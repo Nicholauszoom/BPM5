@@ -25,6 +25,8 @@ $sidebarItems = [
     ['url' => ['/report'], 'label' => 'Report', 'icon' => 'bi bi-file-text'],
     ['url' => ['/setting'], 'label' => 'Settings', 'icon' => 'bi bi-gear'],
 ];
+
+$this->context->layout = 'admin';
 ?>
 
 
@@ -52,12 +54,48 @@ $sidebarItems = [
             ['class' => 'yii\grid\SerialColumn'],
             'username',
             'email',
-           
+            'nationality',
+            'region',
+            'address',
             [
-                'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, User $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'id' => $model->id]);
-                 }
+                'class' => 'yii\grid\ActionColumn',
+                'header' => 'Actions',
+                'headerOptions' => ['style' => 'text-align:center'],
+                'contentOptions' => ['style' => 'text-align:center'],
+                'template' => '<div style="display:flex; justify-content:center;">{view} {update} {delete}</div>',
+                'buttons' => [
+                   
+                
+                    'view' => function ($url, $model, $key) {
+                        return Html::a(
+                            '<span class="glyphicon glyphicon-eye-open"></span>',
+                            ['view', 'id' => $model->id],
+                            [
+                                'title' => 'View ',
+                                'aria-label' => ' view',
+                                'id' => 'view',
+                                'onclick' => 'showBar();',
+                            ]
+                        );
+                    },
+    
+                    'update' => function ($url, $model, $key) {
+                        return Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['site/update', 'id' => $model->id], [
+                            // 'class' => 'btn btn-success',
+                            'title' => 'edit',
+                            'aria-label' => 'edit',
+                        ]);
+                    },
+
+                    'delete' => function ($url, $model, $key) {
+                        return Html::a('<span class="glyphicon glyphicon-trash"></span>', ['delete', 'id' => $model->id], [
+                            // 'class' => 'btn btn-success',
+                            'title' => ' detele',
+                            'aria-label' => 'delete',
+                        ]);
+                    },
+                ],
+                
             ],
         ],
     ]); ?>

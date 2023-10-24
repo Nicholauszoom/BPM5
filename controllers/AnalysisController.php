@@ -200,7 +200,7 @@ class AnalysisController extends Controller
                              $setunitWithoutCommas = str_replace(',', '', $modelRow->setunit);
                              $setunitAsInt = intval($setunitWithoutCommas);
      
-                             $modelRow->unitprofit = $setunitAsInt - $modelRow->unit;        
+                             $modelRow->unitprofit = $setunitAsInt - $modelRow->unit;
                             $modelRow->project = $projectId;
                             $modelRow->files = $filePath;
                             $modelRow->save();
@@ -475,6 +475,22 @@ if ($this->request->isPost && $model->load($this->request->post()) && $model->sa
     ]);
 }
 
+public function actionDeleteMultiple()
+{
+   
+    
+    $post = Yii::$app->request->post();
+    $selectedItems = $post['deleteItems'];
+
+    // Delete the selected items
+    foreach ($selectedItems as $itemId) {
+        $this->findModel($itemId)->delete();
+    
+    }
+    
+    // Redirect to the desired page after deletion
+    return $this->redirect(['project/pm']);
+}
     /**
      * Deletes an existing Analysis model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
@@ -484,9 +500,12 @@ if ($this->request->isPost && $model->load($this->request->post()) && $model->sa
      */
     public function actionDelete($id)
     {
+        $model =$this->findModel($id);
         $this->findModel($id)->delete();
+        
+        $projectId = $model->project;
 
-        return $this->redirect(['project/pm']);
+        return $this->redirect(['project/view', 'id' => $projectId]);
     }
 
     /**
@@ -536,6 +555,8 @@ if ($this->request->isPost && $model->load($this->request->post()) && $model->sa
         // Return the response to end the action
         return Yii::$app->response;
     }
+
+    
 
   
     

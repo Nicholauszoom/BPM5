@@ -14,21 +14,32 @@ class SignupForm extends Model
 public $username;
 
 public $email;
+
 public $password;
+
 public $password_repeat;
 
 public $permissions;
 
 public $department;
 
+public $address;
+
+public $nationality;
+
+public $region;
+
+public $gender;
+
 
 public function rules(){
     return [
         [['username','password','password_repeat','email', 'department'], 'required'],
-        [['username','password','password_repeat','email'],'string','min'=>4,'max'=>40],
+        [['username','password','password_repeat','email','address','nationality','region','gender'],'string','min'=>4,'max'=>40],
         ['password_repeat','compare','compareAttribute'=>'password'],
         ['email', 'unique', 'targetClass' => User::class, 'message' => 'This email has already been taken.'],
         ['email', 'string', 'max' => 40, 'tooLong' => 'Email should contain at most 16 characters.'],
+        
         ];
 }
 
@@ -39,7 +50,11 @@ public function signup()
         $user = new User();
     $user ->username= $this->username;
 
-    $user ->department = $this->department;
+    $user ->department = $this->department; 
+    $user->address = $this->address;
+    $user->nationality= $this->nationality;
+    $user->region = $this->region;
+    $user->gender= $this->gender;
     $user ->email =$this->email;
     $user ->password = \Yii::$app->security->generatePasswordHash($this->password);
     $user ->access_token =\Yii::$app->security->generateRandomString();

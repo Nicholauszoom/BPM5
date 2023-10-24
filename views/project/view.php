@@ -8,6 +8,7 @@ use app\models\Tender;
 use app\models\User;
 use yii\helpers\Html;
 use yii\helpers\Url;
+use yii\widgets\ActiveForm;
 use yii\widgets\DetailView;
 
 /** @var yii\web\View $this */
@@ -247,10 +248,15 @@ $userId = Yii::$app->user->id;
 
 <div class="text-muted">
 <h3 class="text-muted mt-10"></h3>Alaysis Detail for <?= Html::encode($this->title) ?></h3>
+<?php $form = ActiveForm::begin(['action' => ['analysis/delete-multiple']]) ?>
+<div style="margin-left:85%;">
+<?= Html::submitButton('Delete Selected', ['class' => 'btn btn-danger']) ?>
+</div>
 
 <table class="table">
   <thead>
     <tr style="background-color: #f2f2f2;">
+    <th scope="col"><?= Html::checkbox('checkAll', false, ['id' => 'checkAll']) ?> All</th>
       <th scope="col">item</th>
       <th scope="col">quantity</th>
       <th scope="col">Unit</th>
@@ -271,6 +277,7 @@ $userId = Yii::$app->user->id;
   <tbody>
   <?php foreach ($analysis as $analysis): ?>
     <tr>
+    <td><?= Html::checkbox('deleteItems[]', false, ['value' => $analysis->id,'class' => 'checkbox-item']) ?></td>
       <td><?= $analysis->item ?></td>
       <td><?= $analysis->quantity ?></td>
       <td><?= $analysis->description ?></td>
@@ -315,13 +322,15 @@ $userId = Yii::$app->user->id;
             'data-pjax' => '0',
         ]) ?>
 <?php endif?>
+<?php if (Yii::$app->user->can('author') && $model->user_id== $userId) : ?>
+      <?= Html::a('<span class="glyphicon glyphicon-trash"></span>', ['analysis/delete', 'id' => $analysis->id], [
+            'title' => 'Delete',
+            'data-method' => 'post',
+            'data-pjax' => '0',
+        ]) ?>
+<?php endif?>
       </td>
-
-
 <td>
-
-
-
     </tr>
     <?php endforeach; ?>
     <tr>
@@ -352,6 +361,17 @@ $userId = Yii::$app->user->id;
     </tr>
   </tbody>
 </table>
+
+<?php ActiveForm::end() ?>
+<?php
+$js = <<<JS
+    $('#checkAll').click(function () {
+        $('.checkbox-item').prop('checked', this.checked);
+    });
+JS;
+$this->registerJs($js);
+?>
+
 </div>
 <?php
 function getStatusLabel($status)
@@ -364,8 +384,6 @@ function getStatusLabel($status)
 
     return isset($statusLabels[$status]) ? $statusLabels[$status] : '';
 }
-
-
 function getStatusClass($status)
 {
     $statusClasses = [
@@ -439,16 +457,14 @@ function getStatusClass($status)
   </tbody>
 </table>
 </div>
-
-
-
-
+</div>
 </div>
 
 
-        </div>
 
-
-
-
+<script>
+ $('#checkAll').click(function () {
+        $('.checkbox-item').prop('checked', $(this).is(':checked'));
+    });
+</script>
 

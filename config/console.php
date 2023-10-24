@@ -8,6 +8,10 @@ $config = [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'controllerNamespace' => 'app\commands',
+    'controllerMap' => [
+        'cron' => 'app\commands\CronController',
+        'cront' => 'app\commands\CrontController',
+    ],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
@@ -25,11 +29,23 @@ $config = [
                 ],
             ],
         ],
+        'mailer' => [
+            'class' => 'yii\swiftmailer\Mailer',
+            'transport' => [
+                'class' => 'Swift_SmtpTransport',
+                'host' => 'smtp.gmail.com',
+                'username' => 'nicholaussomi5',
+                'password' => 'rjxfmhmlcwzrdmhi',
+                'port' => '587',
+                'encryption' => 'tls', // Use 'tls' for secure connection
+            ],
+        ],
         'db' => $db,
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
         ],
     ],
+  
     'params' => $params,
     /*
     'controllerMap' => [

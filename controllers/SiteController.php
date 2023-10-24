@@ -8,7 +8,10 @@ use app\models\Department;
 use app\models\ForgotPasswordForm;
 use app\models\ResetPasswordForm;
 use app\models\SignupForm;
+use app\models\Tender;
 use app\models\User;
+use app\models\UserAssignment;
+use TCPDF;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -17,8 +20,12 @@ use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+use app\models\Project;
 use yii\helpers\Html;
 use yii\web\ForbiddenHttpException;
+
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 
 class SiteController extends Controller
 {
@@ -73,6 +80,44 @@ class SiteController extends Controller
     {
         return $this->render('index');
     }
+
+    public function actionProfile(){
+
+        $userId= Yii::$app->user->id;
+
+        //get login user account profile
+        $profile = User::findOne($userId);
+
+        //get tender for specific user
+        $tender_user=UserAssignment::find()
+        ->where(['user_id'=>$userId])
+        ->all();
+
+
+        $tender = [];
+        foreach ($tender_user as $tendr) {
+            $tender =Tender::find()
+            ->where(['id'=>$tendr->tender_id])
+            ->all();
+        }
+
+        //get project for specific user
+        $project=Project::find()
+        ->where(['user_id'=>$userId])
+        ->all();
+
+
+
+        return $this->render('edit_profile',[
+            'profile'=>$profile,
+            'tender'=>$tender,
+            'project'=>$project
+            
+        ]);
+    }
+
+
+        //get logged in user id
 
     /**
      * Login action.
@@ -188,12 +233,10 @@ class SiteController extends Controller
                                                              </html>
                     ');
                     
-
             // Attach the document file to the email
 // foreach ($attachments as $attachment) {
 //     $message->attach($attachment);
 // }
-
                 // $message->send();
                 $mailer->send($message);
             }
@@ -223,6 +266,24 @@ class SiteController extends Controller
         return $this->redirect(['site/login']);
 
     }
+
+    public function actionUpdate($id)
+{
+    $model = User::findOne($id);
+
+    if ($model->load(Yii::$app->request->post())) {
+        
+        if($model->save()){
+            return $this->redirect(['user/view', 'id' => $model->id]);
+        }
+       
+      
+    }
+
+    return $this->render('update', [
+        'model' => $model,
+    ]);
+}
 
     /**
      * Displays contact page.
@@ -276,7 +337,6 @@ class SiteController extends Controller
     return Yii::$app->response;
 }
 
-
 public function actionForgotPassword()
 {
     $model = new ForgotPasswordForm();
@@ -310,7 +370,6 @@ public function actionForgotPassword()
     ]);
 }
 
-
 public function actionResetPassword($token)
 {
   // Find the user by password reset token
@@ -337,5 +396,7 @@ public function actionResetPassword($token)
         'model' => $model,
     ]);
 }
+
+
 
 }

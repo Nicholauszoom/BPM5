@@ -9,9 +9,9 @@ use yii\bootstrap5\ActiveForm;
 use yii\bootstrap5\Html;
 use yii\helpers\ArrayHelper;
 
-$this->title = 'Sign Up';
+$this->title = 'Assign New User';
 $this->params['breadcrumbs'][] = $this->title;
-// $this->context->layout = 'admin';
+$this->context->layout = 'admin';
 
 ?>
 
@@ -28,7 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="site-login">
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>Please fill out the following fields to signup:</p>
+    <p>Assign new user in a system:</p>
 
    
        
@@ -37,32 +37,55 @@ $this->params['breadcrumbs'][] = $this->title;
                 'id' => 'signup-form',
                 'fieldConfig' => [
                     'template' => "{label}\n{input}\n{error}",
-                    'labelOptions' => ['class' => 'col-lg-1 col-form-label mr-lg-3'],
-                    'inputOptions' => ['class' => 'col-lg-3 form-control'],
-                    'errorOptions' => ['class' => 'col-lg-7 invalid-feedback'],
+                    'labelOptions' => ['class' => ' col-form-label mr-lg-3'],
+                    'inputOptions' => ['class' => 'form-control'],
+                    'errorOptions' => ['class' => 'invalid-feedback'],
                 ],
             ]); ?>
-
-              <?php echo $form->field($model, 'department')->dropDownList(
+           
+             <?php echo $form->field($model, 'department')->dropDownList(
                \yii\helpers\ArrayHelper::map($department, 'id', 'name'),
                 ['prompt' => 'Select Department']
               ) ; ?>
-            <?= $form->field($model, 'email')->textInput(['autofocus' => true]) ?>
+
+          
+              <?= $form->field($model, 'email')->textInput(['autofocus' => true]) ?>
+
             <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
-            <?= $form->field($model, 'password')->passwordInput() ?>
-            <?= $form->field($model, 'password_repeat')->passwordInput() ?>
+          
+
            
+
+            <?= $form->field($model, 'password')->passwordInput() ?>
+
+            <?= $form->field($model, 'password_repeat')->passwordInput() ?>
+
+            <?= $form->field($model, 'address')->textInput()?>
+
+            <?= $form->field($model, 'nationality')->textInput()?>
+
+            <?= $form->field($model, 'region')->textInput()?>
+
+            <?= $form->field($model, 'gender')->dropDownList(
+                   [
+                    'male' => 'Male',
+                    'female' => 'Female',
+                     ],
+                  ['prompt' => 'Select Gender']
+                 )?>
             <?php 
            
                  $authItems = ArrayHelper::map($authItems,'name','name');
                  
             ?>
            <ul>
+
             <?= $form->field($model,'permissions')->checkboxList($authItems); ?>
+            
             </ul>
             <div class="form-group">
                 <div>
-                    <?= Html::submitButton('SignUp', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
+                    <?= Html::submitButton('+ Add', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
                 </div>
             </div>
 

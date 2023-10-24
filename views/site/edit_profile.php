@@ -39,7 +39,7 @@ $sidebarItems = [
         <!-- ============================================================== -->
         <!-- Sales Cards  -->
         <!-- ============================================================== -->
-        <di class="row"></di>
+        <div class="row"></div>
 
 
 <section style="background-color: #eee;">
@@ -66,7 +66,7 @@ $sidebarItems = [
       }
       ?>
            
-            <p class="text-muted mb-4">Salasala, Dar es Salaam, Tz</p>
+            <p class="text-muted mb-4"><?=$profile->address?> , <?=$profile->region?>, <?=$profile->nationality?></p>
           
           </div>
         </div>
@@ -133,7 +133,7 @@ $sidebarItems = [
                 <p class="mb-0">Address</p>
               </div>
               <div class="col-sm-9">
-                <p class="text-muted mb-0">Salasala, Dar es Salaam, Tz</p>
+                <p class="text-muted mb-0"><?=$profile->address?> , <?=$profile->region?>, <?=$profile->nationality?></p>
               </div>
             </div>
           </div>

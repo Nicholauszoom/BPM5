@@ -28,7 +28,7 @@ class UserActivity extends \yii\db\ActiveRecord
     {
         return [
             [['section'], 'string'],
-            [['user_id','activity_id','tender_id', 'assign'], 'integer'],
+            [['user_id','activity_id','tender_id', 'assign',], 'integer'],
         ];
     }
 
@@ -43,6 +43,7 @@ class UserActivity extends \yii\db\ActiveRecord
             'activity_id' => 'Activity',
             'section'=>'Section',
             'tender_id'=>'tender ID',
+            'submit_at'=>'Submit_at',
             'assign'=> 'Assign',
         ];
     }

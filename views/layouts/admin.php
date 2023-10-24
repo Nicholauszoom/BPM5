@@ -191,9 +191,13 @@ border-radius: 50%;
     border-radius: 50% 50% 10% 10%;
 }
 
+
+.avatar{
+width:200px;
+height:200px;
+}	
 </style>
 
-  
    
 </head>
 <body class="nav-md">
@@ -208,9 +212,7 @@ border-radius: 50%;
               <a href="index.html" class="site_title"> <span>BPM-Tera</span></a>
             </div>
 
-
             <div class="clearfix"></div>
-        
 
             <!-- menu proconditionfile quick info -->
 
@@ -226,7 +228,6 @@ border-radius: 50%;
             </div>
             -->
             <!-- /menu profile quick info -->
-
 
             <br />
             <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
@@ -344,7 +345,7 @@ border-radius: 50%;
                  
                   <li><a><i class="fa fa-gear"></i>Settings<span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <li><a href="#">index</a></li>
+                      <li><a href="/site/profile">profile & resert</a></li>
                     </ul>
                   </li>
                 </ul>
@@ -354,8 +355,6 @@ border-radius: 50%;
             </div>
         </div>
       </div>
-
-
             <!-- top navigation -->
             <div class="top_nav">
           <div class="nav_menu">
@@ -370,15 +369,14 @@ border-radius: 50%;
                     <img src="https://cdn-icons-png.flaticon.com/128/3177/3177440.png?ga=GA1.1.812721869.1686883631" alt="profile_image">
                   </a>
                   <div class="dropdown-menu dropdown-usermenu pull-right" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item"  href="profile"> Profile</a>
-                      <a class="dropdown-item"  href="javascript:;">
+                    <a class="dropdown-item"  href="/site/profile"> Profile</a>
+                      <a class="dropdown-item"  href="/site/profile">
                         <span class="badge bg-red pull-right"></span>
                         <span>Settings</span>
                       </a>
                   <a class="dropdown-item"  href="javascript:;">Help</a>
                     <a class="dropdown-item"  href=""><i class="fa fa-sign-out pull-right"></i>
                     <?php
-   
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav'],
         'items' => [
@@ -397,7 +395,6 @@ border-radius: 50%;
     ]);
     
     ?>
-                    
                     </a>
                   </div>
                 </li>
@@ -415,9 +412,7 @@ border-radius: 50%;
        
         <i class="fa fa-envelope-o"></i>
         <span class="badge bg-red"><?= $newProjects ?></span>
-        
     </a>
-
     <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown1">
         <!-- Dropdown menu items go here -->
     </ul>
@@ -443,8 +438,8 @@ border-radius: 50%;
          <!-- /page content -->
 
         <!-- footer content -->
-        <footer>
-          <div class="pull-right">
+        <footer style="background-color:gray;">
+          <div class="pull-right" >
             Teratech - web application <a href="teratech.co.tz">about us</a>
           </div>
           <div class="clearfix"></div>
@@ -452,14 +447,10 @@ border-radius: 50%;
         <!-- /footer content -->
         </div>
         </div>
-    
-  
+
+
         <!--begin::Body-->
   
- 
-   
-
-
 <?php $this->endBody();
 
 ?>

@@ -17,6 +17,14 @@ $config = [
     'modules' => [
         'auth' => [
             'class' => 'app\modules\auth\Module',
+
+            'reportico' => [
+                'class' => 'reportico\reportico\Module',
+                'controllerMap' => [
+                    'reportico' => 'reportico\reportico\controllers\ReporticoController'
+                ],
+                'reporticoPath' => '@vendor/reportico/yii2-reportico/reportico',
+            ],
         ],
         'datecontrol' => [
             'class' => 'kartik\datecontrol\Module',
@@ -91,6 +99,7 @@ $config = [
             'rules' => [
                 'report/generate' => 'report/generate-report',
                 'user-activity' => 'user-activity/index',
+                'project/report' => 'project/project-report',
             ],
 
             

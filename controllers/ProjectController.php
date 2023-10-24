@@ -17,6 +17,7 @@ use app\models\Updates;
 use app\models\User;
 use app\models\Users;
 use Codeception\Lib\Notification;
+use Com\Tecnick\Pdf\Tcpdf as PdfTcpdf;
 use Yii;
 use yii\base\Model;
 use yii\web\Controller;
@@ -24,7 +25,7 @@ use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
-use TCPDF;
+use TCPDF\TCPDF;
 use yii\helpers\FileHelper;
 use yii\mail\MailerInterface;
 use yii\helpers\Html;
@@ -553,6 +554,20 @@ if ($model->invite_letter) {
     }
     }
 
+public function actionDeleteMultiple()
+{
+    $post = Yii::$app->request->post();
+    $selectedItems = $post['deleteItems'];
+
+    // Delete the selected items
+    foreach ($selectedItems as $itemId) {
+        $this->findModel($itemId)->delete();
+    }
+
+    // Redirect to the desired page after deletion
+    return $this->redirect(['index']);
+}
+
     /**
      * Finds the Project model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
@@ -597,7 +612,7 @@ if ($model->invite_letter) {
     }
 
 
-    
+ 
     
 }
 

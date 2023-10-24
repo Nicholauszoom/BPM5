@@ -251,3 +251,9 @@ assignActivity.forEach(function (activity) {
         }
     }
 });
+
+$(document).ready(function() {
+    $('#checkAll').click(function() {
+        $('.checkbox-item').prop('checked', this.checked);
+    });
+});
