@@ -31,7 +31,10 @@ $this->context->layout = 'admin';
 
     <p>
         <?= Html::a('Create Tender', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Generate Report', ['form'], ['class' => 'btn btn-primary']) ?>
+
     </p>
+
     
 
 

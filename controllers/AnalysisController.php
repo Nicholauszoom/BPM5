@@ -515,7 +515,10 @@ public function actionDeleteMultiple()
      * @return Analysis the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
+
+     
+
+     protected function findModel($id)
     {
         if (($model = Analysis::findOne(['id' => $id])) !== null) {
             return $model;

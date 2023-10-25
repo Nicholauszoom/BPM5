@@ -34,6 +34,10 @@ use yii\behaviors\TimestampBehavior;
 class Tender extends \yii\db\ActiveRecord
 {
 
+    public $date_from;
+
+    public $date_to;
+    
     public $assigned_to = [];
     /**
      * {@inheritdoc}
@@ -71,6 +75,9 @@ class Tender extends \yii\db\ActiveRecord
             ['publish_at', 'compare', 'compareValue' => date('Y-m-d'), 'operator' => '<='],
             ['expired_at', 'date', 'format' => 'php:Y-m-d'],
             ['publish_at', 'date', 'format' => 'php:Y-m-d'],
+
+            ['date_from', 'date', 'format' => 'php:Y-m-d'],
+            ['date_to', 'date', 'format' => 'php:Y-m-d'],
             [['assigned_to'], 'each', 'rule' => ['integer']],
 
         ];
@@ -98,6 +105,8 @@ class Tender extends \yii\db\ActiveRecord
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'assigned_to'=>'Assigned To',
+            'date_from'=>'Date From',
+            'date_to'=>'Date To',
             'submit_to'=>'Submitted To',
             'supervisor'=>'Supervisor',
             'created_by' => 'Created By',

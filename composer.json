@@ -36,7 +36,8 @@
         "kartik-v/yii2-widget-select2": "^2.2",
         "guzzlehttp/guzzle": "^7.8.0",
         "tecnickcom/tcpdf": "^6.6",
-        "reportico/yii2-reportico": "dev-master"
+        "reportico/yii2-reportico": "dev-master",
+        "mpdf/mpdf":"*"
         
         
         

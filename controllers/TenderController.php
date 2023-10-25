@@ -9,6 +9,7 @@ use app\models\Tender;
 use app\models\TenderSearch;
 use app\models\User;
 use app\models\UserAssignment;
+use Mpdf\Mpdf;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\web\Controller;
@@ -620,6 +621,53 @@ $message->setCc($ccRecipients);
         }
 
         // Redirect or display a success message
+    }
+
+    // public function actionReport(){
+    //     $mpdf = new Mpdf;
+    //     $mpdf->WriteHTML('Sample Text');
+    //     $mpdf->Output();
+    //     exit;
+       
+    // }
+
+    public function actionForm()
+    {
+        $model = new Tender();
+
+        if ($model->load(Yii::$app->request->post())) {
+
+            return $this->redirect(['report', 'date_from' => $model->date_from, 'date_to' => $model->date_to]);
+        }
+
+        return $this->render('report_form', [
+            'model' => $model,
+        ]);
+    }
+
+    public function actionReport()
+    {
+        $dateFrom = Yii::$app->request->get('date_from');
+        $dateTo = Yii::$app->request->get('date_to');
+    
+        $timestampFrom = strtotime($dateFrom);
+        $timestampTo = strtotime($dateTo);
+    
+        $tenders = Tender::find()
+            ->where(['between', 'created_at', $timestampFrom, $timestampTo])
+            ->all();
+    
+        $content = $this->renderPartial('report', [
+            'tenders' => $tenders,
+            'dateFrom' => $dateFrom,
+            'dateTo' => $dateTo,
+        ]);
+    
+        $pdf = new Mpdf;
+    
+        $pdf->WriteHTML($content);
+        $pdf->Output();
+        exit;
     }
 
 }

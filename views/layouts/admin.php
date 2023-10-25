@@ -438,7 +438,7 @@ height:200px;
          <!-- /page content -->
 
         <!-- footer content -->
-        <footer style="background-color:gray;">
+        <footer style="">
           <div class="pull-right" >
             Teratech - web application <a href="teratech.co.tz">about us</a>
           </div>
