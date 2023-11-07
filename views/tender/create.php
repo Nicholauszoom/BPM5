@@ -10,9 +10,27 @@ $this->params['breadcrumbs'][] = ['label' => 'Tenders', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 $this->context->layout = 'admin';
 ?>
-<a href="<?= Yii::$app->request->referrer ?>" class="back-arrow">
-    <span class="arrow">&#8592;</span> Back
+<style>
+
+    span{
+        color:grey;
+    }
+    .back-arrow{
+        color:grey;
+    }
+
+    
+    
+</style>
+
+
+<a href="/tdetail/create" class="back-arrow">
+Next <span class="fas fa-arrow-right" ></span>  
 </a>
+<a href="<?= Yii::$app->request->referrer ?>" class="back-arrow">
+    <span class="fas fa-arrow-left"></span> Back
+</a>
+
 <div id="main-content ">
    
     <div id="page-container">

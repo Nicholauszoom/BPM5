@@ -4,12 +4,13 @@ use app\models\Project;
 use app\models\Tender;
 use yii\helpers\Html;
 use yii\bootstrap5\Modal;
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
 /** @var yii\web\View $this */
 /** @var app\models\Analysis $model */
 
-$this->title = 'Create Analysis';
+$this->title = 'Upload Analysis Document';
 $this->params['breadcrumbs'][] = ['label' => 'Analyses', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 $this->context->layout = 'admin';
@@ -21,11 +22,14 @@ $project_tender_id=Tender::findOne($project_tender);
 $projectName = $project_tender_id ? $project_tender_id->title : '';
 $this->title = 'Create Analysis for :' . $projectName . ' Project';
 
-
 ?>
-<a href="<?= Yii::$app->request->referrer ?>" class="back-arrow">
-    <span class="arrow">&#8592;</span> Back
+  <a href="<?= Url::to(['project/view', 'id' => $projectId]) ?>" class="back-arrow" style="color:blue;">
+    Next<span class="fas fa-arrow-right"></span> 
 </a>
+<a href="<?= Yii::$app->request->referrer ?>" class="back-arrow" style="color:blue;">
+    <span class="fas fa-arrow-left"></span> Back
+</a>
+
 <div class="analysis-create">
 <center> 
     <hr/><img src='/images/teralog.png' style="width: 60px;">

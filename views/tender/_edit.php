@@ -45,12 +45,7 @@ $department=Department::find()->all();
                  ['prompt' => 'Assigned to']
              ); ?>          
           </div>
-            <div class="col">
-             <?php echo $form->field($model, 'supervisor')->dropDownList(
-               ArrayHelper::map($users, 'id', 'username'),
-               ['prompt' => 'Supervisor']
-             ); ?>   
-            </div>
+           
             <div class="col">
             <?= $form->field($model, 'description')->textarea()?>
             </div>

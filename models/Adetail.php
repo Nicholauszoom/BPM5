@@ -10,6 +10,7 @@ use Yii;
  * @property int $id
  * @property string $section
  * @property int|null $user_id
+ * @property int|null $assign
  * @property int|null $activity_id
  * @property int|null $tender_id
  */
@@ -30,7 +31,8 @@ class Adetail extends \yii\db\ActiveRecord
     {
         return [
             [['section'], 'string'],
-            [['user_id','tender_id'],'integer'],
+            [['user_id','tender_id','assign','supervisor'],'integer'],
+            [['assign'], 'default', 'value' => 1],
            [['activity_id'], 'safe'],
            ['submit_at', 'date', 'format' => 'php:Y-m-d'],
         ];
@@ -46,6 +48,8 @@ class Adetail extends \yii\db\ActiveRecord
             'user_id' => 'User ',
             'section'=>'Section',
             'activity_id' => 'Activity ',
+            'assign'=>'Assign',
+            'supervisor'=>'Supervisor',
             'submit_at'=> 'tender task submit date',
             'tender_id' => 'Tender ID',
         ];

@@ -141,7 +141,10 @@ class AnalysisController extends Controller
      
              // $model->unitprofit=$model->setunit - $model->unit;
      
-             // $costt=$model->cost;
+             // $costt=$model->cost;XAMPP: Starting MySQL...
+
+
+
              // $unitprof=$model->unitprofit;
      
              // Create the upload directory if it doesn't exist
@@ -186,17 +189,19 @@ class AnalysisController extends Controller
                              $modelRow->description = isset($row[3]) ? $row[3] : null;
                              $modelRow->setunit = isset($row[4]) ? $row[4] : null;
                              $modelRow->cotedAmount = isset($row[5]) ? $row[5] : null;
-                             $modelRow->source = isset($row[6]) ? $row[6] : null;
+                             $modelRow->cost = isset($row[6]) ? $row[6] : null;
+                             $modelRow->source = isset($row[7]) ? $row[7] : null;
                              // $modelRow->unit = $row[7];
      
                              // Ensure numeric values for unit and quantity
                              // $modelRow->unit = is_numeric($modelRow->unit) ? (float)$modelRow->unit : 0;
                              // $modelRow->quantity = is_numeric($modelRow->quantity) ? (float)$modelRow->quantity : 0;
-                             $modelRow->unit = is_numeric($modelRow->unit) ? (float)$modelRow->unit : 0;
+                             
                              $modelRow->quantity = is_numeric($modelRow->quantity) ? (float)$modelRow->quantity : 0;
                              // $modelRow->setunit = is_numeric($modelRow->setunit) ? (float)$modelRow->setunit : 0;
      
-                             // $modelRow->cost = $modelRow->unit * $modelRow->quantity;
+                            //  $modelRow->unit = $modelRow->cost * $modelRow->quantity ;
+                             $modelRow->unit = floatval($modelRow->cost) * intval($modelRow->quantity);
                              $setunitWithoutCommas = str_replace(',', '', $modelRow->setunit);
                              $setunitAsInt = intval($setunitWithoutCommas);
      
@@ -302,8 +307,6 @@ $Aproject= Project::findOne($model->project);
 //status sent with email
 
 
-
-
 if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
   
 
@@ -333,10 +336,18 @@ if ($this->request->isPost && $model->load($this->request->post()) && $model->sa
                         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
                     }
                     h1 {
-                        color: blue;
-                        text-align: center;
-                    }
-                    p {
+                        color: blue;  <!-- Message -->
+                        <a href="javascript:void(0)" class="link border-top">
+                            <div class="d-flex no-block align-items-center p-10">
+                                <span class="btn btn-danger btn-circle d-flex align-items-center justify-content-center">
+                                    <i class="mdi mdi-link fs-4"></i>
+                                </span>
+                                <div class="ms-2">
+                                    <h5 class="mb-0">Launch Admin</h5>
+                                    <span class="mail-desc">Just see the my new admin!</span>
+                                </div>
+                            </div>
+                        </a>
                         color: #666666;
                     }
                     .logo {
@@ -516,7 +527,6 @@ public function actionDeleteMultiple()
      * @throws NotFoundHttpException if the model cannot be found
      */
 
-     
 
      protected function findModel($id)
     {

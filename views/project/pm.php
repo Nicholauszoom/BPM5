@@ -163,7 +163,7 @@ $sidebarItems = [
         // ],
         [
             'class' => 'yii\grid\ActionColumn',
-            'template' => '{view} {create-analysis} {create-task} {update} {team}',
+            'template' => '{view} {start}',
             'buttons' => [
                 'create-analysis' => function ($url, $model, $key) {
                     return Html::a('<span class="glyphicon glyphicon-file"></span>', ['analysis/create', 'projectId' => $model->id], [
@@ -186,6 +186,19 @@ $sidebarItems = [
                         'title' => 'view project',
                         'aria-label' => 'Project view',
                     ]);
+                },
+
+                'start' => function ($url, $model, $key) {
+                    return Html::a(
+                        '<span class="glyphicon glyphicon-off"></span>',
+                        ['team/detail', 'projectId' => $model->id],
+                        [
+                            'title' => 'start process',
+                            'aria-label' => 'start process',
+                            'id' => 'view',
+                            'onclick' => 'showBar();',
+                        ]
+                    );
                 },
 
 

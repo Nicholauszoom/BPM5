@@ -178,11 +178,46 @@ ul li .active .uil{
         font-size: 16px;
     }
 }
-</style>
-<a href="<?= Yii::$app->request->referrer ?>" class="back-arrow">
-    <span class="arrow">&#8592;</span> Back
-</a>
+span{
+    color:grey;
+}
+.back-arrow{
+    color:grey;
+}
 
+.table-container {
+    overflow-x: auto;
+    max-width: 100%;
+}
+
+.styled-table {
+    width: max-content;
+    border-collapse: collapse;
+}
+
+.styled-table th,
+.styled-table td {
+    padding: 8px;
+    border: 1px solid #ddd;
+}
+
+.styled-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.styled-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+</style>
+
+
+
+
+<a href="<?= Yii::$app->request->referrer ?>" class="back-arrow">
+<span class="fas fa-arrow-left"></span> Back
+</a>
 <ul class="bar-progrress">
     <li>
         <i class="icon uil uil-spinner-alt"></i>
@@ -330,29 +365,64 @@ ul li .active .uil{
                         if (!isset($assignedUserActivities[$user->username])) {
                             $assignedUserActivities[$user->username] = [];
                         }
-                        $assignedUserActivities[$user->username][] = $activity->name . ' (Submit Date: ' . Yii::$app->formatter->asDatetime($assignment->submit_at) . ', Section: ' . $adetail->section . ')';
+                        $assignedUserActivities[$user->username][] = [
+                            'activityName' => $activity->name,
+                            'submitDate' => Yii::$app->formatter->asDatetime($assignment->submit_at),
+                            'section' => $adetail->section,
+                            'assignmentId' => $assignment->id, // Add assignment ID for deletion
+                        ];
                     }
                 }
         
-                $assignedUsernames = [];
+                $tableRows = '';
                 foreach ($assignedUserActivities as $username => $activities) {
-                    $assignedUsernames[] = $username . ' - ' . implode(', ', $activities);
+                    foreach ($activities as $index => $activity) {
+                        $tableRows .= '<tr>';
+                        if ($index === 0) {
+                            $tableRows .= '<td rowspan="' . count($activities) . '">' . $username . '</td>';
+                        }
+                        $tableRows .= '<td>' . $activity['activityName'] . '</td>';
+                        $tableRows .= '<td>' . $activity['submitDate'] . '</td>';
+                        $tableRows .= '<td>' . $activity['section'] . '</td>';
+                        if ($index === 0) {
+                            $tableRows .= '<td rowspan="' . count($activities) . '"><button onclick="deleteRow(this)">Delete</button></td>';
+                        }
+                        $tableRows .= '</tr>';
+                    }
                 }
         
-                return implode('<br>', $assignedUsernames);
+                $table = '
+               
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Activity Name</th>
+                                <th>Submit Date</th>
+                                <th>Section</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ' . $tableRows . '
+                        </tbody>
+                    </table>
+                  
+                ';
+        
+                return $table;
             },
         ],
-       
-
-            [
-                'attribute'=>'supervisor',
-                'format'=>'raw',
-                'value'=>function ($model){
-                    $createdByUser = User::findOne($model->supervisor);
-                    $createdByName = $createdByUser ? $createdByUser->username : 'Unknown';
-                     return $createdByName;
-                },
-            ],
+        
+            // [
+            //     'attribute'=>'supervisor',
+            //     'format'=>'raw',
+            //     'value'=>function ($model){
+            //         $createdByUser = User::findOne($model->supervisor);
+            //         $createdByName = $createdByUser ? $createdByUser->username : 'Unknown';
+            //          return $createdByName;
+            //     },
+            // ],
             [
                 'attribute' => 'created_at',
                 'format' => ['date', 'php:Y-m-d H:i:s'],
@@ -664,4 +734,11 @@ if (status === 1) {
   // Handle the case where status is not 1, 3, 4, or 5
   resetSteps();
 }
+
+
+    function deleteRow(button) {
+        var row = button.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+    }
+
 </script>

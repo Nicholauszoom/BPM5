@@ -17,7 +17,7 @@ use yii\jui\DatePicker;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'site_visit', ['template' => "{label}\n<div class='input-group'>{input}\n<span class='input-group-addon'><i class='fa fa-bell'></i></span></div>\n{error}"])->dropDownList(
+    <?= $form->field($model, 'site_visit', ['template' => "{label}\n<div class='input-group'>{input}\n<span class='input-group-addon'><i class='fa fa-bell'></i></span></div>\n{error}"])->label('Sitevisit *<small class="text-muted">from tender department</small>')->dropDownList(
     [
         1 => 'a. YES',
         2 => 'b. NO',
@@ -28,7 +28,7 @@ use yii\jui\DatePicker;
     ]
 ) ?>
 <div id="additional-form" style="display: none;">
-<?= $form->field($model, 'site_visit_date', ['template' => "{label}\n<div class='input-group'>{input}\n<span class='input-group-addon'><i class='fa fa-calender'></i></span></div>\n{error}"])->widget(DatePicker::class, [
+<?= $form->field($model, 'site_visit_date', ['template' => "{label}\n<div class='input-group'>{input}\n<span class='input-group-addon'><i class='fa fa-calender'></i></span></div>\n{error}"])->label('Sitevisit Date *<small class="text-muted"></small>')->widget(DatePicker::class, [
     'language' => 'ru',
     'dateFormat' => 'MM/dd/yyyy',
     'options' => [

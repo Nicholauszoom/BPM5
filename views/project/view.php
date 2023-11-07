@@ -247,6 +247,9 @@ $userId = Yii::$app->user->id;
 
 
 <div class="text-muted">
+<center>
+<h1 class="text-muted center mt-10" style=" color: blue;">ANALYSIS</h1>
+</center>
 <h3 class="text-muted mt-10"></h3>Alaysis Detail for <?= Html::encode($this->title) ?></h3>
 <?php $form = ActiveForm::begin(['action' => ['analysis/delete-multiple']]) ?>
 <div style="margin-left:85%;">
@@ -400,7 +403,6 @@ function getStatusClass($status)
 <h1 class="text-muted center mt-10" style=" color: blue;">WORK PLAN</h1>
 </center>
 <div class="text-muted">
-<h3 class="text-muted center mt-10">Task creted for this project</h3>
 
 <table class="table">
   <thead>

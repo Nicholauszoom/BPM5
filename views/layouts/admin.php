@@ -57,6 +57,8 @@ $sidebarItems = [
     <title><?= Html::encode($this->title) ?></title>
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
 
+  
+
     <?php $this->head();
       echo Html::cssFile('@web/vendors/bootstrap/dist/css/bootstrap.min.css');
       echo Html::cssFile('@web/vendors/font-awesome/css/font-awesome.min.css');
@@ -196,6 +198,56 @@ border-radius: 50%;
 width:200px;
 height:200px;
 }	
+
+.notification-items {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.notification-items .link {
+    display: block;
+    padding: 10px;
+    color: #333;
+    text-decoration: none;
+}
+
+.notification-items .link:hover {
+    background-color: #f5f5f5;
+}
+
+.notification-items .link .btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.notification-items .link .mail-desc {
+    font-size: 14px;
+}
+
+.notification-items .link h5 {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.animated-badge {
+    animation: badge-animation 1s infinite;
+}
+
+@keyframes badge-animation {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.5);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
 </style>
 
    
@@ -262,7 +314,28 @@ height:200px;
                      ->count();
                   ?>
 
-                  <li><a><i class="fa fa-recycle"></i>Tender<span class="badge bg-blue"><?=$newTender?></span><span class="fa fa-chevron-down"></span></a>
+<?php
+    $userId = Yii::$app->user->id;
+    // Retrieve the projects assigned to the user
+    $complete_tender = Tender::find()
+        ->where(['status' => 1])
+        ->all();
+    
+    $projectCount = 0;
+
+    foreach ($complete_tender as $cmpt_tender) {
+        $exist_project = Project::findOne(['tender_id' => $cmpt_tender->id]);
+        if ($exist_project === null) {
+            $projectCount++;
+        }
+    }
+    ?>
+
+                  <li><a><i class="fa fa-recycle"></i>Tender<span class="badge bg-blue"><?=$newTender?></span>
+                  <?php if ($projectCount !== null): ?>
+        <span class="badge bg-red animated-badge"><?= $projectCount ?></span>
+    <?php endif; ?>
+    <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
                     <?php if (Yii::$app->user->can('admin')) : ?>
                       <li><a href="/tender">index</a></li>
@@ -400,21 +473,61 @@ height:200px;
                 </li>
 
                 <li role="presentation" class="nav-item dropdown open">
-    <a href="javascript:;" class="dropdown-toggle info-number" id="navbarDropdown1" data-toggle="dropdown" aria-expanded="false">
-        <?php
-        $userId = Yii::$app->user->id;
-        // Retrieve the projects assigned to the user
-        $newProjects = Project::find()
-            ->where(['user_id' => $userId])
-            ->andWhere(['isViewed' => 0])
-            ->count();
-        ?>
-       
-        <i class="fa fa-envelope-o"></i>
-        <span class="badge bg-red"><?= $newProjects ?></span>
-    </a>
+                <a href="javascript:;" class="dropdown-toggle info-number" id="navbarDropdown1" data-toggle="dropdown" aria-expanded="false">
+    <?php
+    $userId = Yii::$app->user->id;
+    // Retrieve the projects assigned to the user
+    $complete_tender = Tender::find()
+        ->where(['status' => 1])
+        ->all();
+    
+    $projectCount = 0;
+
+    foreach ($complete_tender as $cmpt_tender) {
+        $exist_project = Project::findOne(['tender_id' => $cmpt_tender->id]);
+        if ($exist_project === null) {
+            $projectCount++;
+        }
+    }
+    ?>
+     <?php if (Yii::$app->user->can('admin')) : ?>
+    <i class="fa fa-envelope-o"></i>
+    <?php if ($projectCount !== null): ?>
+        <span class="badge bg-red animated-badge"><?= $projectCount ?></span>
+    <?php endif; ?></a>
     <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown1">
         <!-- Dropdown menu items go here -->
+        <li>
+            <div class="notification-items">
+              <?php
+$complete_tender = Tender::find()
+    ->where(['status' => 1])
+    ->all();
+
+foreach ($complete_tender as $cmpt_tender) {
+    $exist_project = Project::findOne(['tender_id' => $cmpt_tender->id]);
+    if ($exist_project === null) {
+        ?>
+
+        <a href="<?= Url::to(['project/create', 'tenderId' => $cmpt_tender->id]) ?>" class="link border-top">
+            <div class="d-flex no-block align-items-center p-10">
+                <span class="btn btn-success btn-circle d-flex align-items-center justify-content-center animated-badge">
+                    <i class="mdi mdi-calendar text-white fs-4"></i>
+                </span>
+                <div class="ms-2">
+                    <h5 class="mb-0"><?= $cmpt_tender->title ?></h5>
+                    <span class="mail-des" style="color:#3498db;">Tender is already awarded, click to register as a project</span>
+                </div>
+            </div>
+        </a>
+        <?php
+    }
+}
+?>
+  <?php endif; ?>
+
+            </div>
+        </li>
     </ul>
 </li>
               </ul>

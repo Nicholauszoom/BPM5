@@ -164,188 +164,28 @@ public function actionAssigned()
                     }
                     if ($model->save()) {
                         // Send an email to a specific department by email
-                        if (Yii::$app->user->can('admin')) {
-                        try {
 
-                           
-                           $assigneTo= User::findOne($model->assigned_to);
-                           $createdBy= User::findOne($model->created_by);
-                           $supervisedBy= User::findOne($model->supervisor);
-
-                           
-                           
-                              $message = Yii::$app->mailer->compose()
-                               ->setFrom('')
-                               ->setTo('')
-                            //    ->setCc($ccEmails) // Add CC recipient(s) here
-                               ->setSubject('Tender Registration')
-                               ->setHtmlBody('
-                               <html>
-                               <head>
-                                   <style>
-                                       /* CSS styles for the email body */
-                                       body {
-                                           font-family: Arial, sans-serif;
-                                           background-color: #f4f4f4;
-                                       }
-                                       .container {
-                                           max-width: 600px;
-                                           margin: 0 auto;
-                                           padding: 20px;
-                                           background-color: #ffffff;
-                                           border: 1px solid #dddddd;
-                                           border-radius: 4px;
-                                           box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-                                       }
-                                       h1 {
-                                           color: blue;
-                                           text-align: center;
-                                       }
-                                       p {
-                                           color: #666666;
-                                       }
-                                       .logo {
-                                           text-align: center;
-                                           margin-bottom: 20px;
-                                       }
-                                       .logo img {
-                                           max-width: 200px;
-                                       }
-                                       .assigned-by {
-                                           font-weight: bold;
-                                       }
-                                       .button {
-                                           display: inline-block;
-                                           padding: 10px 20px;
-                                           background-color: #3366cc;
-                                           color: white;
-                                           text-decoration: none;
-                                           border-radius: 4px;
-                                           margin-top: 20px;
-                                       }
-                                       .button:hover {
-                                           background-color: #235daa;
-                                       }
-                                       .status-label {
-                                           display: inline-block;
-                                           padding: 5px 10px;
-                                           color: #ffffff;
-                                           border-radius: 4px;
-                                       }
-                                       .status-pending {
-                                           background-color: #ffc107;
-                                       }
-                                       .status-approved {
-                                           background-color: #28a745;
-                                       }
-                                       .status-rejected {
-                                           background-color: #dc3545;
-                                       }
-                                   </style>
-                           
-                                   <script>
-                                       function getStatusLabel(status) {
-                                           switch (status) {
-                                               case 0:
-                                                   return {
-                                                       name: "Pending",
-                                                       labelClass: "status-pending"
-                                                   };
-                                               case 1:
-                                                   return {
-                                                       name: "Approved",
-                                                       labelClass: "status-approved"
-                                                   };
-                                               case 2:
-                                                   return {
-                                                       name: "Rejected",
-                                                       labelClass: "status-rejected"
-                                                   };
-                                               default:
-                                                   return {
-                                                       name: "",
-                                                       labelClass: ""
-                                                   };
-                                           }
-                                       }
-                                   </script>
-                               </head>
-                               <body>
-                                   <div class="container">
-                                       <div class="logo">
-                                       <img src="https://ci6.googleusercontent.com/proxy/s2ioZxU1n6rXmuUxz4xYQ36Pfr2j1HnbSNgHwy2c6pjTWEvzsLe9VdZGhYp-7dE-n6oTkJ79jUw9pHPeXRePiOT7U4irwAl5esSZrsPPqvZr8N1o6g2Bhh7k7M5UGUk=s0-d-e1-ft#http://teratech.co.tz/local/images/uploads/logo/163277576061522e507c527.webp" alt="teralogo">
-                                       </div>
-                                       <h1></h1>
-                                       <p>Dear ,</p>
-                                       <p>You have been tassigned new tender, as below:</p>
-                                       <ul>
-                                          <li>Tender Name: </li>
-                                          <li>Registered By:</li>
-                                          <li> Supervised By: </li>
-                                          <li> Message: </li>
-                                          <li>Submit Date:</li>
-
-                                           
-                                       </ul>
-                                      
-                                   </div>
-                               </body>
-                               </html>
-                           ');
-                           // Retrieve the assigned use
-                     // Get the selected user IDs from the form
-$selectedUserIds = $model->assigned_to;
-
-// Find the assigned users
-$assignedUsers = User::find()
-    ->where(['in', 'id', $selectedUserIds])
-    ->all();
-
-// Create an array to store the CC recipients' emails
-$ccRecipients = [];
-
-// Add CC recipients to the array
-foreach ($assignedUsers as $assignedUser) {
-    $ccRecipients[] = $assignedUser->email;
-}
-
-// Set the CC recipients in the email message
-$message->setCc($ccRecipients);
-                       // Set the CC recipients from the array
                        
-
-
-                    //    $message->setCc($assignedUserEmails);
-                           // Send the email
-                           if ($message instanceof MessageInterface && $message->send()) {
-                               // Display a success message
-                               
-                           } else {
-                               // Handle email sending failure
-                               Yii::$app->session->setFlash('');
-                           }
-                       } catch (InvalidConfigException $e) {
-                           // Handle any configuration errors
-                         
-                       } catch (\Throwable $e) {
-                           // Handle any other exceptions
-
-                       }
+                        if (Yii::$app->user->can('admin')) {
+                      
                        $model->expired_at=$model->expired_at;
                        $model->publish_at=$model->publish_at;
                        $model->save();
 
                        // Save the assigned users
-                    if (is_array($model->assigned_to) && !empty($model->assigned_to)) {
-                        foreach ($model->assigned_to as $userId) {
-                            $assignment = new UserAssignment();
-                            $assignment->tender_id = $model->id;
-                            $assignment->user_id = $userId;
-                            $assignment->save();
-                        }
-                    }
+                    // if (is_array($model->assigned_to) && !empty($model->assigned_to)) {
+                    //     foreach ($model->assigned_to as $userId) {
+                    //         $assignment = new UserAssignment();
+                    //         $assignment->tender_id = $model->id;
+                    //         $assignment->user_id = $userId;
+                    //         $assignment->save();
+                    //     }
+                    // }
                    }
+                   
                    return $this->redirect(['tdetail/create', 'tenderId' => $model->id]);
+
+                    Yii::$app->session->setFlash('success', 'Tender sent successfull.');
                    }
                     
                

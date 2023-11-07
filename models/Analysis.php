@@ -63,7 +63,7 @@ class Analysis extends \yii\db\ActiveRecord
             [['quantity', 'cost', 'created_at', 'updated_at', 'created_by','project','status','unit','unitprofit'], 'integer'],
             [['item', 'description','source','serio','cotedAmount','setunit'], 'string', 'max' => 255],
             [['files'],'file'],
-            [['boq','status','unit'],'default','value'=>0],
+            [['boq','status'],'default','value'=>0],
             [['source'], 'default', 'value'=>'source'],
             [['setunit'], 'validateSetunit'],
         ];

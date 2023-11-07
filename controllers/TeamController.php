@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Project;
 use app\models\Task;
 use app\models\Team;
 use app\models\TeamAssignment;
@@ -88,7 +89,7 @@ class TeamController extends Controller
                         $assignment->save();
                     }
                 }
-                return $this->redirect(['team/detail']);
+                return $this->redirect(['team/detail','projectId'=>$projectId]);
             }
         } else {
             $model->loadDefaultValues();
@@ -160,9 +161,11 @@ class TeamController extends Controller
      */
     public function actionDelete($id)
     {
+        $team= $this->findModel($id);
+        $projectId=Project::findOne(['id'=>$team->project_id]);
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirect(['project/pm']);
     }
 
     /**

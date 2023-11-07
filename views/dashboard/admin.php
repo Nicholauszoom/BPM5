@@ -38,7 +38,100 @@ $budgetDataJson = Json::encode($budgetData);
 
 ?>
 
+<style>
+  div {
+    color: grey;
+  }
 
+  .card:hover {
+        transform: translateY(-5px);
+        transition: transform 0.3s ease;
+    }
+
+
+    .popup .overlay {
+        position: fixed;
+        top: 0;
+        left:0;
+        width:300vw;
+        height: 300vw;
+        background: rgba(0, 0, 0, 0.7);
+        z-index:1;
+        display:none;
+    }
+
+    .popup .content {
+        position: absolute;
+        top:50%;
+        left:50%;
+        transform:translate(-50%, -50%) scale(0);
+        background: #fff;
+        width: 1000px;
+        height: 500px;
+        z-index:2;
+        text-align: center;
+        padding:20px;
+        box-sizing: border-box;
+    }
+    
+
+    .popup .close-btn {
+        position:absolute;
+        right: 20px;
+        top:20px;
+        width: 30px;
+        height:30px;
+        background: #222;
+        color:#fff;
+        font-size: 25px;
+        font-weight: 600;
+        line-height: 30px;
+        text-align: center;
+        border-radius: 50%;
+
+    }
+
+    .popup.active .overlay{
+      display:block;
+    }
+
+    .popup.active .content{
+       transition: all 300ms ease-in-out;
+       transform:translate(-50%, -50%) scale(1);
+
+    }
+
+    .truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%; /* Adjust this width to match the container width */
+  }
+    
+    hr {
+        color: #222;
+        font-weight: bold;
+    }
+
+    .list-group {
+        position: absolute;
+        width: 940px;
+        height: 400px;
+        text-align: center;
+        overflow-y: auto;
+    }
+
+    .tender-label {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 9999px;
+    background-color: #e2f0d9;
+    color: #3c763d;
+    display: flex; 
+    justify-content: flex-start;
+    margin-top: 5px;
+  }
+</style>
 
    <!-- top tiles -->
 
@@ -46,52 +139,96 @@ $budgetDataJson = Json::encode($budgetData);
   <!-- PROJECT MANAGEMENT SUMMARY-->
   <div class="tile_count">
 
+
+ 
   <!-- /admin dash  -->
   <?php if (Yii::$app->user->can('admin')) : ?>
           
-        
-    <div class="col-md-2 col-sm-4 tile_stats_count">
-      <span class="count_top"><i class="fa fa-bullhorn"></i> Announced Tender</span>
-      <div class="count"><?= $tender ?></div>
-      <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i></i> </span>
-    </div>
+    <div class="row">
 
-    <div class="col-md-2 col-sm-4 tile_stats_count">
-      <span class="count_top"><i class="fa fa-check-square"></i>Awarded Tender</span>
-      <div class="count "><?= $tenderWin ?></div>
-      <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i></i></span>
-    </div>
+<!-- Earnings (Monthly) Card Example -->
+<div class="col-xl-3 col-md-6 mb-4">
+    <a  aria-controls="" onclick="togglePopup()">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-uppercase mb-1">
+                            Published Tender
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $tender ?></div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-calendar fa-2x text-gray-300" style="color:cornflowerblue;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </a>
+</div>
 
-    <div class="col-md-2 col-sm-4 tile_stats_count">
-    <?php
-        
-        $projectHolds = Project::find()
-            ->Where(['status' => 3])
-            ->count();
-            
-        ?>
-      <span class="count_top"><i class="fa fa-circle-o-notch"></i>Pending Tender..</span>
-      <div class="count "><?= $tenderPend?></div>
-      <span class="count_bottom"><i class="orange"><i class="fa fa-sort-desc"></i></i> </span>
-    </div>
+<div class="col-xl-3 col-md-6 mb-4">
+    <a  onclick="togglePopup2()">
+        <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-uppercase mb-1">
+                            Tender On Progress
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $tenderPend ?></div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fa fa-circle-o-notch fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </a>
+</div>
+<!-- Earnings (Monthly) Card Example -->
+<div class="col-xl-3 col-md-6 mb-4">
+<a  onclick="togglePopup3()">
+    <div class="card border-left-info shadow h-100 py-2">
+        <div class="card-body">
+            <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                    <div class="text-xs font-weight-bold  text-uppercase mb-1">Unsuccessful Tender
+                    </div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $tenderFail?></div>
 
-    <div class="col-md-2 col-sm-4 tile_stats_count">
-      <span class="count_top"><i class="fa fa-minus-circle"></i>Not-Awarded Tender</span>
-      <div class="count "><?= $tenderFail?></div>
-      <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i></i> </span>
+                </div>
+                <div class="col-auto">
+                    <i class="fa fa-minus-circle fa-2x text-gray-300 " style="color:crimson;"></i>
+                </div>
+            </div>
+        </div>
     </div>
+</a>
+</div>
 
-    <div class="col-md-2 col-sm-4 tile_stats_count">
-      <?php
-      $staff= User::find()
-      ->count();
-     
-      
-      ?>
-      <span class="count_top"><i class="fa fa-user"></i> Staff</span>
-      <div class="count "><?=$staff?></div>
-      <span class="count_bottom"><i class="red"><i class="fa fa-sort-desc"></i></i> </span>
+<!-- Pending Requests Card Example -->
+<div class="col-xl-3 col-md-6 mb-4">
+    <div class="card border-left-warning shadow h-100 py-2">
+        <div class="card-body">
+            <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                <?php
+               $staff= User::find()
+                 ->count();
+               ?>
+                    <div class="text-xs font-weight-bold  text-uppercase mb-1">
+                      Staff </div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800"> <?=$staff?></div>
+                </div>
+                <div class="col-auto">
+                    <i class="fas fa-user fa-2x text-gray-300" style="color:black;"></i>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
+</div>
 
      <!-- <div class="col-md-2 col-sm-4 tile_stats_count">
         <?php
@@ -126,62 +263,144 @@ $budgetDataJson = Json::encode($budgetData);
   <?php if (Yii::$app->user->can('admin')) : ?>
           
         
-    <div class="col-md-2 col-sm-4 tile_stats_count">
-      <span class="count_top"><i class="fa fa-folder"></i> Total Projects</span>
-      <div class="count"><?= $total ?></div>
-      <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i></i> </span>
-    </div>
+    <div class="row">
 
-    <div class="col-md-2 col-sm-4 tile_stats_count">
-      <span class="count_top"><i class="fa fa-check"></i> Complete Projects</span>
-      <div class="count "><?= $successCount ?></div>
-      <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i></i></span>
+<!-- Earnings (Monthly) Card Example -->
+<div class="col-xl-3 col-md-6 mb-4">
+<a  onclick="togglePopup4()">
+    <div class="card border-left-primary shadow h-100 py-2">
+        <div class="card-body">
+            <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                    <div class="text-xs font-weight-bold  text-uppercase mb-1">
+                    Total Projects</div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $total ?></div>
+                </div>
+                <div class="col-auto">
+                    <i class="fas fa-folder fa-2x text-gray-300" style="color: orange;"></i>
+                </div>
+            </div>
+        </div>
     </div>
+</a>
+</div>
 
-    <div class="col-md-2 col-sm-4 tile_stats_count">
-    <?php
+<!-- Earnings (Monthly) Card Example -->
+<div class="col-xl-3 col-md-6 mb-4">
+<a  onclick="togglePopup5()">
+    <div class="card border-left-success shadow h-100 py-2">
+        <div class="card-body">
+            <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                    <div class="text-xs font-weight-bold  text-uppercase mb-1">
+                    Complete Projects</div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $successCount ?></div>
+                </div>
+                <div class="col-auto">
+                    <i class="fas fa-clone fa-2x text-gray-300" style="color:cadetblue;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</a>
+</div>
+
+<!-- Earnings (Monthly) Card Example -->
+<div class="col-xl-3 col-md-6 mb-4">
+<a  onclick="togglePopup6()">
+    <div class="card border-left-info shadow h-100 py-2">
+        <div class="card-body">
+            <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                <?php
         
         $projectHolds = Project::find()
-            ->Where(['status' => 3])
+            ->Where(['status' => 2])
             ->count();
             
         ?>
-      <span class="count_top"><i class="fa fa-clone"></i> OnHold Projects</span>
-      <div class="count "><?= $projectHolds?></div>
-      <span class="count_bottom"><i class="red"><i class="fa fa-sort-desc"></i></i> </span>
+                    <div class="text-xs font-weight-bold  text-uppercase mb-1">OnProgress Projects
+                    </div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $projectHolds?></div>
+
+                </div>
+                <div class="col-auto">
+                    <i class="fas fa-check fa-2x text-gray-300" ></i>
+                </div>
+            </div>
+        </div>
     </div>
+</a>
+</div>
 
-    <div class="col-md-2 col-sm-4 tile_stats_count">
-      <span class="count_top"><i class="fa fa-close"></i> Fail Projects</span>
-      <div class="count "><?= $fail?></div>
-      <span class="count_bottom"><i class="red"><i class="fa fa-sort-desc"></i></i> </span>
+<!-- Pending Requests Card Example -->
+<div class="col-xl-3 col-md-6 mb-4">
+    <div class="card border-left-warning shadow h-100 py-2">
+        <div class="card-body">
+            <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                    <div class="text-xs font-weight-bold  text-uppercase mb-1">
+                    Fail Projects</div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $fail?></div>
+                </div>
+                <div class="col-auto">
+                    <i class="fas fa-close fa-2x text-gray-300" style="color:crimson;"></i>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 
-      <div class="col-md-2 col-sm-4 tile_stats_count">
-        <?php
-          $department = Department::find()
-          ->count();
-        ?>
-      <span class="count_top"><i class="fa fa-users"></i> Departments </span>
-      <div class="count "><?=$department?></div>
-      <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i></i> </span>
-    </div> 
+<div class="col-xl-3 col-md-6 mb-4">
+    <div class="card border-left-info shadow h-100 py-2">
+        <div class="card-body">
+            <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                <div class="text-xs font-weight-bold  text-uppercase mb-1">Total Projects Budget
+                    </div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800"> TSH <?=$totalBudget ?></div>
 
-    <div class="col-md-2 col-sm-6 tile_stats_count">
-  <span class="count_top"><i class="fa fa-money"></i>Total Projects Budget</span>
-  <div class="">
-    TSH <?=$totalBudget ?>
-  </div>
-  <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i></i></span>
+                </div>
+                <div class="col-auto">
+                    <i class="fa fa-institution fa-2x text-gray-300"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </div>
 <?php endif; ?>
-<!-- /admin dash end -->
 
 <!-- /Project Manager Dashboard -->
 <?php if (Yii::$app->user->can('author')) : ?>
 
-  <div class="col-md-2 col-sm-4 tile_stats_count">
-    <?php
+  <div class="row">
+
+<!-- Earnings (Monthly) Card Example -->
+<div class="col-xl-3 col-md-6 mb-4">
+    <div class="card border-left-primary shadow h-100 py-2">
+        <div class="card-body">
+            <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                    <div class="text-xs font-weight-bold  text-uppercase mb-1">
+                        Published Tender</div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $tender ?></div>
+                </div>
+                <div class="col-auto">
+                    <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Earnings (Monthly) Card Example -->
+<div class="col-xl-3 col-md-6 mb-4">
+    <div class="card border-left-success shadow h-100 py-2">
+        <div class="card-body">
+            <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                <?php
         $userId = Yii::$app->user->getId();
 
         $user_assignments = UserAssignment::find()
@@ -198,53 +417,103 @@ $budgetDataJson = Json::encode($budgetData);
            ->andWhere(['session'=>0])
            ->count();
         ?>
-        
-      <span class="count_top"><i class="fa fa-folder"></i> Assigned Tender</span>
-      <div class="count"><?= $tender ?></div>
-      <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i></i> </span>
+                    <div class="text-xs font-weight-bold text-uppercase mb-1">
+                    Assigned Tender</div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $tender ?></div>
+                </div>
+                <div class="col-auto">  .tender-label {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 9999px;
+    background-color: #e2f0d9;
+    color: #3c763d;
+  }
+                    <i class="fa fa-circle-o-notch fa-2x text-gray-300"></i>
+                </div>
+            </div>
+        </div>
     </div>
-      
-<div class="col-md-2 col-sm-4 tile_stats_count">
-      <span class="count_top"><i class="fa fa-clone"></i> Assigned Project</span>
-      <?php
+</div>
+
+<!-- Earnings (Monthly) Card Example -->
+<div class="col-xl-3 col-md-6 mb-4">
+    <div class="card border-left-info shadow h-100 py-2">
+        <div class="card-body">
+            <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                <?php
         $userId = Yii::$app->user->getId();
         $projectCount = Project::find()
             ->where(['user_id' => $userId])
             ->count();
         ?>
-        <div class="count"><?= $projectCount ?></div>
-      <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i></i> </span>
+                    <div class="text-xs font-weight-bold  text-uppercase mb-1">Assigned Project
+                    </div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $projectCount ?></div>
+
+                </div>
+                <div class="col-auto">
+                    <i class="fa fa-minus-circle fa-2x text-gray-300"></i>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 
-
-    <div class="col-md-2 col-sm-4 tile_stats_count">
-    <?php
+<!-- Pending Requests Card Example -->
+<div class="col-xl-3 col-md-6 mb-4">
+    <div class="card border-left-warning shadow h-100 py-2">
+        <div class="card-body">
+            <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                <?php
         $userId = Yii::$app->user->getId();
         $projectSuccess = Project::find()
             ->where(['user_id' => $userId])
             ->andWhere(['status' => 1])
             ->count();
         ?>
-      <span class="count_top"><i class="fa fa-check"></i> Complete Project</span>
-      <div class="count "><?=$projectSuccess?></div>
-      <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i></i></span>
+                    <div class="text-xs font-weight-bold  text-uppercase mb-1">
+                    Complete Project</div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800"> <?=$projectSuccess?></div>
+                </div>
+                <div class="col-auto">
+                    <i class="fas fa-user fa-2x text-gray-300"></i>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <div class="col-md-2 col-sm-4 tile_stats_count">
-    <?php
+</div>
+<div class="col-xl-3 col-md-6 mb-4">
+    <div class="card border-left-warning shadow h-100 py-2">
+        <div class="card-body">
+            <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                <?php
         $userId = Yii::$app->user->getId();
         $projectHold = Project::find()
             ->where(['user_id' => $userId])
             ->andWhere(['status' => 3])
             ->count();
         ?>
-      <span class="count_top"><i class="fa fa-check"></i> Projects OnHold</span>
-      <div class="count "><?=$projectHold?></div>
-      <span class="count_bottom"><i class="warning" style="color:yellow"> <i class="fa fa-sort-asc"></i></i></span>
+                    <div class="text-xs font-weight-bold  text-uppercase mb-1">
+                    Projects OnHold</div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800"> <?=$projectHold?></div>
+                </div>
+                <div class="col-auto">
+                    <i class="fas fa-check fa-2x text-gray-300"></i>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 
-    <div class="col-md-2 col-sm-4 tile_stats_count">
-    <?php
+<div class="col-xl-3 col-md-6 mb-4">
+    <div class="card border-left-warning shadow h-100 py-2">
+        <div class="card-body">
+            <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                <?php
 $userId = Yii::$app->user->getId();
 
 // Count failed projects for the logged-in user
@@ -253,14 +522,23 @@ $projectFail = Project::find()
     ->andWhere(['status' => 2])
     ->count();
 ?>
-      <span class="count_top"><i class="fa fa-close"></i> Fail Project</span>
-      <div class="count "><?=$projectFail?></div>
-      <span class="count_bottom"><i class="red"><i class="fa fa-sort-desc"></i></i> </span>
+                    <div class="text-xs font-weight-bold  text-uppercase mb-1">
+                    Fail Project</div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800"> <?=$projectFail?></div>
+                </div>
+                <div class="col-auto">
+                    <i class="fas fa-close fa-2x text-gray-300"></i>
+                </div>
+            </div>
+        </div>
     </div>
-
-
-    <div class="col-md-2 col-sm-6 tile_stats_count">
-
+</div>
+<div class="col-xl-3 col-md-6 mb-4">
+    <div class="card border-left-warning shadow h-100 py-2">
+        <div class="card-body">
+            <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+      
     <?php
 $userId = Yii::$app->user->getId();
 
@@ -276,11 +554,17 @@ foreach ($projects as $project) {
 }
 $formattedBudget = number_format($projectBudget, 2)
 ?>
-  <span class="count_top"><i class="fa fa-money"></i>Projects Budget</span>
-  <div class="">
-  <?= $formattedBudget ?>
-  </div>
-  <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i></i></span>
+                    <div class="text-xs font-weight-bold  text-uppercase mb-1">
+                    Projects Budget</div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800"> <?= $formattedBudget ?></div>
+                </div>
+                <div class="col-auto">
+                    <i class="fas fa-institution fa-2x text-gray-300"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </div>
 <?php endif; ?>
 <!-- /pm end -->
@@ -504,15 +788,290 @@ $formattedBudget = number_format($projectBudget, 2)
         </div>
 
 
- 
-       
+ <!-- POPUP PAGES -->
+<?php 
+    $all_tender_popup=Tender::find()->all();
+?>
+ <div class="popup" id="popup-1">
+<div class="overlay">
+</div>
 
+<div class="content">
+    <div class="close-btn " onclick="togglePopup()">&times;</div>
+    
+        <div>
+      
+   <ul class="list-group mt-5">
+   <?php foreach ($all_tender_popup as $all_tender_popup) : ?>
+  <li class="list-group-item">
+<h6 class="truncate" style="color:#222; text-align: left;">
+ <?=$all_tender_popup->title?>
+</h6>
+<h6 style="color:cornflowerblue; text-align:left;">
+<?=$all_tender_popup->PE ?>
+</h6>
+<p style="color:grey; text-align:left;">Invitation Date:<span style="color:#222;"><?= Yii::$app->formatter->asDatetime($all_tender_popup->publish_at) ?></span>  Submission Deadline:<span style="color:mediumseagreen;"> <?= Yii::$app->formatter->asDatetime($all_tender_popup->expired_at )?> </span>  Number: <?=$all_tender_popup->TenderNo ?></p>
+  
+  <div class="tender-label inline-block px-2 py rounded-full bg-green-200 text-green-800"> <?=getStatusLabelTender($all_tender_popup->status)?> </div>
+<button class="py-1 whitespace-nowrap px-2 border border-primary rounded text-primary mr-10" style="display: flex; justify-content: flex-end; margin-top: 5px;" >View Details </button>
+<hr/>
+</li>
+  
+  <?php endforeach ;?>
+  
+</ul>
+
+
+</div>
+
+</div>
+
+ </div>     
+
+
+
+
+ <!-- POPUP PAGES TENDER ON PROGRESS -->
+<?php 
+    $progress_tender_popup=Tender::find()->where(["status"=>5])->all();
+?>
+ <div class="popup" id="popup-2">
+<div class="overlay">
+</div>
+
+<div class="content">
+    <div class="close-btn " onclick="togglePopup2()">&times;</div>
+    
+        <div>
+      
+   <ul class="list-group mt-5">
+   <?php foreach ($progress_tender_popup as $progress_tender_popup) : ?>
+  <li class="list-group-item">
+<h6 class="truncate" style="color:#222; text-align: left;">
+ <?=$progress_tender_popup->title?>
+</h6>
+<h6 style="color:cornflowerblue; text-align:left;">
+<?=$progress_tender_popup->PE ?>
+</h6>
+<p style="color:grey; text-align:left;">Invitation Date:<span style="color:#222;"><?= Yii::$app->formatter->asDatetime($progress_tender_popup->publish_at) ?></span>  Submission Deadline:<span style="color:mediumseagreen;"> <?= Yii::$app->formatter->asDatetime($progress_tender_popup->expired_at )?> </span>  Number: <?=$progress_tender_popup->TenderNo ?></p>
+  
+  <div class="tender-label inline-block px-2 py rounded-full bg-green-200 text-green-800"> <?=getStatusLabelTender($progress_tender_popup->status)?> </div>
+<button class="py-1 whitespace-nowrap px-2 border border-primary rounded text-primary mr-10" style="display: flex; justify-content: flex-end; margin-top: 5px;" >View Details </button>
+<hr/>
+</li>
+  
+  <?php endforeach ;?>
+  
+</ul>
+
+
+</div>
+
+</div>
+
+ </div>     
 
      
            
 
 
-             
+ <!-- POPUP PAGES TENDER UNSUCESSFULL -->
+ <?php 
+    $unsuccess_tender_popup=Tender::find()->where(["status"=>2])->all();
+?>
+ <div class="popup" id="popup-3">
+<div class="overlay">
+</div>
+
+<div class="content">
+    <div class="close-btn " onclick="togglePopup3()">&times;</div>
+    
+        <div>
+      
+   <ul class="list-group mt-5">
+   <?php foreach ($unsuccess_tender_popup as $unsuccess_tender_popup) : ?>
+  <li class="list-group-item">
+<h6 class="truncate" style="color:#222; text-align: left;">
+ <?=$unsuccess_tender_popup->title?>
+</h6>
+<h6 style="color:cornflowerblue; text-align:left;">
+<?=$unsuccess_tender_popup->PE ?>
+</h6>
+<p style="color:grey; text-align:left;">Invitation Date:<span style="color:#222;"><?= Yii::$app->formatter->asDatetime($unsuccess_tender_popup->publish_at) ?></span>  Submission Deadline:<span style="color:mediumseagreen;"> <?= Yii::$app->formatter->asDatetime($unsuccess_tender_popup->expired_at )?> </span>  Number: <?=$unsuccess_tender_popup->TenderNo ?></p>
+  
+  <div class="tender-label inline-block px-2 py rounded-full bg-green-200 text-green-800"> <?=getStatusLabelTender($unsuccess_tender_popup->status)?> </div>
+<button class="py-1 whitespace-nowrap px-2 border border-primary rounded text-primary mr-10" style="display: flex; justify-content: flex-end; margin-top: 5px;" >View Details </button>
+<hr/>
+</li>
+  
+  <?php endforeach ;?>
+  
+</ul>
+
+
+</div>
+
+</div>
+
+ </div>     
+
+
+
+ 
+ <!-- POPUP PAGES ALL PROJECTS -->
+ <?php 
+    $all_project_popup=Project::find()->all();
+?>
+ <div class="popup" id="popup-4">
+<div class="overlay">
+</div>
+
+<div class="content">
+    <div class="close-btn " onclick="togglePopup4()">&times;</div>
+    
+        <div>
+      
+   <ul class="list-group mt-5">
+   <?php foreach ($all_project_popup as $all_project_popup) : ?>
+  <li class="list-group-item">
+<h6 class="truncate" style="color:#222; text-align: left;">
+ 
+<?php
+$project = Project::findOne($all_project_popup->id);
+$project_tender = $project ? $project->tender_id : '';
+$project_tender_id=Tender::findOne($project_tender);
+$projectName = $project_tender_id ? $project_tender_id->title : '';
+
+
+$p_manager_pop=User::findOne(['id'=>$all_project_popup->user_id]);
+?>
+<?=$projectName?>
+</h6>
+<h6 style="color:cornflowerblue; text-align:left;">
+Budget: <?=$all_project_popup->budget ?>
+</h6>
+<p style="color:grey; text-align:left;">Start Date:<span style="color:#222;"><?= Yii::$app->formatter->asDatetime($all_project_popup->start_at) ?></span>  End/Deadline:<span style="color:mediumseagreen;"> <?= Yii::$app->formatter->asDatetime($all_project_popup->end_at )?> </span>  Project Manager: <?=$p_manager_pop->username ?></p>
+  
+  <div class="tender-label inline-block px-2 py rounded-full bg-green-200 text-green-800"> <?=getStatusLabelProject($all_project_popup->status)?> </div>
+<button class="py-1 whitespace-nowrap px-2 border border-primary rounded text-primary mr-10" style="display: flex; justify-content: flex-end; margin-top: 5px;" >View Details </button>
+<hr/>
+</li>
+  
+  <?php endforeach ;?>
+  
+</ul>
+
+
+</div>
+
+</div>
+
+ </div>     
+
+
+
+ <!-- POPUP PAGES SUCCESS PROJECTS -->
+ <?php 
+    $success_project_popup=Project::find()->where(["status"=>1])->all();
+?>
+ <div class="popup" id="popup-5">
+<div class="overlay">
+</div>
+
+<div class="content">
+    <div class="close-btn " onclick="togglePopup5()">&times;</div>
+    
+        <div>
+      
+   <ul class="list-group mt-5">
+   <?php foreach ($success_project_popup as $success_project_popup) : ?>
+  <li class="list-group-item">
+<h6 class="truncate" style="color:#222; text-align: left;">
+ 
+<?php
+$project = Project::findOne($success_project_popup->id);
+$project_tender = $project ? $project->tender_id : '';
+$project_tender_id=Tender::findOne($project_tender);
+$projectName = $project_tender_id ? $project_tender_id->title : '';
+
+
+$p_manager_pop=User::findOne(['id'=>$success_project_popup->user_id]);
+?>
+<?=$projectName?>
+</h6>
+<h6 style="color:cornflowerblue; text-align:left;">
+Budget: <?=$success_project_popup->budget ?>
+</h6>
+<p style="color:grey; text-align:left;">Start Date:<span style="color:#222;"><?= Yii::$app->formatter->asDatetime($success_project_popup->start_at) ?></span>  End/Deadline:<span style="color:mediumseagreen;"> <?= Yii::$app->formatter->asDatetime($success_project_popup->end_at )?> </span>  Project Manager: <?=$p_manager_pop->username ?></p>
+  
+  <div class="tender-label inline-block px-2 py rounded-full bg-green-200 text-green-800"> <?=getStatusLabelProject($success_project_popup->status)?> </div>
+<button class="py-1 whitespace-nowrap px-2 border border-primary rounded text-primary mr-10" style="display: flex; justify-content: flex-end; margin-top: 5px;" >View Details </button>
+<hr/>
+</li>
+  
+  <?php endforeach ;?>
+  
+</ul>
+
+
+</div>
+
+</div>
+
+ </div>     
+
+
+
+ <!-- POPUP PAGES PROGRESS PROJECTS -->
+ <?php 
+    $hold_project_popup=Project::find()->where(["status"=>2])->all();
+?>
+ <div class="popup" id="popup-6">
+<div class="overlay">
+</div>
+
+<div class="content">
+    <div class="close-btn " onclick="togglePopup6()">&times;</div>
+    
+        <div>
+      
+   <ul class="list-group mt-5">
+   <?php foreach ($hold_project_popup as $hold_project_popup) : ?>
+  <li class="list-group-item">
+<h6 class="truncate" style="color:#222; text-align: left;">
+ 
+<?php
+$project = Project::findOne($hold_project_popup->id);
+$project_tender = $project ? $project->tender_id : '';
+$project_tender_id=Tender::findOne($project_tender);
+$projectName = $project_tender_id ? $project_tender_id->title : '';
+
+
+$p_manager_pop=User::findOne(['id'=>$hold_project_popup->user_id]);
+?>
+<?=$projectName?>
+</h6>
+<h6 style="color:cornflowerblue; text-align:left;">
+Budget: <?=$hold_project_popup->budget ?>
+</h6>
+<p style="color:grey; text-align:left;">Start Date:<span style="color:#222;"><?= Yii::$app->formatter->asDatetime($hold_project_popup->start_at) ?></span>  End/Deadline:<span style="color:mediumseagreen;"> <?= Yii::$app->formatter->asDatetime($hold_project_popup->end_at )?> </span>  Project Manager: <?=$p_manager_pop->username ?></p>
+  
+  <div class="tender-label inline-block px-2 py rounded-full bg-green-200 text-green-800"> <?=getStatusLabelProject($hold_project_popup->status)?> </div>
+<button class="py-1 whitespace-nowrap px-2 border border-primary rounded text-primary mr-10" style="display: flex; justify-content: flex-end; margin-top: 5px;" >View Details </button>
+<hr/>
+</li>
+  
+  <?php endforeach ;?>
+  
+</ul>
+
+
+</div>
+
+</div>
+
+ </div>     
+
                 
 
         <?php
@@ -526,4 +1085,57 @@ function getStatusLabel($status)
 
     return isset($statusLabels[$status]) ? $statusLabels[$status] : '';
 }
+
+function getStatusLabelProject($status)
+{
+    $statusLabels = [
+      1 => 'Completed',
+      2 => 'Onprogress',
+      3 => 'On Hold',
+    ];
+
+    return isset($statusLabels[$status]) ? $statusLabels[$status] : '';
+}
+
+function getStatusLabelTender($status)
+{
+    $statusLabels = [
+        1 => 'Awarded',
+        2 => 'Not-awarded',
+        3 => 'Submitted',
+        4 => 'Not-submtted',
+        5 => 'On-progress',
+
+    ];
+
+    return isset($statusLabels[$status]) ? $statusLabels[$status] : '';
+}
 ?>
+
+<script>
+
+    function togglePopup(){
+        document.getElementById("popup-1").classList.toggle("active");
+    }
+
+    function togglePopup2(){
+        document.getElementById("popup-2").classList.toggle("active");
+    }
+
+    function togglePopup3(){
+        document.getElementById("popup-3").classList.toggle("active");
+    }
+
+    function togglePopup4(){
+        document.getElementById("popup-4").classList.toggle("active");
+    }
+
+    function togglePopup5(){
+        document.getElementById("popup-5").classList.toggle("active");
+    }
+
+
+    function togglePopup6(){
+        document.getElementById("popup-6").classList.toggle("active");
+    }
+</script>

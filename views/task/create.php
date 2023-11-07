@@ -4,6 +4,7 @@ use app\models\Project;
 use app\models\Tender;
 use yii\bootstrap5\Modal;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
 /** @var yii\web\View $this */
@@ -22,9 +23,13 @@ $projectName = $project_tender_id ? $project_tender_id->title : '';
 $this->title = 'Create Work Plann for :' . $projectName . ' Project';
 
 ?>
-<a href="<?= Yii::$app->request->referrer ?>" class="back-arrow">
-    <span class="arrow">&#8592;</span> Back
+  <a href="<?= Url::to(['analysis/create', 'projectId' => $projectId]) ?>" class="back-arrow" style="color:blue;">
+    Next<span class="fas fa-arrow-right"></span> 
 </a>
+<a href="<?= Yii::$app->request->referrer ?>" class="back-arrow" style="color:blue;">
+    <span class="fas fa-arrow-left"></span> Back
+</a>
+
 <div id="main-content ">
    
     <div id="page-container">

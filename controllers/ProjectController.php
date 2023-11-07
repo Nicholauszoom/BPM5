@@ -18,6 +18,7 @@ use app\models\User;
 use app\models\Users;
 use Codeception\Lib\Notification;
 use Com\Tecnick\Pdf\Tcpdf as PdfTcpdf;
+use Mpdf\Mpdf;
 use Yii;
 use yii\base\Model;
 use yii\web\Controller;
@@ -609,6 +610,47 @@ public function actionDeleteMultiple()
             ->setSubject($subject)
             ->setTextBody($body)
             ->send();
+    }
+
+
+
+    public function actionForm()
+    {
+        $model = new Project();
+
+        if ($model->load(Yii::$app->request->post())) {
+
+            return $this->redirect(['reports', 'date_from' => $model->date_from, 'date_to' => $model->date_to]);
+        }
+
+        return $this->render('report_form', [
+            'model' => $model,
+        ]);
+    }
+
+    public function actionReports()
+    {
+        $dateFrom = Yii::$app->request->get('date_from');
+        $dateTo = Yii::$app->request->get('date_to');
+    
+        $timestampFrom = strtotime($dateFrom);
+        $timestampTo = strtotime($dateTo);
+    
+        $projects = Project::find()
+            ->where(['between', 'created_at', $timestampFrom, $timestampTo])
+            ->all();
+    
+        $content = $this->renderPartial('reports', [
+            'projects' => $projects,
+            'dateFrom' => $dateFrom,
+            'dateTo' => $dateTo,
+        ]);
+    
+        $pdf = new Mpdf;
+    
+        $pdf->WriteHTML($content);
+        $pdf->Output();
+        exit;
     }
 
 

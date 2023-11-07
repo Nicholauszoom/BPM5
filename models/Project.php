@@ -29,7 +29,11 @@ use yii\filters\AccessControl;
  */
 class Project extends \yii\db\ActiveRecord
 {
+   
 
+    public $date_from;
+    
+    public $date_to;
   
     
     /**
@@ -72,6 +76,9 @@ class Project extends \yii\db\ActiveRecord
 
             ['start_at', 'date', 'format' => 'php:Y-m-d'],
             ['end_at', 'date', 'format' => 'php:Y-m-d'],
+
+            ['date_from', 'date', 'format' => 'php:Y-m-d'],
+            ['date_to', 'date', 'format' => 'php:Y-m-d'],
             [['isViewed'], 'boolean'],
 
             [['isViewed'], 'safe'],
@@ -102,6 +109,8 @@ class Project extends \yii\db\ActiveRecord
             'updated_at' => 'Updated At',
             'created_by' => 'Created By',
             'document' => 'Document',
+            'date_from'=>'Date From',
+            'date_to'=>'Date To',
         ];
     }
 

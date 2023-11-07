@@ -1,5 +1,6 @@
 <?php
 use app\models\Office;
+use app\models\Tattachmentss;
 use app\models\Tdetails;
 use app\models\Tender;
 use app\models\User;
@@ -90,6 +91,29 @@ $this->context->layout = 'admin';
                         </tbody>
                     </table>
 
+                    <h3 style="text-align: center; color:grey; font-family:Georgia, 'Times New Roman', Times, serif"> tender document's</h3>
+
+                    <?php
+                   $attachments = Tattachmentss::findOne(['tender_id' => $tender->id]);
+
+                   if ($attachments !== null) {
+                 ?>
+    <ol>
+        <li><?= $attachments->evaluation ?>
+    
+    </li>
+        <li><?= $attachments->negotiation ?></li>
+        <li><?= $attachments->award ?></li>
+        <li><?= $attachments->intention ?></li>
+        <li><?= $attachments->arithmetic ?></li>
+        <li><?= $attachments->audit ?></li>
+        <li><?= $attachments->cancellation ?></li>
+    </ol>
+       <?php
+          } else {
+           echo "No attachments found for the tender.";
+             }
+?>
                     <hr>
                 </li>
             <?php endforeach; ?>

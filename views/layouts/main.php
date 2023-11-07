@@ -55,32 +55,6 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
           <li class="active">
             <a href="/" class="animsition-link">Home</a>
           </li>
-        
-          <?php echo Nav::widget([
-    'options' => ['class' => 'navbar-nav'],
-    'items' => [
-        Yii::$app->user->isGuest
-            ? (
-                '<li class="nav-item">' .
-                Html::a('Login', ['/site/login'], ['class' => 'nav-link animsition-link']) .
-                '</li>'
-            )
-            : (
-                '<li class="nav-item">' .
-                Html::beginForm(['/site/logout'], 'post') .
-                Html::submitButton(
-                    'Logout (' . Yii::$app->user->identity->username . ')',
-                    ['class' => 'nav-link btn btn-link logout']
-                ) .
-                Html::endForm() .
-                '</li>'
-            ),
-        '<li class="nav-item">' .
-        Html::a('Sign in', ['/site/login'], ['class' => 'nav-link animsition-link']) .
-        '</li>',
-    ],
-]);
- ?>
     <li><a class="animsition-link" href="/site/login"> Sign in</a></li>
           
           <li>

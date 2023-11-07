@@ -34,9 +34,14 @@ $this->context->layout = 'admin';
        <!-- ============================================================== -->
        <div class="row"></div>
 <div class="tender-index">
-<a href="<?= Yii::$app->request->referrer ?>" class="back-arrow">
-    <span class="arrow">&#8592;</span> Back
+    
+    <a href="<?= Url::to(['task/create', 'projectId' => $projectId]) ?>" class="back-arrow" style="color:blue;">
+    Next<span class="fas fa-arrow-right"></span> 
 </a>
+<a href="<?= Yii::$app->request->referrer ?>" class="back-arrow" style="color:blue;">
+    <span class="fas fa-arrow-left"></span> Back
+</a>
+
 
     <h1><?= Html::encode($this->title) ?></h1>
     <p>

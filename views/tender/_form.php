@@ -28,50 +28,32 @@ $department=Department::find()->all();
     <?php if (Yii::$app->user->can('admin')) : ?>
         <div class="form-row">
     <div class="col">
-        <?= $form->field($model, 'title', ['template' => "{label}\n<div class='input-group'>{input}\n<span class='input-group-addon'><i class='fa fa-pencil'></i></span></div>\n{error}"])->textInput(['maxlength' => true, 'placeholder'=>''])->label('Title*') ?>
+        <?= $form->field($model, 'title', ['template' => "{label}\n<div class='input-group'>{input}\n<span class='input-group-addon'><i class='fa fa-pencil'></i></span></div>\n{error}"])->label('Title * <small class="text-muted">eg.Upgrading of Africana-Kinzudi(0.5Km) road</small>')->textInput(['maxlength' => true, 'placeholder'=>''])?>
     </div>
     <div class="col">
-    <?= $form->field($model, 'PE', ['template' => "{label}\n<div class='input-group'>{input}\n<span class='input-group-addon'><i class='fa fa-home'></i></span></div>\n{error}"])->textInput(['maxlength' => true, 'placeholder' => ''])->label('Procurement Entity*') ?>
+    <?= $form->field($model, 'PE', ['template' => "{label}\n<div class='input-group'>{input}\n<span class='input-group-addon'><i class='fa fa-home'></i></span></div>\n{error}"])->label('Procurement Entity * <small class="text-muted">eg.TARURA - DAR ES SALAAM REGIONAL</small>')->textInput(['maxlength' => true, 'placeholder' => '']) ?>
 </div>
     <div class="col">
-        <?= $form->field($model, 'TenderNo', ['template' => "{label}\n<div class='input-group'>{input}\n<span class='input-group-addon'><i class='fas fa-barcode'></i></span></div>\n{error}"])->textInput(['maxlength' => true,'placeholder'=>''])->label('Tender Number*') ?>
+        <?= $form->field($model, 'TenderNo', ['template' => "{label}\n<div class='input-group'>{input}\n<span class='input-group-addon'><i class='fas fa-barcode'></i></span></div>\n{error}"])->label('Tender Number * <small class="text-muted">eg.S10/002/2023/2024/W/69</small>')->textInput(['maxlength' => true,'placeholder'=>''])?>
     </div>
 </div>
 
-
-    <div class="form-row">
-    <div class="col">
-    
-<?= $form->field($model, 'assigned_to')->checkboxList(
-    ArrayHelper::map($users, 'id', 'username'),
-    ['prompt' => 'Assigned to', 'id' => 'assigned-to']
-)?>
-
-
-  </div>
-    <div class="col mt-3">
-<?= $form->field($model, 'document')->fileInput()?>
-    </div>
-</div>
-    
 <div class="form-row">
-    <div class="col">
- <?php echo $form->field($model, 'supervisor', ['template' => "{label}\n<div class='input-group'>{input}\n<span class='input-group-addon'><i class='fa fa-user'></i></span></div>\n{error}"])->dropDownList(
-    ArrayHelper::map($users, 'id', 'username'),
-    ['prompt' => 'Supervisor',
-    
-    ]
-); ?>
+    <div class="col mt-3">
+   
+    <?= $form->field($model, 'document')->label('Attachment * <small class="text-muted"></small>')->fileInput()?>
     </div>
+    <div class="col">
+ <?= $form->field($model, 'description')->label('Description * <small class="text-muted">eg.information on tender</small>')->textarea(['placeholder'=>'add description..'])?>
+</div>
     <div class="col">
     
     <?php endif; ?>
  
 
-<?php if (Yii::$app->user->can('admin')) : ?>
+<?php if (Yii::$app->user->can('admin')) : ?>   
     
-    
-    <?= $form->field($model, 'status', ['template' => "{label}\n<div class='input-group'>{input}\n<span class='input-group-addon'><i class='fa fa-info'></i></span></div>\n{error}"])->dropDownList(
+    <?= $form->field($model, 'status', ['template' => "{label}\n<div class='input-group'>{input}\n<span class='input-group-addon'><i class='fa fa-info'></i></span></div>\n{error}"])->label('Status * <small class="text-muted">eg.awarded</small>')->dropDownList(
             [
                 1 => 'awarded',
                 2 => 'not-awarded',
@@ -82,14 +64,17 @@ $department=Department::find()->all();
             ['prompt' => 'Select tender Status'] // Disable the field if the expiration date is not greater than the current date
 
         ); ?>
-<?php endif; ?>
+
 </div>
+
+<?php endif; ?>
 </div>
 
 <?php if (Yii::$app->user->can('admin')) : ?>
-<?= $form->field($model, 'description')->textarea(['placeholder'=>'add description..'])?>
+<div class="form-row">
 
-<?= $form->field($model, 'publish_at')->widget(DatePicker::class, [
+<div class="col">
+<?= $form->field($model, 'publish_at')->label('Date of Publication/Invitation * <small class="text-muted">eg.16 Nov 2023 2:00 PM</small>')->widget(DatePicker::class, [
     'language' => 'ru',
     'dateFormat' => 'MM/dd/yyyy',
     'options' => [
@@ -102,7 +87,11 @@ $department=Department::find()->all();
 <div id="publish-date-warning" style="display: none; color: red;"> <i class="fas fa-warning" style="color:orange ;"></i> Date must be less or equal to the current date.</div>
 
 
-<?= $form->field($model, 'expired_at')->widget(DatePicker::class, [
+</div>
+
+<div class="col">
+
+<?= $form->field($model, 'expired_at')->label('Bid submission deadline date * <small class="text-muted">eg.16 Nov 2023 2:00 PM</small>')->widget(DatePicker::class, [
     'language' => 'ru',
     'dateFormat' => 'MM/dd/yyyy',
     'options' => [
@@ -113,6 +102,10 @@ $department=Department::find()->all();
     'value' => Yii::$app->formatter->asDate($model->expired_at, 'MM/dd/yyyy'), // Set the value of the date picker
 ]) ?>
 <div id="submit-date-warning" style="display: none; color: red;"><i class="fas fa-warning" style="color:orange ;"></i> Date must be greater to publish date</div>
+
+</div>
+</div>
+  
 
 <?php endif; ?>
     <?php if (Yii::$app->user->can('author')) : ?>

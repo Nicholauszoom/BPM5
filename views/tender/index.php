@@ -17,7 +17,14 @@ $this->title = 'Tenders';
 $this->params['breadcrumbs'][] = $this->title;
 $this->context->layout = 'admin';
 
+
 ?>
+<style>
+    .icon-button {
+    display: inline-block;
+    margin-right: 10px;
+}
+</style>
 <div id="main-content ">
    
    <div id="page-container">
@@ -112,18 +119,18 @@ $this->context->layout = 'admin';
                     return $model->session ? '' : Html::tag('span', 'New', ['class' => 'badge badge-success']);
                 },
             ],
-            [
-                'attribute' => 'id', // Replace with the actual attribute name for the tender ID
-                'format' => 'raw',
-                'label' => '',
-                'value' => function ($model) {
-                    $project = Project::findOne(['tender_id' => $model->id]);
-                    if ($project !== null) {
-                        return '<span class="badge badge-warning glyphicon glyphicon-ok">.</span>';
-                    }
-                    return '';
-                },
-            ],
+            // [
+            //     'attribute' => 'id', // Replace with the actual attribute name for the tender ID
+            //     'format' => 'raw',
+            //     'label' => '',
+            //     'value' => function ($model) {
+            //         $project = Project::findOne(['tender_id' => $model->id]);
+            //         if ($project !== null) {
+            //             return '<span class="badge badge-primary glyphicon glyphicon-ok">.</span>';
+            //         }
+            //         return '';
+            //     },
+            // ],
             // 'status',
             //'created_at',
             //'updated_at',
@@ -140,23 +147,32 @@ $this->context->layout = 'admin';
                 'class' => 'yii\grid\ActionColumn',
                 'template' => '{project} {attachment}',
                 'buttons' => [
-                    
                     'project' => function ($url, $model, $key) {
-                        return Html::a('<span class="glyphicon glyphicon-plus"></span>', ['project/create', 'tenderId' => $model->id], [
-                            // 'class' => 'btn btn-success',
+                        $userId = Yii::$app->user->id;
+                
+                        // Check if the tender meets the criteria
+                        $isEligibleTender = $model->status == 1 && Project::findOne(['tender_id' => $model->id]) === null;
+                
+                        $badgeHtml = '';
+                        if ($isEligibleTender) {
+                            $badgeHtml = '<span class="badge animated-badge"><img src="https://img.icons8.com/?size=48&id=2EuI26KqYJ6b&format=png" style="width:25px;"></span>';
+                        }
+                
+                        return Html::a($badgeHtml, ['project/create', 'tenderId' => $model->id], [
                             'title' => 'register project',
                             'aria-label' => 'register project',
+                            'class' => 'icon-button', // Add a custom CSS class for the icon button
                         ]);
                     },
-
+                
                     'attachment' => function ($url, $model, $key) {
-                        return Html::a('<span class="fa fa-paperclip"></span>', ['tattachmentss/create', 'tenderId' => $model->id], [
-                            // 'class' => 'btn btn-success',
+                        return Html::a('<span class="fa fa-paperclip"></span>', ['tattachments/create', 'tenderId' => $model->id], [
                             'title' => 'tender attachment',
                             'aria-label' => 'tender attachment',
+                            'class' => 'icon-button', // Add a custom CSS class for the icon button
                         ]);
                     },
-    
+                
     
                     // 'update' => function ($url, $model, $key) {
                     //     return Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['update', 'id' => $model->id], [

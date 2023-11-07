@@ -26,7 +26,6 @@ $this->context->layout = 'admin';
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?= GridView::widget([
@@ -36,7 +35,7 @@ $this->context->layout = 'admin';
             ['class' => 'yii\grid\SerialColumn'],
 
             // 'id',
-            
+
             'item',
             'description',
             'quantity',
@@ -53,6 +52,7 @@ $this->context->layout = 'admin';
             //'updated_at',
             //'created_by',
             [
+
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, Analysis $model, $key, $index, $column) {
                     return Url::toRoute([$action, 'id' => $model->id]);

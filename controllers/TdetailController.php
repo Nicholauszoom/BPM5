@@ -84,11 +84,11 @@ class TdetailController extends Controller
                 if($model->save()){
                         
                     $tender=Tender::findOne($tenderId);
-                    $tender_supervisor=User::findOne($tender->supervisor);
+                    // $tender_supervisor=User::findOne($tender->supervisor);
              
                   
 
-                    $tender_assigned=User::findOne($tender->assigned_to);
+                    // $tender_assigned=User::findOne($tender->assigned_to);
                    
 
                     
@@ -122,122 +122,7 @@ function getSiteVisitLabel($status)
 
                      
 
-                    if ($tender_supervisor && !empty($tender_supervisor->email)) {
-                        /** @var MailerInterface $mailer */
-                        $mailer = Yii::$app->mailer;
-                        $message = $mailer->compose()
-                            ->setFrom('nicholaussomi5@gmail.com')
-                            ->setTo($tender_supervisor->email)
-                            // ->setCc($tender_assigned->email) // Add CC recipient(s) here
-                            ->setSubject('tera tech company is confortably assign you a tender to work on')
-                            ->setHtmlBody('
-                                <html>
-                                <head>
-                                    <style>
-                                        /* CSS styles for the email body */
-                                        body {
-                                            font-family: Arial, sans-serif;
-                                            background-color: #f4f4f4;
-                                        }
-
-                                        .container {
-                                            max-width: 600px;
-                                            margin: 0 auto;
-                                            padding: 20px;
-                                            background-color: #ffffff;
-                                            border: 1px solid #dddddd;
-                                            border-radius: 4px;
-                                            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-                                        }
-
-                                        h1 {
-                                            color: blue;
-                                            text-align: center;
-                                        }
-
-                                        p {
-                                            color: #666666;
-                                        }
-
-                                        .logo {
-                                            text-align: center;
-                                            margin-bottom: 20px;
-                                        }
-
-                                        .logo img {
-                                            max-width: 200px;
-                                        }
-
-                                        .assigned-by {
-                                            font-weight: bold;
-                                        }
-
-                                        .button {
-                                            display: inline-block;
-                                            padding: 10px 20px;
-                                            background-color: #3366cc;
-                                            color: white;
-                                            text-decoration: none;
-                                            border-radius: 4px;
-                                            margin-top: 20px;
-                                        }
-
-                                        .button:hover {
-                                            background-color: #235daa;
-                                        }
-                                    </style>
-                                </head>
-                                <body>
-                                    <div class="container">
-                                        <div class="logo">
-                                            <img src="http://teratech.co.tz/local/images/uploads/logo/163277576061522e507c527.webp" alt="teralogo">
-                                        </div>
-                                        <p>Dear ' . Html::encode($tender_supervisor->username) . ',</p>
-                                        <p>Your project has been assigned to you. Please find the details below:</p>
-                                        <ul>
-                                            <li>Tender Title: ' . Html::encode($tender->title) . '</li>
-                                            <li> Message: ' . Html::encode($tender->description) . '</li>
-                                            <li> Site Visit: ' . Html::encode(getSiteVisitLabel($model->site_visit)) . '</li>
-                                            <li>Site Visit Date: ' . Html::encode(date('Y-m-d', $model->site_visit_date)). '</li>    
-                                            <li> End Clarification Date: ' . Html::encode(date('Y-m-d',$model->end_clarificatiion)). '</li>
-                                            <li> Bid Meeting Date: ' . Html::encode(date('Y-m-d',$model->bidmeet)) . '</li>
-                                            <li>Tender Security: ' . Html::encode(getStatusLabel($model->tender_security)) . '</li>
-                                            <li>Submission Date: ' . Html::encode(date('Y-m-d',$tender->expired_at)) . '</li>
-                                            <li> Security Amount: ' . Html::encode($model->amount) . '</li>
-                                            <li>Security %: ' . Html::encode($model->percentage) . '</li>
-                                            <li>Office: ' . Html::encode($office->location) . '</li>
-                                        </ul>
-                                        <p>If you have any questions or need further assistance, feel free to contact us.</p>
-                                        <a href="' . Yii::$app->request->getHostInfo() . '/upload/' . $tender->document . '">View Attachment</a>                                </html>
-                            ');
-
-                            $user_assignments = UserAssignment::find()
-                            ->where(['tender_id' => $tenderId])
-                            ->all();
-                        
-                        $assignedUserIds = [];
-                        foreach ($user_assignments as $user_assignment) {
-                            $assignedUserIds[] = $user_assignment->user_id;
-                        }
-                        
-                        $assignedUsers = User::find()
-                            ->where(['id' => $assignedUserIds])
-                            ->all();
-                        
-                        // Add CC recipients
-                        foreach ($assignedUsers as $assignedUser) {
-                            $message->setCc($assignedUser->email);
-                        }
-                            
-
-                    // Attach the document file to the email
-    // foreach ($attachments as $attachment) {
-    //     $message->attach($attachment);
-    // }
-
-                        // $message->send();
-                        $mailer->send($message);
-                    }
+                 
                 }
                
                 return $this->redirect(['adetail/create', 'tenderId' => $tenderId]);

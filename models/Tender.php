@@ -66,11 +66,11 @@ class Tender extends \yii\db\ActiveRecord
     {
         return [
             [['title', 'description', 'status','document'], 'required'],
-            [['status', 'updated_at', 'created_by','budget','session','supervisor','submit_to'], 'integer'],
-            [['title', 'description','PE','TenderNo','document','coment'], 'string', 'max' => 255],
+            [['status', 'updated_at', 'created_by','budget','session','submit_to'], 'integer'],
+            [['title', 'description','PE','TenderNo','coment'], 'string', 'max' => 255],
             [['session','budget'], 'default', 'value' => 0],
             [['coment'], 'default', 'value'=>'reason not submitted || not awarded'],
-            // [['document','submission'], 'file'],
+            [['document'], 'file','maxSize' => 1024*1024*10],
             [['document','session','submission','assigned_to'], 'safe'],
             ['publish_at', 'compare', 'compareValue' => date('Y-m-d'), 'operator' => '<='],
             ['expired_at', 'date', 'format' => 'php:Y-m-d'],
@@ -78,7 +78,7 @@ class Tender extends \yii\db\ActiveRecord
 
             ['date_from', 'date', 'format' => 'php:Y-m-d'],
             ['date_to', 'date', 'format' => 'php:Y-m-d'],
-            [['assigned_to'], 'each', 'rule' => ['integer']],
+            // [['assigned_to'], 'each', 'rule' => ['integer']],
 
         ];
     }
@@ -104,11 +104,11 @@ class Tender extends \yii\db\ActiveRecord
             'submission'=>'Tender Submition Document',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
-            'assigned_to'=>'Assigned To',
+            // 'assigned_to'=>'Assigned To',
             'date_from'=>'Date From',
             'date_to'=>'Date To',
             'submit_to'=>'Submitted To',
-            'supervisor'=>'Supervisor',
+            // 'supervisor'=>'Supervisor',
             'created_by' => 'Created By',
         ];
     }

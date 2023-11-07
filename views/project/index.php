@@ -23,6 +23,7 @@ $this->registerCssFile('https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.
 $this->registerJsFile('https://code.jquery.com/ui/1.12.1/jquery-ui.js');
 
 // Define an array of sidebar items with their URLs and labels
+
 $sidebarItems = [
     ['url' => ['/dashboard/admin'], 'label' => 'Home', 'icon' => 'bi bi-house'],
     ['url' => ['/project'], 'label' => 'Projects', 'icon' => 'bi bi-layers'],
@@ -33,6 +34,7 @@ $sidebarItems = [
     ['url' => ['/setting'], 'label' => 'Settings', 'icon' => 'bi bi-gear'],
 ];
 ?>
+
 <!--
 <div id="loading-bar-container" class="loading-bar-container">
   <div id="loading-bar" class="loading-bar"></div>
@@ -41,15 +43,19 @@ $sidebarItems = [
 <div id="main-content "><a href="<?= Yii::$app->request->referrer ?>" class="back-arrow">
     <span class="arrow">&#8592;</span> Back
 </a>
-   
+
     <div id="page-container">
         <!-- ============================================================== -->
         <!-- Sales Cards  -->
         <!-- ============================================================== -->
         <div class="row"></div>
-       
+        <p>
+        <?= Html::a('Generate Report', ['form'], ['class' => 'btn btn-primary']) ?>
+        </p>
+
            <!--<p>
                 <?= Html::a('Create Project', ['create'], ['class' => 'btn btn-success']) ?>
+
             </p>-->
           
             <?php // echo $this->render('_search', ['model' => $searchModel]); 
@@ -76,7 +82,7 @@ $sidebarItems = [
                     ],
                     // 'description:ntext',
                     'budget',
-                    
+
                     [
                         'attribute' => 'progress',
                         'format' => 'raw',
@@ -108,7 +114,7 @@ $sidebarItems = [
                             $expiredDate = $model->end_at;
                             $oneWeekAhead = strtotime('+1 week');
                             $labelClass = '';
-            
+
                             if ($expiredDate - $now <= 0) {
                                 $labelClass = 'badge badge-danger'; // Red label
                             } elseif ($expiredDate > $oneWeekAhead) {
@@ -118,7 +124,7 @@ $sidebarItems = [
                             }else{
                                 $labelClass = 'badge badge-secondary';
                             }
-            
+
                             $formatter = new Formatter();
                             $formattedDate = $formatter->asDate($model->end_at, 'php:Y-m-d H:i:s');
                             $label = Html::tag('span', Html::encode($formattedDate), ['class' => $labelClass]);
@@ -127,6 +133,7 @@ $sidebarItems = [
                     ],
                 //     [
                 //         'attribute' => 'created_at',
+
 
                 //         'value' => function ($model) {
                 //             return Yii::$app->formatter->asDatetime($model->created_at);
@@ -151,7 +158,7 @@ $sidebarItems = [
                     },
                 ],
                 
-              
+
                     //'updated_at',
                     //'created_by',
                     //'ducument',
@@ -174,20 +181,18 @@ $sidebarItems = [
                                     ->andWhere(['project_id' => $model->id])
                                     ->andFilterWhere(['status' => 1])
                                     ->count();
-                    
+
                                 $badge = ($request_project_new > 0)
                                     ? '<span class="badge bg-blue">' . $request_project_new . '</span>'
                                     : '';
-                    
+
                                 return Html::a($badge . '<span class="glyphicon glyphicon-file"></span>', ['request/all', 'projectId' => $model->id], [
                                     // 'class' => 'btn btn-success',
                                     'title' => 'View Requests',
                                     'aria-label' => 'Requests',
                                 ]);
                             },
-                   
-                           
-            
+
                             'view' => function ($url, $model, $key) {
                                 return Html::a(
                                     '<span class="glyphicon glyphicon-eye-open"></span>',
@@ -200,7 +205,7 @@ $sidebarItems = [
                                     ]
                                 );
                             },
-            
+
                             'update' => function ($url, $model, $key) {
                                 return Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['edit', 'id' => $model->id], [
                                     // 'class' => 'btn btn-success',
@@ -208,6 +213,7 @@ $sidebarItems = [
                                     'aria-label' => 'Project edit',
                                 ]);
                             },
+
 
                             'team' => function ($url, $model, $key) {
                                 return Html::a('<span class="fa fa-group"></span>', ['team/detail', 'projectId' => $model->id], [
@@ -222,7 +228,7 @@ $sidebarItems = [
                    
                 ],
                 
-                
+
             ]); ?>
 
 <?php
@@ -250,6 +256,7 @@ function getStatusClass($status)
 
     return isset($statusClasses[$status]) ? $statusClasses[$status] : '';
 }
+
 ?>
         </div>
     </div>
