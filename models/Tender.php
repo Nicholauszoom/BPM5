@@ -65,13 +65,13 @@ class Tender extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['title', 'description', 'status','document'], 'required'],
+            [['title', 'description','document'], 'required'],
             [['status', 'updated_at', 'created_by','budget','session','submit_to'], 'integer'],
             [['title', 'description','PE','TenderNo','coment'], 'string', 'max' => 255],
             [['session','budget'], 'default', 'value' => 0],
             [['coment'], 'default', 'value'=>'reason not submitted || not awarded'],
             [['document'], 'file','maxSize' => 1024*1024*10],
-            [['document','session','submission','assigned_to'], 'safe'],
+            [['document','session','submission','assigned_to','status'], 'safe'],
             ['publish_at', 'compare', 'compareValue' => date('Y-m-d'), 'operator' => '<='],
             ['expired_at', 'date', 'format' => 'php:Y-m-d'],
             ['publish_at', 'date', 'format' => 'php:Y-m-d'],

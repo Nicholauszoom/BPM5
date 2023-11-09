@@ -248,6 +248,13 @@ height:200px;
         transform: scale(1);
     }
 }
+
+.truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%; /* Adjust this width to match the container width */
+  }
 </style>
 
    
@@ -331,17 +338,17 @@ height:200px;
     }
     ?>
 
-                  <li><a><i class="fa fa-recycle"></i>Tender<span class="badge bg-blue"><?=$newTender?></span>
-                  <?php if ($projectCount !== null): ?>
-        <span class="badge bg-red animated-badge"><?= $projectCount ?></span>
-    <?php endif; ?>
+                  <li><a><i class="fa fa-recycle"></i>Tender
+                 
     <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
                     <?php if (Yii::$app->user->can('admin')) : ?>
-                      <li><a href="/tender">index</a></li>
+                      <li><a href="/tender">index <?php if ($projectCount !== null): ?>
+        <span class="badge bg-red animated-badge"><?= $projectCount ?></span>
+    <?php endif; ?></a></li>
                       <?php endif; ?>
                      
-                      <li><a href="/tender/pm">Assigned Tender</a></li>
+                      <li><a href="/tender/pm">Assigned Tender<span class="badge bg-blue"><?=$newTender?></span></a></li>
 
                       <li><a href="/activity/create">Activity</a></li>
                     
@@ -357,11 +364,11 @@ height:200px;
                         ->andWhere(['isViewed'=>0])
                         ->count();
                     ?>
-                  <li><a><i class="fa fa-clone"></i> Project <span class="badge bg-green"><?=$newProjects?></span><span class="fa fa-chevron-down"></span> </a>
+                  <li><a><i class="fa fa-clone"></i> Project <span class="fa fa-chevron-down"></span> </a>
                   
                     <ul class="nav child_menu">
                     <?php if (Yii::$app->user->can('admin')) : ?>
-            <li><a href="/project">index</a></li>
+            <li><a href="/project">index<span class="badge bg-green"><?=$newProjects?></span></a></li>
         <?php endif; ?>
         <?php if (Yii::$app->user->can('author')) : ?>
             <li><a href="/project/pm">Project PM</a>
@@ -474,58 +481,63 @@ height:200px;
 
                 <li role="presentation" class="nav-item dropdown open">
                 <a href="javascript:;" class="dropdown-toggle info-number" id="navbarDropdown1" data-toggle="dropdown" aria-expanded="false">
-    <?php
+                <?php
     $userId = Yii::$app->user->id;
     // Retrieve the projects assigned to the user
-    $complete_tender = Tender::find()
-        ->where(['status' => 1])
-        ->all();
-    
-    $projectCount = 0;
+    $complete_tender_count = Tender::find()->all();
+    $notificationCount = 0;
 
-    foreach ($complete_tender as $cmpt_tender) {
-        $exist_project = Project::findOne(['tender_id' => $cmpt_tender->id]);
-        if ($exist_project === null) {
-            $projectCount++;
+    foreach ($complete_tender_count as $cmpt_tender) {
+        $currentDate = date('Y-m-d'); // Get the current date
+        $expiredDays = floor(($cmpt_tender->expired_at - strtotime($currentDate)) / (60 * 60 * 24));
+
+        if (Yii::$app->user->can('admin') && $expiredDays >= 0 && $expiredDays < 7) {
+            $notificationCount++;
         }
     }
     ?>
-     <?php if (Yii::$app->user->can('admin')) : ?>
-    <i class="fa fa-envelope-o"></i>
-    <?php if ($projectCount !== null): ?>
-        <span class="badge bg-red animated-badge"><?= $projectCount ?></span>
-    <?php endif; ?></a>
+
+    <?php if (Yii::$app->user->can('admin')) : ?>
+        <i class="fa fa-envelope-o"></i>
+        <?php if ($notificationCount > 0): ?>
+            <span class="badge bg-red animated-badge"><?= $notificationCount ?></span>
+        <?php endif; ?>
+    
+</a>
+   
     <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown1">
         <!-- Dropdown menu items go here -->
         <li>
-            <div class="notification-items">
+            <div class="notification-items ">
               <?php
 $complete_tender = Tender::find()
-    ->where(['status' => 1])
     ->all();
-
+  
+  
 foreach ($complete_tender as $cmpt_tender) {
-    $exist_project = Project::findOne(['tender_id' => $cmpt_tender->id]);
-    if ($exist_project === null) {
+  $currentDate = date('Y-m-d'); // Get the current date
+  $expiredDays = floor(($cmpt_tender->expired_at - strtotime($currentDate)) / (60 * 60 * 24));
+    if ($expiredDays >= 0 && $expiredDays < 7 ) {
         ?>
 
-        <a href="<?= Url::to(['project/create', 'tenderId' => $cmpt_tender->id]) ?>" class="link border-top">
-            <div class="d-flex no-block align-items-center p-10">
-                <span class="btn btn-success btn-circle d-flex align-items-center justify-content-center animated-badge">
-                    <i class="mdi mdi-calendar text-white fs-4"></i>
+        <a href="<?= Url::to(['tender/view', 'id' => $cmpt_tender->id]) ?>" class="link border-top">
+            <div class="d-flex no-block align-items-center p-7 " >
+                <span class="btn btn-primary btn-circle d-flex align-items-center justify-content-center ">
+                    <i class="fas uil-mailbox-alt text-white fs-4"></i>
                 </span>
-                <div class="ms-2">
-                    <h5 class="mb-0"><?= $cmpt_tender->title ?></h5>
-                    <span class="mail-des" style="color:#3498db;">Tender is already awarded, click to register as a project</span>
+                <div class="ms-2 ">
+                    <h5 class="mb-0 " style="color:grey; text-align: justify; font-size: 12px; font-weight: 600;"><?= $cmpt_tender->title ?></h5>
+                    <span class="mail-des" style="color:grey; text-align: justify; font-size: 11px;">Reminded: submition date is close...<span style="color:#3498db;font-size: 11px;">View</span></span>
                 </div>
             </div>
         </a>
         <?php
-    }
+    
+  }
 }
 ?>
   <?php endif; ?>
-
+  
             </div>
         </li>
     </ul>

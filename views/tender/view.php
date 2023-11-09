@@ -59,22 +59,24 @@ $expireDater=$model->expired_at;
     color: #333;
     margin-top: 3px;
 }
-ul{
+.bar{
     display: flex;
     margin-top: 80px;
+    
 }
-ul li{
+.bar li{
     list-style: none;
     display: flex;
     flex-direction: column;
     align-items: center;
+    
 }
-ul li .icon{
+.bar li .icon{
     font-size: 30px;
     color:#63d19e;
     margin: 0 60px;
 }
-ul li .text{
+.bar li .text{
     font-size: 14px;
     font-weight: 600;
     color:rgba(68, 68, 68, 0.781);
@@ -83,7 +85,7 @@ ul li .text{
         display: flex;
         align-items: center;
         justify-content: center;
-        margin:5%;
+        
         margin-bottom: 4%;
         height: 10px; /* Adjust the height as needed */
         width: 90%; /* Adjust the width as needed */
@@ -93,12 +95,11 @@ ul li .text{
 
 /* Progress Div Css  */
 
-ul li .progress{
+.bar li .progress{
     width: 30px;
     height: 30px;
     border-radius: 50%;
     background-color: rgba(68, 68, 68, 0.781);
-    margin: 14px 0;
     display: grid;
     place-items: center;
     color: #fff;
@@ -114,30 +115,30 @@ ul li .progress{
     right: 30px;
 }
 .one::after{
-    width: 0;
+    width: 33%;
     height: 0;
 }
-ul li .progress .uil{
+.bar li .progress .uil{
     display: none;
 }
-ul li .progress p{
+.bar  li .progress p{
     font-size: 13px;
 }
 
 /* Active Css  */
 
-ul li .active{
+.bar li .active{
     background-color:#63d19e;
     display: grid;
     place-items: center;
 }
-li .active::after{
+.bar li .active::after{
     background-color:#63d19e;
 }
-ul li .active p{
+.bar li .active p{
     display: none;
 }
-ul li .active .uil{
+.bar li .active .uil{
     font-size: 20px;
     display: flex;
 }
@@ -145,17 +146,17 @@ ul li .active .uil{
 /* Responsive Css  */
 
 @media (max-width: 980px) {
-    ul{
+    .bar{
         flex-direction: column;
     }
-    ul li{
+    .bar li{
         flex-direction: row;
     }
-    ul li .progress{
-        margin: 0 30px;
+    .bar li .progress{
+       
     }
     .progress::after{
-        width: 5px;
+        width: 33%;
         height: 55px;
         bottom: 30px;
         left: 50%;
@@ -165,10 +166,12 @@ ul li .active .uil{
     .one::after{
         height: 0;
     }
-    ul li .icon{
+    .bar li .icon{
         margin: 15px 0;
     }
 }
+
+
 
 @media (max-width:600px) {
     .head .head_1{
@@ -218,35 +221,7 @@ span{
 <a href="<?= Yii::$app->request->referrer ?>" class="back-arrow">
 <span class="fas fa-arrow-left"></span> Back
 </a>
-<ul class="bar-progrress">
-    <li>
-        <i class="icon uil uil-spinner-alt"></i>
-        <div class="progress one<?= $model->status <= 5 ? ' active' : '' ?>">
-            <p></p>
-            <i class="uil uil-check"></i>
-        </div>
-        <p class="text">Registration</p>
-    </li>
-    <li>
-        <i class="icon uil uil-telegram"></i>
-        <div class="progress two<?= $model->status <= 3 ? ' active' : '' ?>">
-            <p></p>
-            <i class="uil uil-check"></i>
-        </div>
-        <p class="text">Submittion</p>
-    </li>
-    <li>
-        <i class="icon uil uil-trophy"></i>
-        <div class="progress three<?= $model->status <= 1 ? ' active' : '' ?>">
-            <p></p>
-            <i class="uil uil-check"></i>
-        </div>
-        <p class="text">Awarded</p>
-    </li>
-</ul>
 
-
-<div id="counter"></div>
 
 <div id="main-content ">
     
@@ -262,9 +237,43 @@ span{
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    
+   
+<div class="bar-progrress mt-2 ">
+<ul class="bar">
+    <li>
 
-    <p>
+        <div class="progress one<?= $model->status <= 5 ? ' active' : '' ?>">
+            <p></p>
+            <i class="uil uil-check"></i>
+        </div>
+     
+        <p style="font-size: 1px small;">step 1(registration)----------------------------</p>
+      
+    </li>
+    <li>
+        
+        <div class="progress two<?= $model->status <= 3 ? ' active' : '' ?>">
+            <p></p>
+            <i class="uil uil-check"></i>
+        </div>
+    
+        <p>step 2(submit)----------------------------</p>
+    </li>
+    <li>
+     
+        <div class="progress three<?= $model->status <= 1 ? ' active' : '' ?>">
+            <p></p>
+            <i class="uil uil-check"></i>
+        </div>
+     
+        <p>----------------------------step 3(awarded)</p>
+    </li>
+</ul>
+</div>
+
+
+
+    <p >
         <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('Delete', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
@@ -273,6 +282,22 @@ span{
                 'method' => 'post',
             ],
         ]) ?>
+
+<?= Html::a('Submitted', ['', 'id' => $model->id], [
+            'class' => 'btn btn-secondary',
+            'data' => [
+                'confirm' => 'Are you sure you want to change the status to Submit of this item?',
+                'method' => 'post',
+            ],
+        ]) ?>
+
+<?= Html::a('Awarded', ['award', 'id' => $model->id], [
+    'class' => 'btn btn-success',
+    'data' => [
+        'confirm' => 'Are you sure you want to change the status to Award of this item?',
+        'method' => 'post',
+    ],
+]) ?>
     </p>
 
     <?= DetailView::widget([
@@ -302,26 +327,26 @@ span{
                 'attribute' => 'expired_at',
                 'format' => ['date', 'php:Y-m-d H:i:s'],
             ],
-            [
-            'attribute' => 'assigned_to',
-            'format' => 'raw',
-            'value' => function ($model) {
-                $assignments = UserAssignment::find()
-                    ->where(['tender_id' => $model->id])
-                    ->all();
+        //     [
+        //     'attribute' => 'assigned_to',
+        //     'format' => 'raw',
+        //     'value' => function ($model) {
+        //         $assignments = UserAssignment::find()
+        //             ->where(['tender_id' => $model->id])
+        //             ->all();
             
-                $assignedUsernames = [];
+        //         $assignedUsernames = [];
             
-                foreach ($assignments as $assignment) {
-                    $user = User::findOne($assignment->user_id);
-                    if ($user) {
-                        $assignedUsernames[] = $user->username;
-                    }
-                }
+        //         foreach ($assignments as $assignment) {
+        //             $user = User::findOne($assignment->user_id);
+        //             if ($user) {
+        //                 $assignedUsernames[] = $user->username;
+        //             }
+        //         }
             
-                return implode(', ', $assignedUsernames);
-            },
-        ],
+        //         return implode(', ', $assignedUsernames);
+        //     },
+        // ],
 
 
         // [
@@ -347,7 +372,7 @@ span{
         //     },
         // ],
         [
-            'attribute' => 'activity & roles',
+            'attribute' => 'Asign-to & compliance activity',
             'format' => 'raw',
             'value' => function ($model) {
                 $assignments = UserActivity::find()
@@ -384,9 +409,7 @@ span{
                         $tableRows .= '<td>' . $activity['activityName'] . '</td>';
                         $tableRows .= '<td>' . $activity['submitDate'] . '</td>';
                         $tableRows .= '<td>' . $activity['section'] . '</td>';
-                        if ($index === 0) {
-                            $tableRows .= '<td rowspan="' . count($activities) . '"><button onclick="deleteRow(this)">Delete</button></td>';
-                        }
+                       
                         $tableRows .= '</tr>';
                     }
                 }
@@ -400,7 +423,7 @@ span{
                                 <th>Activity Name</th>
                                 <th>Submit Date</th>
                                 <th>Section</th>
-                                <th>Action</th>
+                              
                             </tr>
                         </thead>
                         <tbody>
@@ -633,7 +656,7 @@ span{
   
    
 </div>
-
+<div id="counter" class="m-1" style="background:royalblue;"></div>
 
 <?php
     function getStatusLabel($status)

@@ -260,10 +260,6 @@ class ProjectController extends Controller
     
     
 
-     
-    
-
-
      public function actionCreate($tenderId)
 {
     if (Yii::$app->user->can('admin')) {
@@ -278,11 +274,6 @@ class ProjectController extends Controller
         // ->where(['status'=>1])
         // ->all();
          $model->tender_id=$details;
-
-
-         $tender = Tender::findOne($model->tender_id);
-
-         
 
         if ($model->load(Yii::$app->request->post())) {
             // select to upload document
@@ -509,7 +500,6 @@ if ($model->invite_letter) {
 
         
      }
-
    
 
 
@@ -653,6 +643,58 @@ public function actionDeleteMultiple()
         exit;
     }
 
+
+    public function actionBudget()
+{
+    if (Yii::$app->user->can('admin')) {
+        $model=Project::find()
+           ->all();
+  
+
+    return $this->render('budget', [
+      
+        'model'=>$model,
+    ]);
+}else {
+    throw new ForbiddenHttpException;
+}
+}
+
+
+
+public function actionComplete()
+{
+    if (Yii::$app->user->can('admin')) {
+        $model=Project::find()
+        ->where(['status'=>1])
+        ->all();
+  
+
+    return $this->render('complete', [
+      
+        'model'=>$model,
+    ]);
+}else {
+    throw new ForbiddenHttpException;
+}
+}
+
+public function actionProgress()
+{
+    if (Yii::$app->user->can('admin')) {
+        $model=Project::find()
+        ->where(['status'=>2])
+        ->all();
+  
+
+    return $this->render('progress', [
+      
+        'model'=>$model,
+    ]);
+}else {
+    throw new ForbiddenHttpException;
+}
+}
 
  
     

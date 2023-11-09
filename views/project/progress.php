@@ -15,7 +15,7 @@ use yii\i18n\Formatter;
 /** @var app\models\ProjectSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 // $this->context->layout = 'admin';
-$this->title = 'Projects';
+$this->title = 'On Progress Projects';
 $this->params['breadcrumbs'][] = $this->title;
 $this->context->layout = 'admin';
 $currentUrl = Url::toRoute(Yii::$app->controller->getRoute());
@@ -45,13 +45,12 @@ $sidebarItems = [
 </a>
 
     <div id="page-container">
+    <h1><?= Html::encode($this->title) ?></h1>
         <!-- ============================================================== -->
         <!-- Sales Cards  -->
         <!-- ============================================================== -->
         <div class="row"></div>
-        <p>
-        <?= Html::a('Generate Report', ['form'], ['class' => 'btn btn-primary']) ?>
-        </p>
+   
 
            <!--<p>
                 <?= Html::a('Create Project', ['create'], ['class' => 'btn btn-success']) ?>
@@ -64,18 +63,16 @@ $sidebarItems = [
                 'sort' => false, // Disable sorting in the GridView
               
             ]);
-            $model=Project::find()->all();
+            $model=Project::find()->where(['status'=>2])->all();
             ?>
 
-            <?= GridView::widget([
-                'dataProvider' => $dataProvider,
-                'filterModel' => $searchModel,
-                'dataProvider' => new \yii\data\ArrayDataProvider([
-                    'allModels' => $model,
-                    'pagination' => [
-                        'pageSize' => 8, // Adjust the page size as needed
-                    ],
-                ]),
+<?= GridView::widget([
+    'dataProvider' => new \yii\data\ArrayDataProvider([
+        'allModels' => $model,
+        'pagination' => [
+            'pageSize' => 8, // Adjust the page size as needed
+        ],
+    ]),
                 'columns' => [
                     ['class' => 'yii\grid\SerialColumn'],
                     // 'id',

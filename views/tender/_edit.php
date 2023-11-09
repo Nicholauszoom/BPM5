@@ -66,7 +66,7 @@ $department=Department::find()->all();
         <div class="form-row">
             <div class="col">
                 
-            <?php if ($model->expired_at <= strtotime(date('Y-m-d')) && $model->submission !== null) : ?>
+            <?php if ($model->expired_at <= strtotime(date('Y-m-d')) ) : ?>
             <?= $form->field($model, 'status')->dropDownList(
             [
                 1 => 'awarded',

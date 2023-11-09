@@ -73,7 +73,7 @@ $budgetDataJson = Json::encode($budgetData);
         padding:20px;
         box-sizing: border-box;
     }
-    
+
 
     .popup .close-btn {
         position:absolute;
@@ -121,6 +121,13 @@ $budgetDataJson = Json::encode($budgetData);
         overflow-y: auto;
     }
 
+    .scrow{
+        position: absolute;
+        width: 940px;
+        height: 400px;
+        overflow-y: auto;
+}
+  
     .tender-label {
     display: inline-block;
     padding: 4px 8px;
@@ -131,6 +138,8 @@ $budgetDataJson = Json::encode($budgetData);
     justify-content: flex-start;
     margin-top: 5px;
   }
+
+
 </style>
 
    <!-- top tiles -->
@@ -148,7 +157,9 @@ $budgetDataJson = Json::encode($budgetData);
 
 <!-- Earnings (Monthly) Card Example -->
 <div class="col-xl-3 col-md-6 mb-4">
-    <a  aria-controls="" onclick="togglePopup()">
+<!--    <a  aria-controls="" onclick="togglePopup()">-->
+<a  aria-controls="" href="/tender">
+
         <div class="card border-left-primary shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
@@ -159,7 +170,7 @@ $budgetDataJson = Json::encode($budgetData);
                         <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $tender ?></div>
                     </div>
                     <div class="col-auto">
-                        <i class="fas fa-calendar fa-2x text-gray-300" style="color:cornflowerblue;"></i>
+                    <i class="badge" ><img src="https://cdn-icons-png.flaticon.com/128/2328/2328936.png" style="width:35px;"></i>
                     </div>
                 </div>
             </div>
@@ -168,18 +179,19 @@ $budgetDataJson = Json::encode($budgetData);
 </div>
 
 <div class="col-xl-3 col-md-6 mb-4">
-    <a  onclick="togglePopup2()">
+    <!--<a  onclick="togglePopup2()">-->
+    <a  aria-controls="" href="/tender/success">
         <div class="card border-left-success shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-uppercase mb-1">
-                            Tender On Progress
+                            Awarded Tender
                         </div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $tenderPend ?></div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $tenderWin ?></div>
                     </div>
                     <div class="col-auto">
-                        <i class="fa fa-circle-o-notch fa-2x text-gray-300"></i>
+                    <i class="badge "><img src="https://cdn-icons-png.flaticon.com/128/12503/12503629.png" style="width:35px;"></i>
                     </div>
                 </div>
             </div>
@@ -188,18 +200,19 @@ $budgetDataJson = Json::encode($budgetData);
 </div>
 <!-- Earnings (Monthly) Card Example -->
 <div class="col-xl-3 col-md-6 mb-4">
-<a  onclick="togglePopup3()">
+ <!--<a  onclick="togglePopup3()"> __-->
+ <a  aria-controls="" href="/tender/submit">
     <div class="card border-left-info shadow h-100 py-2">
         <div class="card-body">
             <div class="row no-gutters align-items-center">
                 <div class="col mr-2">
-                    <div class="text-xs font-weight-bold  text-uppercase mb-1">Unsuccessful Tender
+                    <div class="text-xs font-weight-bold  text-uppercase mb-1">Submitted Tender
                     </div>
-                    <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $tenderFail?></div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $tenderSubmit?></div>
 
                 </div>
                 <div class="col-auto">
-                    <i class="fa fa-minus-circle fa-2x text-gray-300 " style="color:crimson;"></i>
+                <i class="badge "><img src="https://cdn-icons-png.flaticon.com/128/9497/9497842.png" style="width:35px;"></i>
                 </div>
             </div>
         </div>
@@ -207,28 +220,28 @@ $budgetDataJson = Json::encode($budgetData);
 </a>
 </div>
 
-<!-- Pending Requests Card Example -->
+<!-- Earnings (Monthly) Card Example -->
 <div class="col-xl-3 col-md-6 mb-4">
-    <div class="card border-left-warning shadow h-100 py-2">
+ <!--<a  onclick="togglePopup3()"> __-->
+ <a  aria-controls="" href="/tender/unsubmit">
+    <div class="card border-left-info shadow h-100 py-2">
         <div class="card-body">
             <div class="row no-gutters align-items-center">
                 <div class="col mr-2">
-                <?php
-               $staff= User::find()
-                 ->count();
-               ?>
-                    <div class="text-xs font-weight-bold  text-uppercase mb-1">
-                      Staff </div>
-                    <div class="h5 mb-0 font-weight-bold text-gray-800"> <?=$staff?></div>
+                    <div class="text-xs font-weight-bold  text-uppercase mb-1">Not Submitted Tender
+                    </div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $tenderFail?></div>
+
                 </div>
                 <div class="col-auto">
-                    <i class="fas fa-user fa-2x text-gray-300" style="color:black;"></i>
+                <i class="badge "><img src="https://cdn-icons-png.flaticon.com/128/12474/12474134.png" style="width:35px;"></i>
                 </div>
             </div>
         </div>
     </div>
+</a>
 </div>
-</div>
+
 
      <!-- <div class="col-md-2 col-sm-4 tile_stats_count">
         <?php
@@ -267,7 +280,7 @@ $budgetDataJson = Json::encode($budgetData);
 
 <!-- Earnings (Monthly) Card Example -->
 <div class="col-xl-3 col-md-6 mb-4">
-<a  onclick="togglePopup4()">
+<a  href="/project">
     <div class="card border-left-primary shadow h-100 py-2">
         <div class="card-body">
             <div class="row no-gutters align-items-center">
@@ -277,7 +290,7 @@ $budgetDataJson = Json::encode($budgetData);
                     <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $total ?></div>
                 </div>
                 <div class="col-auto">
-                    <i class="fas fa-folder fa-2x text-gray-300" style="color: orange;"></i>
+                <i class="badge" ><img src="https://cdn-icons-png.flaticon.com/128/4946/4946342.png" style="width:35px;"></i>
                 </div>
             </div>
         </div>
@@ -287,7 +300,7 @@ $budgetDataJson = Json::encode($budgetData);
 
 <!-- Earnings (Monthly) Card Example -->
 <div class="col-xl-3 col-md-6 mb-4">
-<a  onclick="togglePopup5()">
+<a href="/project/complete">
     <div class="card border-left-success shadow h-100 py-2">
         <div class="card-body">
             <div class="row no-gutters align-items-center">
@@ -297,7 +310,7 @@ $budgetDataJson = Json::encode($budgetData);
                     <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $successCount ?></div>
                 </div>
                 <div class="col-auto">
-                    <i class="fas fa-clone fa-2x text-gray-300" style="color:cadetblue;"></i>
+                <i class="badge" ><img src="https://cdn-icons-png.flaticon.com/128/9733/9733034.png" style="width:35px;"></i>
                 </div>
             </div>
         </div>
@@ -307,7 +320,7 @@ $budgetDataJson = Json::encode($budgetData);
 
 <!-- Earnings (Monthly) Card Example -->
 <div class="col-xl-3 col-md-6 mb-4">
-<a  onclick="togglePopup6()">
+<a  href="/project/progress">
     <div class="card border-left-info shadow h-100 py-2">
         <div class="card-body">
             <div class="row no-gutters align-items-center">
@@ -325,7 +338,7 @@ $budgetDataJson = Json::encode($budgetData);
 
                 </div>
                 <div class="col-auto">
-                    <i class="fas fa-check fa-2x text-gray-300" ></i>
+                    <i class="badge" ><img src="https://cdn-icons-png.flaticon.com/128/10327/10327589.png" style="width:35px;"></i>
                 </div>
             </div>
         </div>
@@ -344,7 +357,7 @@ $budgetDataJson = Json::encode($budgetData);
                     <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $fail?></div>
                 </div>
                 <div class="col-auto">
-                    <i class="fas fa-close fa-2x text-gray-300" style="color:crimson;"></i>
+                <i class="badge" ><img src="https://cdn-icons-png.flaticon.com/128/4476/4476841.png" style="width:35px;"></i>
                 </div>
             </div>
         </div>
@@ -352,6 +365,7 @@ $budgetDataJson = Json::encode($budgetData);
 </div>
 
 <div class="col-xl-3 col-md-6 mb-4">
+     <a  onclick="togglePopup6()">
     <div class="card border-left-info shadow h-100 py-2">
         <div class="card-body">
             <div class="row no-gutters align-items-center">
@@ -362,13 +376,16 @@ $budgetDataJson = Json::encode($budgetData);
 
                 </div>
                 <div class="col-auto">
-                    <i class="fa fa-institution fa-2x text-gray-300"></i>
+                <i class="badge" ><img src="https://cdn-icons-png.flaticon.com/128/12371/12371123.png" style="width:38px;"></i>
                 </div>
             </div>
         </div>
     </div>
+     </a>
 </div>
+
 </div>
+
 <?php endif; ?>
 
 <!-- /Project Manager Dashboard -->
@@ -421,7 +438,8 @@ $budgetDataJson = Json::encode($budgetData);
                     Assigned Tender</div>
                     <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $tender ?></div>
                 </div>
-                <div class="col-auto">  .tender-label {
+                <div class="col-auto"> 
+                     .tender-label {
     display: inline-block;
     padding: 4px 8px;
     border-radius: 9999px;
@@ -559,7 +577,7 @@ $formattedBudget = number_format($projectBudget, 2)
                     <div class="h5 mb-0 font-weight-bold text-gray-800"> <?= $formattedBudget ?></div>
                 </div>
                 <div class="col-auto">
-                    <i class="fas fa-institution fa-2x text-gray-300"></i>
+                <i class="badge" ><img src="https://cdn-icons-png.flaticon.com/128/12371/12371123.png" style="width:35px;"></i>
                 </div>
             </div>
         </div>
@@ -813,7 +831,7 @@ $formattedBudget = number_format($projectBudget, 2)
 <p style="color:grey; text-align:left;">Invitation Date:<span style="color:#222;"><?= Yii::$app->formatter->asDatetime($all_tender_popup->publish_at) ?></span>  Submission Deadline:<span style="color:mediumseagreen;"> <?= Yii::$app->formatter->asDatetime($all_tender_popup->expired_at )?> </span>  Number: <?=$all_tender_popup->TenderNo ?></p>
   
   <div class="tender-label inline-block px-2 py rounded-full bg-green-200 text-green-800"> <?=getStatusLabelTender($all_tender_popup->status)?> </div>
-<button class="py-1 whitespace-nowrap px-2 border border-primary rounded text-primary mr-10" style="display: flex; justify-content: flex-end; margin-top: 5px;" >View Details </button>
+<a class="py-1 whitespace-nowrap px-2 border border-primary rounded text-primary mr-10" style="display: flex; justify-content: flex-end; margin-top: 5px;" >View Details </a>
 <hr/>
 </li>
   
@@ -856,7 +874,7 @@ $formattedBudget = number_format($projectBudget, 2)
 <p style="color:grey; text-align:left;">Invitation Date:<span style="color:#222;"><?= Yii::$app->formatter->asDatetime($progress_tender_popup->publish_at) ?></span>  Submission Deadline:<span style="color:mediumseagreen;"> <?= Yii::$app->formatter->asDatetime($progress_tender_popup->expired_at )?> </span>  Number: <?=$progress_tender_popup->TenderNo ?></p>
   
   <div class="tender-label inline-block px-2 py rounded-full bg-green-200 text-green-800"> <?=getStatusLabelTender($progress_tender_popup->status)?> </div>
-<button class="py-1 whitespace-nowrap px-2 border border-primary rounded text-primary mr-10" style="display: flex; justify-content: flex-end; margin-top: 5px;" >View Details </button>
+<a class="py-1 whitespace-nowrap px-2 border border-primary rounded text-primary mr-10" style="display: flex; justify-content: flex-end; margin-top: 5px;" >View Details </a>
 <hr/>
 </li>
   
@@ -900,7 +918,7 @@ $formattedBudget = number_format($projectBudget, 2)
 <p style="color:grey; text-align:left;">Invitation Date:<span style="color:#222;"><?= Yii::$app->formatter->asDatetime($unsuccess_tender_popup->publish_at) ?></span>  Submission Deadline:<span style="color:mediumseagreen;"> <?= Yii::$app->formatter->asDatetime($unsuccess_tender_popup->expired_at )?> </span>  Number: <?=$unsuccess_tender_popup->TenderNo ?></p>
   
   <div class="tender-label inline-block px-2 py rounded-full bg-green-200 text-green-800"> <?=getStatusLabelTender($unsuccess_tender_popup->status)?> </div>
-<button class="py-1 whitespace-nowrap px-2 border border-primary rounded text-primary mr-10" style="display: flex; justify-content: flex-end; margin-top: 5px;" >View Details </button>
+<a class="py-1 whitespace-nowrap px-2 border border-primary rounded text-primary mr-10" style="display: flex; justify-content: flex-end; margin-top: 5px;" >View Details </a>
 <hr/>
 </li>
   
@@ -953,7 +971,7 @@ Budget: <?=$all_project_popup->budget ?>
 <p style="color:grey; text-align:left;">Start Date:<span style="color:#222;"><?= Yii::$app->formatter->asDatetime($all_project_popup->start_at) ?></span>  End/Deadline:<span style="color:mediumseagreen;"> <?= Yii::$app->formatter->asDatetime($all_project_popup->end_at )?> </span>  Project Manager: <?=$p_manager_pop->username ?></p>
   
   <div class="tender-label inline-block px-2 py rounded-full bg-green-200 text-green-800"> <?=getStatusLabelProject($all_project_popup->status)?> </div>
-<button class="py-1 whitespace-nowrap px-2 border border-primary rounded text-primary mr-10" style="display: flex; justify-content: flex-end; margin-top: 5px;" >View Details </button>
+<a class="py-1 whitespace-nowrap px-2 border border-primary rounded text-primary mr-10" style="display: flex; justify-content: flex-end; margin-top: 5px;" >View Details </a>
 <hr/>
 </li>
   
@@ -1005,7 +1023,7 @@ Budget: <?=$success_project_popup->budget ?>
 <p style="color:grey; text-align:left;">Start Date:<span style="color:#222;"><?= Yii::$app->formatter->asDatetime($success_project_popup->start_at) ?></span>  End/Deadline:<span style="color:mediumseagreen;"> <?= Yii::$app->formatter->asDatetime($success_project_popup->end_at )?> </span>  Project Manager: <?=$p_manager_pop->username ?></p>
   
   <div class="tender-label inline-block px-2 py rounded-full bg-green-200 text-green-800"> <?=getStatusLabelProject($success_project_popup->status)?> </div>
-<button class="py-1 whitespace-nowrap px-2 border border-primary rounded text-primary mr-10" style="display: flex; justify-content: flex-end; margin-top: 5px;" >View Details </button>
+<a class="py-1 whitespace-nowrap px-2 border border-primary rounded text-primary mr-10" style="display: flex; justify-content: flex-end; margin-top: 5px;" >View Details </a>
 <hr/>
 </li>
   
@@ -1024,7 +1042,7 @@ Budget: <?=$success_project_popup->budget ?>
 
  <!-- POPUP PAGES PROGRESS PROJECTS -->
  <?php 
-    $hold_project_popup=Project::find()->where(["status"=>2])->all();
+    $hold_project_popup=Project::find()->all();
 ?>
  <div class="popup" id="popup-6">
 <div class="overlay">
@@ -1032,15 +1050,25 @@ Budget: <?=$success_project_popup->budget ?>
 
 <div class="content">
     <div class="close-btn " onclick="togglePopup6()">&times;</div>
-    
-        <div>
-      
-   <ul class="list-group mt-5">
-   <?php foreach ($hold_project_popup as $hold_project_popup) : ?>
-  <li class="list-group-item">
-<h6 class="truncate" style="color:#222; text-align: left;">
- 
-<?php
+   
+
+<table class="table table-striped">
+<thead>
+    <tr>
+     
+      <th scope="col">Project</th>
+      <th scope="col">Budget</th>
+      <th scope="col">Start Date</th>
+      <th scope="col">End Date</th>
+     
+    </tr>
+  </thead>
+  <tbody class="scrow">
+  <?php foreach ($hold_project_popup as $hold_project_popup) : ?>
+    <tr>
+     
+      <td style="text-align:justify;">
+      <?php
 $project = Project::findOne($hold_project_popup->id);
 $project_tender = $project ? $project->tender_id : '';
 $project_tender_id=Tender::findOne($project_tender);
@@ -1050,23 +1078,18 @@ $projectName = $project_tender_id ? $project_tender_id->title : '';
 $p_manager_pop=User::findOne(['id'=>$hold_project_popup->user_id]);
 ?>
 <?=$projectName?>
-</h6>
-<h6 style="color:cornflowerblue; text-align:left;">
-Budget: <?=$hold_project_popup->budget ?>
-</h6>
-<p style="color:grey; text-align:left;">Start Date:<span style="color:#222;"><?= Yii::$app->formatter->asDatetime($hold_project_popup->start_at) ?></span>  End/Deadline:<span style="color:mediumseagreen;"> <?= Yii::$app->formatter->asDatetime($hold_project_popup->end_at )?> </span>  Project Manager: <?=$p_manager_pop->username ?></p>
-  
-  <div class="tender-label inline-block px-2 py rounded-full bg-green-200 text-green-800"> <?=getStatusLabelProject($hold_project_popup->status)?> </div>
-<button class="py-1 whitespace-nowrap px-2 border border-primary rounded text-primary mr-10" style="display: flex; justify-content: flex-end; margin-top: 5px;" >View Details </button>
-<hr/>
-</li>
-  
-  <?php endforeach ;?>
-  
-</ul>
+      </td>
+      <td><?=$hold_project_popup->budget ?></td>
+      <td style="text-align:justify;"><?= Yii::$app->formatter->asDatetime($hold_project_popup->start_at) ?></td>
+      <td style="text-align:justify;"><?= Yii::$app->formatter->asDatetime($hold_project_popup->end_at )?></td>
+      
+    </tr>
 
+    <?php endforeach ;?>
+    
+</table>
+  
 
-</div>
 
 </div>
 

@@ -2,7 +2,6 @@
 
 use app\models\Project;
 use app\models\Tender;
-use yii\bootstrap5\LinkPager;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -14,7 +13,7 @@ use yii\i18n\Formatter;
 /** @var app\models\TenderSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Tenders';
+$this->title = 'Not submitted Tenders';
 $this->params['breadcrumbs'][] = $this->title;
 $this->context->layout = 'admin';
 
@@ -37,34 +36,25 @@ $this->context->layout = 'admin';
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>
-        <?= Html::a('Create Tender', ['create'], ['class' => 'btn btn-success']) ?>
-        <?= Html::a('Generate Report', ['form'], ['class' => 'btn btn-primary']) ?>
-
-    </p>
-
+    
     
 
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); 
             $dataProvider = new ActiveDataProvider([
                 'query' => Tender::find()->orderBy(['created_at' => SORT_DESC]),
-              
+                'sort' => false, // Disable sorting in the GridView
             ]);
-            $model=Tender::find()->all();
-            
             ?>
 
 
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'dataProvider' => new \yii\data\ArrayDataProvider([
-            'allModels' => $model,
-            'pagination' => [
-                'pageSize' => 8, // Adjust the page size as needed
-            ],
-        ]),
+<?= GridView::widget([
+    'dataProvider' => new \yii\data\ArrayDataProvider([
+        'allModels' => $model,
+        'pagination' => [
+            'pageSize' => 10, // Adjust the page size as needed
+        ],
+    ]),
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
@@ -107,6 +97,7 @@ $this->context->layout = 'admin';
                     return $label;
                 },
             ],
+           
 
             [
                 'attribute' => 'status',
@@ -118,14 +109,39 @@ $this->context->layout = 'admin';
                     return ['class' => getStatusClass($model->status)];
                 },
             ],
-
+            // 'document',
+            // [
+            //     'attribute' => 'session',
+            //     'label' => 'alert',
+            //     'format' => 'raw',
+            //     'value' => function ($model) {
+            //         return $model->session ? '' : Html::tag('span', 'New', ['class' => 'badge badge-success']);
+            //     },
+            // ],
+            // [
+            //     'attribute' => 'id', // Replace with the actual attribute name for the tender ID
+            //     'format' => 'raw',
+            //     'label' => '',
+            //     'value' => function ($model) {
+            //         $project = Project::findOne(['tender_id' => $model->id]);
+            //         if ($project !== null) {
+            //             return '<span class="badge badge-primary glyphicon glyphicon-ok">.</span>';
+            //         }
+            //         return '';
+            //     },
+            // ],
+            // 'status',
+            //'created_at',
+            //'updated_at',
+            //'created_by',
             [
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, Tender $model, $key, $index, $column) {
                     return Url::toRoute([$action, 'id' => $model->id]);
                  }
             ],
-
+            
+            // ///////////////////
             [
                 'class' => 'yii\grid\ActionColumn',
                 'template' => '{project} {attachment}',
@@ -138,7 +154,7 @@ $this->context->layout = 'admin';
                 
                         $badgeHtml = '';
                         if ($isEligibleTender) {
-                            $badgeHtml = '';
+                            $badgeHtml = '<span class="badge animated-badge"><img src="https://img.icons8.com/?size=48&id=2EuI26KqYJ6b&format=png" style="width:25px;"></span>';
                         }
                 
                         return Html::a($badgeHtml, ['project/create', 'tenderId' => $model->id], [
@@ -169,16 +185,6 @@ $this->context->layout = 'admin';
             ],
             // ///////////////
         ],
-
-        'pager' => [
-            'class' => LinkPager::class,
-            'options' => [
-                'class' => 'pagination justify-content-center',
-            ],
-            'prevPageLabel' => 'Previous',
-            'nextPageLabel' => 'Next',
-            'maxButtonCount' => 5,
-        ],
     ]); ?>
     <?php
 function getStatusLabel($status)
@@ -189,6 +195,9 @@ function getStatusLabel($status)
         3 => '<span class="badge badge-secondary">submitted</span>',
         4 => '<span class="badge badge-secondary">not-submtted</span>',
         5 => '<span class="badge badge-secondary">on-progress</span>',
+
+        
+        
     ];
 
     return isset($statusLabels[$status]) ? $statusLabels[$status] : '';

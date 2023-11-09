@@ -421,6 +421,28 @@ public function actionAssigned()
         }
     }
 
+
+    public function actionAward($id)
+    {
+        if (Yii::$app->user->can('admin')) {
+            $model=Tender::findOne($id);
+          
+            if($model->save()){
+
+             $model->status=1;
+            }
+            else{
+                throw new NotFoundHttpException('the status is not saved');
+              }
+
+            
+        return $this->redirect(['project/create', 'tenderId' =>$model->id]);
+        }else{
+            throw new ForbiddenHttpException;
+        }
+       
+    }
+
     /**
      * Finds the Tender model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
@@ -509,5 +531,70 @@ public function actionAssigned()
         $pdf->Output();
         exit;
     }
+
+    public function actionSuccess()
+    {
+        if (Yii::$app->user->can('admin')) {
+            $model=Tender::find()
+             ->where(['status'=>1])->all();
+      
+
+        return $this->render('success', [
+          
+            'model'=>$model,
+        ]);
+    }else {
+        throw new ForbiddenHttpException;
+    }
+}
+
+public function actionProgress()
+{
+    if (Yii::$app->user->can('admin')) {
+        $model=Tender::find()
+         ->where(['status'=>5])->all();
+  
+
+    return $this->render('progress', [
+      
+        'model'=>$model,
+    ]);
+}else {
+    throw new ForbiddenHttpException;
+}
+}
+
+public function actionUnsubmit()
+{
+    if (Yii::$app->user->can('admin')) {
+        $model=Tender::find()
+         ->where(['status'=>4])->all();
+  
+
+    return $this->render('unsubmit', [
+      
+        'model'=>$model,
+    ]);
+}else {
+    throw new ForbiddenHttpException;
+}
+}
+
+public function actionSubmit()
+{
+    if (Yii::$app->user->can('admin')) {
+        $model=Tender::find()
+         ->where(['status'=>3])->all();
+  
+
+    return $this->render('submit', [
+      
+        'model'=>$model,
+    ]);
+}else {
+    throw new ForbiddenHttpException;
+}
+}
+
 
 }

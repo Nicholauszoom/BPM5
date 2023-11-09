@@ -3,6 +3,7 @@
 namespace app\commands;
 
 use app\models\Activity;
+use app\models\Adetail;
 use app\models\Tender;
 use app\models\User;
 use app\models\UserActivity;
@@ -21,22 +22,26 @@ class CrontController extends Controller
             
             // Tender with expiration date less than a week from the current date
             $tenders = Tender::find()
-                ->where(['status'=>5])
                 ->all();
         
             foreach ($tenders as $tender) {
-                $supervisor = User::findOne(['id' => $tender->supervisor]);
+                
         
                 // Calculate the difference in days between the expiration date and the current date
                 $expiredDays = floor(($tender->expired_at - strtotime($currentDate)) / (60 * 60 * 24));
-                
+
+                $adetail_tender=Adetail::findOne(['tender_id'=>$tender->id]);
+               
+
+                if ($adetail_tender !== null) {
+                    $supervisor_ad = User::findOne(['id' => $adetail_tender->supervisor]);
                 // Only send the email if the expiration date is less than 7 days away
                 if ($expiredDays >= 0 && $expiredDays < 7 ) {
                     /** @var MailerInterface $mailer */
                     $mailer = Yii::$app->mailer;
                     $message = $mailer->compose()
                         ->setFrom('nicholaussomi5@gmail.com')
-                        ->setTo($supervisor->email)
+                        ->setTo($supervisor_ad->email)
                         ->setSubject('Reminder notification')
                         ->setHtmlBody('
                             <html>
@@ -102,7 +107,7 @@ class CrontController extends Controller
                                     <img src="https://ci6.googleusercontent.com/proxy/s2ioZxU1n6rXmuUxz4xYQ36Pfr2j1HnbSNgHwy2c6pjTWEvzsLe9VdZGhYp-7dE-n6oTkJ79jUw9pHPeXRePiOT7U4irwAl5esSZrsPPqvZr8N1o6g2Bhh7k7M5UGUk=s0-d-e1-ft#http://teratech.co.tz/local/images/uploads/logo/163277576061522e507c527.webp" alt="teralogo">
                                     </div>
                                     <h1>TERATECH ANNOUCEMENT</h1>
-                                    <p>Dear ' . Html::encode($supervisor->username) . ',</p>
+                                    <p>Dear ' . Html::encode($supervisor_ad->username) . ',</p>
                                     <p>You have less than a week until the tender submission, As a Supervisor of this tennder:</p>
                                     <ul>
                                         <li>Tender Title: ' . Html::encode($tender->title) . '</li>
@@ -120,10 +125,10 @@ class CrontController extends Controller
 
                 //Send notification to all who assigned tender activities
             
-                $assigned=UserAssignment::find()
+                $assigned=UserActivity::find()
                 ->where(['tender_id'=>$tender->id])
                 ->all();
-                if($assigned != null){
+                if($assigned !== null){
                     foreach($assigned as $asign){
 
                         $assign_to=User::findOne(['id'=>$asign->user_id]);
@@ -131,7 +136,12 @@ class CrontController extends Controller
                         ->where(['tender_id'=>$tender->id])
                        ->all();
 
-                       if($activity != null){
+                       $activit=UserActivity::find()
+                       ->where(['tender_id'=>$tender->id])
+                      ->count();
+                       
+                       if($activity !== null){
+                        
                         foreach ($activity as $acty) {
                         $tender_activity =Activity::findOne(['id'=>$acty->activity_id]);
 
@@ -223,10 +233,11 @@ class CrontController extends Controller
 
                     }
                 }
+
                 }
             }
         }
-    
+                }
     
              
      }

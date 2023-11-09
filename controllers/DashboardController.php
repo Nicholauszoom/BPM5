@@ -388,8 +388,9 @@ $counts[] = $tender['count'];
 
 
         
-        $tenderPend=Tender::find()->where(['status'=>3])->count();
-        $tenderFail=Tender::find()->where(['status'=>2])->count();
+        $tenderPend=Tender::find()->where(['status'=>5])->count();
+        $tenderFail=Tender::find()->where(['status'=>4])->count();//not submmitted
+        $tenderSubmit=Tender::find()->where(['status'=>3])->count();
         $tenderWin=Tender::find()->where(['status'=>1])->count();
         $tender=Tender::find()->count();
         $team= Team::find()->count();
@@ -419,7 +420,7 @@ $counts[] = $tender['count'];
             'options'=>$options,
             'projectNames' => $projectNames,//graph data for project name
             'budgetData' => $budgetData,//graph data for project name
-
+            'tenderSubmit'=> $tenderSubmit,
             'dates' => $dates,// for Tender per day graph
         'counts' => $counts, //for Tender per day graph
 
