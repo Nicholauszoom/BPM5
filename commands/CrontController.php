@@ -243,5 +243,35 @@ class CrontController extends Controller
      }
     }
     
-}   
+
+    public function actionStatus()
+    {
+        $tenderDetails = Tender::find()->where(['status' => 5])->all();
+        $currentDate = date('Y-m-d'); // Get the current date
+        
+        foreach ($tenderDetails as $tenderD) {
+            if ($tenderD->expired_at < $currentDate) {
+                $tenderD->status = 4;
+                $tenderD->save();
+            }
+        }
+    }
+
+
+    public function actionStatus()
+    {
+        $tenderDetails = Tender::find()->where(['status' => 5])->all();
+        $currentDate = date('Y-m-d'); // Get the current date
+        
+        foreach ($tenderDetails as $tenderD) {
+            if ($tenderD->expired_at < $currentDate) {
+                $tenderD->status = 4;
+                $tenderD->save();
+            }
+        }
+    }
+}
+
+
+
  

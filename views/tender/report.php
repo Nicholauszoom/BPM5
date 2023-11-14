@@ -1,4 +1,6 @@
 <?php
+
+use app\models\Adetail;
 use app\models\Office;
 use app\models\Tattachmentss;
 use app\models\Tdetails;
@@ -8,9 +10,16 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 $this->context->layout = 'admin';
 ?>
+<style>
 
-<div id="main-content">
-    <div id="page-container">
+h1{
+    color: darkblue;
+    text-align: center;
+
+}
+</style>
+<div>
+    <div>
         <h1>Tender Report</h1>
         <hr>
 
@@ -31,8 +40,18 @@ $this->context->layout = 'admin';
                 <?php foreach ($tenders as $tender): ?>
                     <tr>
                         <td scope="row"><?= Html::encode($tender->title) ?></td>
-                        <?php $supervisor = User::findOne($tender->supervisor); ?>
-                        <td><?= $supervisor->username ?></td>
+                        <?php 
+                        // $supervisor = User::findOne($tender->supervisor); 
+                        $tender_supervisor=Adetail::find()->where(['tender_id'=>$tender->id])->all();
+                      
+                        $supervisorTenderIds = [];
+                        foreach ($tender_supervisor as $t_supervisor) {
+                            $supervisorTenderIds[] = $t_supervisor->supervisor;
+                        }
+                        $supervisor =User::findOne(['id'=>$supervisorTenderIds]);
+                         
+                        ?>
+                      
                         <td><?= Yii::$app->formatter->asDatetime($tender->publish_at) ?></td>
                         <td><?= Yii::$app->formatter->asDatetime($tender->expired_at) ?></td>
                         <td><?= Yii::$app->formatter->asDatetime($tender->created_at) ?></td>
@@ -49,7 +68,7 @@ $this->context->layout = 'admin';
                 <li>
                     <h3 class="tender-title"><?= $tender->title ?></h3>
                     <ul class="tender-details">
-                        <li><strong>Supervisor:</strong> <?= $supervisor->username ?></li>
+                       
                         <li><strong>Publish Date:</strong> <?= Yii::$app->formatter->asDatetime($tender->publish_at) ?></li>
                         <li><strong>Expired Date:</strong> <?= Yii::$app->formatter->asDatetime($tender->expired_at) ?></li>
                         <li><strong>Created At:</strong> <?= Yii::$app->formatter->asDatetime($tender->created_at) ?></li>
@@ -75,18 +94,22 @@ $this->context->layout = 'admin';
                         </thead>
                         <tbody>
                             <tr>
-                                <td scope="row"><?= getSiteLabels($advance->site_visit) ?></td>
-                                <?php
+                            <?php if ($advance !== null): ?>
+                              <td scope="row"><?= getSiteLabels($advance->site_visit) ?></td>
+                                       
+                                 <?php
                                 $office = Office::findOne($advance->office);
                                 $office_loca = $office->location;
                                 ?>
                                 <td><?= $office_loca ?></td>
+                                
                                 <td><?= Yii::$app->formatter->asDatetime($advance->end_clarificatiion) ?></td>
                                 <td><?= Yii::$app->formatter->asDatetime($advance->site_visit_date) ?></td>
                                 <td><?= Yii::$app->formatter->asDatetime($advance->bidmeet) ?></td>
                                 <td><?= getSecurityLabel($advance->tender_security) ?></td>
                                 <td><?= $advance->amount ?></td>
                                 <td><?= $advance->percentage ?></td>
+                                <?php endif; ?>   
                             </tr>
                         </tbody>
                     </table>

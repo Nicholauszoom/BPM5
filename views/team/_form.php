@@ -1,5 +1,6 @@
 <?php
 
+use app\models\Project;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -22,18 +23,22 @@ $this->context->layout = 'admin';
 
 <?= $form->field($model, 'project_id')->hiddenInput(['value' => $projectId])->label(false)?>
 
- 
+<?php
+$project_pm=Project::findOne($projectId);
+?>
+<?= $form->field($model, 'user_id')->hiddenInput(['value' => $project_pm->user_id])->label(false)?>
+
 
 <div class="form-row">
     <div class="col">
 <?= $form->field($model, 'team_no', ['template' => "{label}\n<div class='input-group'>{input}\n<span class='input-group-addon'><i class='fa fa-group'></i></span></div>\n{error}"])->dropDownList(
     [
-        1 => 'a. NO',
-        2 => 'b. YES',
+        1 => 'a. Only Project Manager',
+        2 => 'b. Team Of Members',
     ],
     [
         'id' => 'tender-security-dropdown',
-        'prompt' => 'Project requires a team ?',
+        'prompt' => 'Project requires ?',
     ]
 ) ?>
 <div id="add-form" style="display: none;">
@@ -46,7 +51,7 @@ $this->context->layout = 'admin';
     [
         1 => 'Active',
         2 => 'Inactive',
-        3 => 'On Hold',
+       
     ],
     ['prompt' => 'Select Team Status']
 ); ?>    

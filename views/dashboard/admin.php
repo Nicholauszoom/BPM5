@@ -1,5 +1,7 @@
 <?php
     // Get the current route URL
+
+use app\models\Adetail;
 use dosamigos\chartjs\ChartJs;
 use app\models\Department;
 use yii\helpers\Url;
@@ -49,64 +51,7 @@ $budgetDataJson = Json::encode($budgetData);
     }
 
 
-    .popup .overlay {
-        position: fixed;
-        top: 0;
-        left:0;
-        width:300vw;
-        height: 300vw;
-        background: rgba(0, 0, 0, 0.7);
-        z-index:1;
-        display:none;
-    }
 
-    .popup .content {
-        position: absolute;
-        top:50%;
-        left:50%;
-        transform:translate(-50%, -50%) scale(0);
-        background: #fff;
-        width: 1000px;
-        height: 500px;
-        z-index:2;
-        text-align: center;
-        padding:20px;
-        box-sizing: border-box;
-    }
-
-
-    .popup .close-btn {
-        position:absolute;
-        right: 20px;
-        top:20px;
-        width: 30px;
-        height:30px;
-        background: #222;
-        color:#fff;
-        font-size: 25px;
-        font-weight: 600;
-        line-height: 30px;
-        text-align: center;
-        border-radius: 50%;
-
-    }
-
-    .popup.active .overlay{
-      display:block;
-    }
-
-    .popup.active .content{
-       transition: all 300ms ease-in-out;
-       transform:translate(-50%, -50%) scale(1);
-
-    }
-
-    .truncate {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    width: 100%; /* Adjust this width to match the container width */
-  }
     
     hr {
         color: #222;
@@ -243,38 +188,9 @@ $budgetDataJson = Json::encode($budgetData);
 </div>
 
 
-     <!-- <div class="col-md-2 col-sm-4 tile_stats_count">
-        <?php
-          $department = Department::find()
-          ->count();
-        ?>
-      <span class="count_top"><i class="fa fa-users"></i> Departments </span>
-      <div class="count "><?=$department?></div>
-      <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i></i> </span>
-    </div> 
-
-    <div class="col-md-2 col-sm-6 tile_stats_count">
-  <span class="count_top"><i class="fa fa-money"></i>Total Projects Budget</span>
-  <div class="">
-    TSH <?=$totalBudget ?>
-  </div>
-  <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i></i></span>
-</div>-->
-<?php endif; ?>
-<!-- /admin dash end -->
-
-<!-- /Project Manager Dashboard -->
-
+    
 <!-- /pm end -->
   </div>
-
-
-  <!-- TENDER MANAGEMENT SUMMARY-->
-  <div class="tile_count">
-
-  <!-- /admin dash  -->
-  <?php if (Yii::$app->user->can('admin')) : ?>
-          
         
     <div class="row">
 
@@ -387,40 +303,43 @@ $budgetDataJson = Json::encode($budgetData);
 </div>
 
 <?php endif; ?>
+      
 
 <!-- /Project Manager Dashboard -->
 <?php if (Yii::$app->user->can('author')) : ?>
-
-  <div class="row">
-
+    <div class="tile_count">
+    <div class="row">
 <!-- Earnings (Monthly) Card Example -->
 <div class="col-xl-3 col-md-6 mb-4">
-    <div class="card border-left-primary shadow h-100 py-2">
+<a href="/project/complete">
+    <div class="card border-left-success shadow h-100 py-2">
         <div class="card-body">
             <div class="row no-gutters align-items-center">
                 <div class="col mr-2">
                     <div class="text-xs font-weight-bold  text-uppercase mb-1">
-                        Published Tender</div>
+                    Published Tender</div>
                     <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $tender ?></div>
                 </div>
                 <div class="col-auto">
-                    <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                <i class="badge" ><img src="https://cdn-icons-png.flaticon.com/128/4405/4405051.png" style="width:35px;"></i>
                 </div>
             </div>
         </div>
     </div>
+</a>
 </div>
 
 <!-- Earnings (Monthly) Card Example -->
 <div class="col-xl-3 col-md-6 mb-4">
-    <div class="card border-left-success shadow h-100 py-2">
+<a  href="/project/progress">
+    <div class="card border-left-info shadow h-100 py-2">
         <div class="card-body">
             <div class="row no-gutters align-items-center">
                 <div class="col mr-2">
                 <?php
         $userId = Yii::$app->user->getId();
 
-        $user_assignments = UserAssignment::find()
+        $user_assignments = Adetail::find()
         ->where(['user_id' => $userId])
         ->all();
 
@@ -429,24 +348,43 @@ $budgetDataJson = Json::encode($budgetData);
         $assignedTenderIds[] = $user_assignment->tender_id;
     }
 
-        $tender=Tender::find()
+        $tend=Tender::find()
            ->where(['id' => $assignedTenderIds])
            ->andWhere(['session'=>0])
            ->count();
         ?>
-                    <div class="text-xs font-weight-bold text-uppercase mb-1">
-                    Assigned Tender</div>
-                    <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $tender ?></div>
+                    <div class="text-xs font-weight-bold  text-uppercase mb-1">Assigned Tender
+                    </div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $tend ?></div>
+
                 </div>
-                <div class="col-auto"> 
-                     .tender-label {
-    display: inline-block;
-    padding: 4px 8px;
-    border-radius: 9999px;
-    background-color: #e2f0d9;
-    color: #3c763d;
-  }
-                    <i class="fa fa-circle-o-notch fa-2x text-gray-300"></i>
+                <div class="col-auto">
+                    <i class="badge" ><img src="https://cdn-icons-png.flaticon.com/128/5847/5847233.png" style="width:35px;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</a>
+</div>
+
+<!-- Pending Requests Card Example -->
+<div class="col-xl-3 col-md-6 mb-4">
+    <div class="card border-left-warning shadow h-100 py-2">
+        <div class="card-body">
+            <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                    <div class="text-xs font-weight-bold  text-uppercase mb-1">
+                    <?php
+        $userId = Yii::$app->user->getId();
+        $projectCount = Project::find()
+            ->where(['user_id' => $userId])
+            ->count();
+        ?>
+                    Assigned Project</div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $projectCount ?></div>
+                </div>
+                <div class="col-auto">
+                <i class="badge" ><img src="https://cdn-icons-png.flaticon.com/128/7156/7156236.png" style="width:35px;"></i>
                 </div>
             </div>
         </div>
@@ -455,32 +393,8 @@ $budgetDataJson = Json::encode($budgetData);
 
 <!-- Earnings (Monthly) Card Example -->
 <div class="col-xl-3 col-md-6 mb-4">
-    <div class="card border-left-info shadow h-100 py-2">
-        <div class="card-body">
-            <div class="row no-gutters align-items-center">
-                <div class="col mr-2">
-                <?php
-        $userId = Yii::$app->user->getId();
-        $projectCount = Project::find()
-            ->where(['user_id' => $userId])
-            ->count();
-        ?>
-                    <div class="text-xs font-weight-bold  text-uppercase mb-1">Assigned Project
-                    </div>
-                    <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $projectCount ?></div>
-
-                </div>
-                <div class="col-auto">
-                    <i class="fa fa-minus-circle fa-2x text-gray-300"></i>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Pending Requests Card Example -->
-<div class="col-xl-3 col-md-6 mb-4">
-    <div class="card border-left-warning shadow h-100 py-2">
+<a  href="/project">
+    <div class="card border-left-primary shadow h-100 py-2">
         <div class="card-body">
             <div class="row no-gutters align-items-center">
                 <div class="col mr-2">
@@ -493,17 +407,21 @@ $budgetDataJson = Json::encode($budgetData);
         ?>
                     <div class="text-xs font-weight-bold  text-uppercase mb-1">
                     Complete Project</div>
-                    <div class="h5 mb-0 font-weight-bold text-gray-800"> <?=$projectSuccess?></div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800"><?=$projectSuccess?></div>
                 </div>
                 <div class="col-auto">
-                    <i class="fas fa-user fa-2x text-gray-300"></i>
+                <i class="badge" ><img src="https://cdn-icons-png.flaticon.com/128/4875/4875033.png" style="width:35px;"></i>
                 </div>
             </div>
         </div>
     </div>
+</a>
 </div>
+
+<!-- Earnings (Monthly) Card Example -->
 <div class="col-xl-3 col-md-6 mb-4">
-    <div class="card border-left-warning shadow h-100 py-2">
+<a  href="/project">
+    <div class="card border-left-primary shadow h-100 py-2">
         <div class="card-body">
             <div class="row no-gutters align-items-center">
                 <div class="col mr-2">
@@ -516,18 +434,21 @@ $budgetDataJson = Json::encode($budgetData);
         ?>
                     <div class="text-xs font-weight-bold  text-uppercase mb-1">
                     Projects OnHold</div>
-                    <div class="h5 mb-0 font-weight-bold text-gray-800"> <?=$projectHold?></div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800"><?=$projectHold?></div>
                 </div>
                 <div class="col-auto">
-                    <i class="fas fa-check fa-2x text-gray-300"></i>
+                <i class="badge" ><img src="https://cdn-icons-png.flaticon.com/128/1087/1087927.png" style="width:35px;"></i>
                 </div>
             </div>
         </div>
     </div>
+</a>
 </div>
 
+<!-- Earnings (Monthly) Card Example -->
 <div class="col-xl-3 col-md-6 mb-4">
-    <div class="card border-left-warning shadow h-100 py-2">
+<a  href="/project">
+    <div class="card border-left-primary shadow h-100 py-2">
         <div class="card-body">
             <div class="row no-gutters align-items-center">
                 <div class="col mr-2">
@@ -541,23 +462,25 @@ $projectFail = Project::find()
     ->count();
 ?>
                     <div class="text-xs font-weight-bold  text-uppercase mb-1">
-                    Fail Project</div>
-                    <div class="h5 mb-0 font-weight-bold text-gray-800"> <?=$projectFail?></div>
+                  Fail Projects</div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800"><?=$projectFail?></div>
                 </div>
                 <div class="col-auto">
-                    <i class="fas fa-close fa-2x text-gray-300"></i>
+                <i class="badge" ><img src="https://cdn-icons-png.flaticon.com/128/10150/10150424.png" style="width:35px;"></i>
                 </div>
             </div>
         </div>
     </div>
+</a>
 </div>
+
 <div class="col-xl-3 col-md-6 mb-4">
-    <div class="card border-left-warning shadow h-100 py-2">
+     <a  onclick="togglePopup6()">
+    <div class="card border-left-info shadow h-100 py-2">
         <div class="card-body">
             <div class="row no-gutters align-items-center">
                 <div class="col mr-2">
-      
-    <?php
+                <?php
 $userId = Yii::$app->user->getId();
 
 // Find projects assigned to the user
@@ -572,23 +495,26 @@ foreach ($projects as $project) {
 }
 $formattedBudget = number_format($projectBudget, 2)
 ?>
-                    <div class="text-xs font-weight-bold  text-uppercase mb-1">
-                    Projects Budget</div>
-                    <div class="h5 mb-0 font-weight-bold text-gray-800"> <?= $formattedBudget ?></div>
+                <div class="text-xs font-weight-bold  text-uppercase mb-1"> Projects Budget
+                    </div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800"> TSH <?= $formattedBudget ?></div>
+
                 </div>
                 <div class="col-auto">
-                <i class="badge" ><img src="https://cdn-icons-png.flaticon.com/128/12371/12371123.png" style="width:35px;"></i>
+                <i class="badge" ><img src="https://cdn-icons-png.flaticon.com/128/10842/10842949.png" style="width:38px;"></i>
                 </div>
             </div>
         </div>
     </div>
+     </a>
 </div>
+
+
 </div>
+    </div>
 <?php endif; ?>
 <!-- /pm end -->
-  </div>
-</div>
-          <!-- /top tiles -->
+<!-- /top tiles -->
        
            
           <div class="row">
@@ -769,10 +695,12 @@ $formattedBudget = number_format($projectBudget, 2)
                     <?php
                     $project_title = Tender::findOne($project->tender_id);
                     ?>
+                    <?php if($project_title!==null):?>
                     <p class="mb-1" style="font-size: .77rem;"><?= $project_title->title ?> <?= getStatusLabel($project->status) ?></p>
                     <p class="text-muted mb-0" style="font-size: .60rem;">
                         Start: <?= Yii::$app->formatter->asDatetime($project->start_at) ?>, End: <?= Yii::$app->formatter->asDatetime($project->end_at) ?>
                     </p>
+                    <?php endif;?>
                 <?php endforeach; ?>
             </div>
         </div>
@@ -782,15 +710,18 @@ $formattedBudget = number_format($projectBudget, 2)
         <div class="card mb-4 mb-md-0">
             <div class="card-body">
                 <p class="mb-4"><span class="text-primary font-italic me-1">Assignment</span> Projects Assigned as Member of Team</p>
-
+             
                 <?php foreach ($project_team as $project): ?>
                     <?php
                     $project_title = Tender::findOne($project->tender_id);
                     ?>
+                        <?php if($project_title!==null):?>
                     <p class="mb-1" style="font-size: .77rem;"><?= $project_title->title ?> <?= getStatusLabel($project->status) ?></p>
                     <p class="text-muted mb-0" style="font-size: .60rem;">
                         Start: <?= Yii::$app->formatter->asDatetime($project->start_at) ?>, End: <?= Yii::$app->formatter->asDatetime($project->end_at) ?>
                     </p>
+                    <?php endif;?>
+
                 <?php endforeach; ?>
             </div>
         </div>
@@ -806,294 +737,13 @@ $formattedBudget = number_format($projectBudget, 2)
         </div>
 
 
- <!-- POPUP PAGES -->
-<?php 
-    $all_tender_popup=Tender::find()->all();
-?>
- <div class="popup" id="popup-1">
-<div class="overlay">
-</div>
-
-<div class="content">
-    <div class="close-btn " onclick="togglePopup()">&times;</div>
-    
-        <div>
-      
-   <ul class="list-group mt-5">
-   <?php foreach ($all_tender_popup as $all_tender_popup) : ?>
-  <li class="list-group-item">
-<h6 class="truncate" style="color:#222; text-align: left;">
- <?=$all_tender_popup->title?>
-</h6>
-<h6 style="color:cornflowerblue; text-align:left;">
-<?=$all_tender_popup->PE ?>
-</h6>
-<p style="color:grey; text-align:left;">Invitation Date:<span style="color:#222;"><?= Yii::$app->formatter->asDatetime($all_tender_popup->publish_at) ?></span>  Submission Deadline:<span style="color:mediumseagreen;"> <?= Yii::$app->formatter->asDatetime($all_tender_popup->expired_at )?> </span>  Number: <?=$all_tender_popup->TenderNo ?></p>
-  
-  <div class="tender-label inline-block px-2 py rounded-full bg-green-200 text-green-800"> <?=getStatusLabelTender($all_tender_popup->status)?> </div>
-<a class="py-1 whitespace-nowrap px-2 border border-primary rounded text-primary mr-10" style="display: flex; justify-content: flex-end; margin-top: 5px;" >View Details </a>
-<hr/>
-</li>
-  
-  <?php endforeach ;?>
-  
-</ul>
-
-
-</div>
-
-</div>
-
- </div>     
-
-
-
-
- <!-- POPUP PAGES TENDER ON PROGRESS -->
-<?php 
-    $progress_tender_popup=Tender::find()->where(["status"=>5])->all();
-?>
- <div class="popup" id="popup-2">
-<div class="overlay">
-</div>
-
-<div class="content">
-    <div class="close-btn " onclick="togglePopup2()">&times;</div>
-    
-        <div>
-      
-   <ul class="list-group mt-5">
-   <?php foreach ($progress_tender_popup as $progress_tender_popup) : ?>
-  <li class="list-group-item">
-<h6 class="truncate" style="color:#222; text-align: left;">
- <?=$progress_tender_popup->title?>
-</h6>
-<h6 style="color:cornflowerblue; text-align:left;">
-<?=$progress_tender_popup->PE ?>
-</h6>
-<p style="color:grey; text-align:left;">Invitation Date:<span style="color:#222;"><?= Yii::$app->formatter->asDatetime($progress_tender_popup->publish_at) ?></span>  Submission Deadline:<span style="color:mediumseagreen;"> <?= Yii::$app->formatter->asDatetime($progress_tender_popup->expired_at )?> </span>  Number: <?=$progress_tender_popup->TenderNo ?></p>
-  
-  <div class="tender-label inline-block px-2 py rounded-full bg-green-200 text-green-800"> <?=getStatusLabelTender($progress_tender_popup->status)?> </div>
-<a class="py-1 whitespace-nowrap px-2 border border-primary rounded text-primary mr-10" style="display: flex; justify-content: flex-end; margin-top: 5px;" >View Details </a>
-<hr/>
-</li>
-  
-  <?php endforeach ;?>
-  
-</ul>
-
-
-</div>
-
-</div>
-
- </div>     
-
      
            
 
 
- <!-- POPUP PAGES TENDER UNSUCESSFULL -->
- <?php 
-    $unsuccess_tender_popup=Tender::find()->where(["status"=>2])->all();
-?>
- <div class="popup" id="popup-3">
-<div class="overlay">
-</div>
-
-<div class="content">
-    <div class="close-btn " onclick="togglePopup3()">&times;</div>
-    
-        <div>
-      
-   <ul class="list-group mt-5">
-   <?php foreach ($unsuccess_tender_popup as $unsuccess_tender_popup) : ?>
-  <li class="list-group-item">
-<h6 class="truncate" style="color:#222; text-align: left;">
- <?=$unsuccess_tender_popup->title?>
-</h6>
-<h6 style="color:cornflowerblue; text-align:left;">
-<?=$unsuccess_tender_popup->PE ?>
-</h6>
-<p style="color:grey; text-align:left;">Invitation Date:<span style="color:#222;"><?= Yii::$app->formatter->asDatetime($unsuccess_tender_popup->publish_at) ?></span>  Submission Deadline:<span style="color:mediumseagreen;"> <?= Yii::$app->formatter->asDatetime($unsuccess_tender_popup->expired_at )?> </span>  Number: <?=$unsuccess_tender_popup->TenderNo ?></p>
-  
-  <div class="tender-label inline-block px-2 py rounded-full bg-green-200 text-green-800"> <?=getStatusLabelTender($unsuccess_tender_popup->status)?> </div>
-<a class="py-1 whitespace-nowrap px-2 border border-primary rounded text-primary mr-10" style="display: flex; justify-content: flex-end; margin-top: 5px;" >View Details </a>
-<hr/>
-</li>
-  
-  <?php endforeach ;?>
-  
-</ul>
-
-
-</div>
-
-</div>
-
- </div>     
 
 
 
- 
- <!-- POPUP PAGES ALL PROJECTS -->
- <?php 
-    $all_project_popup=Project::find()->all();
-?>
- <div class="popup" id="popup-4">
-<div class="overlay">
-</div>
-
-<div class="content">
-    <div class="close-btn " onclick="togglePopup4()">&times;</div>
-    
-        <div>
-      
-   <ul class="list-group mt-5">
-   <?php foreach ($all_project_popup as $all_project_popup) : ?>
-  <li class="list-group-item">
-<h6 class="truncate" style="color:#222; text-align: left;">
- 
-<?php
-$project = Project::findOne($all_project_popup->id);
-$project_tender = $project ? $project->tender_id : '';
-$project_tender_id=Tender::findOne($project_tender);
-$projectName = $project_tender_id ? $project_tender_id->title : '';
-
-
-$p_manager_pop=User::findOne(['id'=>$all_project_popup->user_id]);
-?>
-<?=$projectName?>
-</h6>
-<h6 style="color:cornflowerblue; text-align:left;">
-Budget: <?=$all_project_popup->budget ?>
-</h6>
-<p style="color:grey; text-align:left;">Start Date:<span style="color:#222;"><?= Yii::$app->formatter->asDatetime($all_project_popup->start_at) ?></span>  End/Deadline:<span style="color:mediumseagreen;"> <?= Yii::$app->formatter->asDatetime($all_project_popup->end_at )?> </span>  Project Manager: <?=$p_manager_pop->username ?></p>
-  
-  <div class="tender-label inline-block px-2 py rounded-full bg-green-200 text-green-800"> <?=getStatusLabelProject($all_project_popup->status)?> </div>
-<a class="py-1 whitespace-nowrap px-2 border border-primary rounded text-primary mr-10" style="display: flex; justify-content: flex-end; margin-top: 5px;" >View Details </a>
-<hr/>
-</li>
-  
-  <?php endforeach ;?>
-  
-</ul>
-
-
-</div>
-
-</div>
-
- </div>     
-
-
-
- <!-- POPUP PAGES SUCCESS PROJECTS -->
- <?php 
-    $success_project_popup=Project::find()->where(["status"=>1])->all();
-?>
- <div class="popup" id="popup-5">
-<div class="overlay">
-</div>
-
-<div class="content">
-    <div class="close-btn " onclick="togglePopup5()">&times;</div>
-    
-        <div>
-      
-   <ul class="list-group mt-5">
-   <?php foreach ($success_project_popup as $success_project_popup) : ?>
-  <li class="list-group-item">
-<h6 class="truncate" style="color:#222; text-align: left;">
- 
-<?php
-$project = Project::findOne($success_project_popup->id);
-$project_tender = $project ? $project->tender_id : '';
-$project_tender_id=Tender::findOne($project_tender);
-$projectName = $project_tender_id ? $project_tender_id->title : '';
-
-
-$p_manager_pop=User::findOne(['id'=>$success_project_popup->user_id]);
-?>
-<?=$projectName?>
-</h6>
-<h6 style="color:cornflowerblue; text-align:left;">
-Budget: <?=$success_project_popup->budget ?>
-</h6>
-<p style="color:grey; text-align:left;">Start Date:<span style="color:#222;"><?= Yii::$app->formatter->asDatetime($success_project_popup->start_at) ?></span>  End/Deadline:<span style="color:mediumseagreen;"> <?= Yii::$app->formatter->asDatetime($success_project_popup->end_at )?> </span>  Project Manager: <?=$p_manager_pop->username ?></p>
-  
-  <div class="tender-label inline-block px-2 py rounded-full bg-green-200 text-green-800"> <?=getStatusLabelProject($success_project_popup->status)?> </div>
-<a class="py-1 whitespace-nowrap px-2 border border-primary rounded text-primary mr-10" style="display: flex; justify-content: flex-end; margin-top: 5px;" >View Details </a>
-<hr/>
-</li>
-  
-  <?php endforeach ;?>
-  
-</ul>
-
-
-</div>
-
-</div>
-
- </div>     
-
-
-
- <!-- POPUP PAGES PROGRESS PROJECTS -->
- <?php 
-    $hold_project_popup=Project::find()->all();
-?>
- <div class="popup" id="popup-6">
-<div class="overlay">
-</div>
-
-<div class="content">
-    <div class="close-btn " onclick="togglePopup6()">&times;</div>
-   
-
-<table class="table table-striped">
-<thead>
-    <tr>
-     
-      <th scope="col">Project</th>
-      <th scope="col">Budget</th>
-      <th scope="col">Start Date</th>
-      <th scope="col">End Date</th>
-     
-    </tr>
-  </thead>
-  <tbody class="scrow">
-  <?php foreach ($hold_project_popup as $hold_project_popup) : ?>
-    <tr>
-     
-      <td style="text-align:justify;">
-      <?php
-$project = Project::findOne($hold_project_popup->id);
-$project_tender = $project ? $project->tender_id : '';
-$project_tender_id=Tender::findOne($project_tender);
-$projectName = $project_tender_id ? $project_tender_id->title : '';
-
-
-$p_manager_pop=User::findOne(['id'=>$hold_project_popup->user_id]);
-?>
-<?=$projectName?>
-      </td>
-      <td><?=$hold_project_popup->budget ?></td>
-      <td style="text-align:justify;"><?= Yii::$app->formatter->asDatetime($hold_project_popup->start_at) ?></td>
-      <td style="text-align:justify;"><?= Yii::$app->formatter->asDatetime($hold_project_popup->end_at )?></td>
-      
-    </tr>
-
-    <?php endforeach ;?>
-    
-</table>
-  
-
-
-</div>
-
- </div>     
 
                 
 

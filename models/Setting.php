@@ -7,29 +7,25 @@ use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 
 /**
- * This is the model class for table "team".
+ * This is the model class for table "setting".
  *
  * @property int $id
- * @property string $name
- * @property int $status
  * @property int|null $created_at
  * @property int|null $updated_at
  * @property int|null $created_by
- * @property int $task_id
- * @property int $project_id
- * @property int $user_id
+ * @property int $end_clarification
+ * @property string $logo
+ * @property string $logo2
  */
-class Team extends \yii\db\ActiveRecord
+class Setting extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'team';
+        return 'setting';
     }
-
-
 
     public function behaviors(){
         return [
@@ -55,10 +51,10 @@ class Team extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['project_id'], 'required'],
-            [['status', 'created_at', 'updated_at','project_id', 'created_by','team_no'], 'integer'],
-            [['name'], 'string', 'max' => 255],
-            [['user_id'], 'safe'],
+            [[ 'end_clarification'], 'integer'],
+            [['end_clarification'], 'required'],
+            [['created_at', 'updated_at', 'created_by','password','email','company','address','phone'], 'string', 'max' => 255],
+            [['logo', 'logo2'], 'safe'],
         ];
     }
 
@@ -69,25 +65,18 @@ class Team extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
-            'user_id'=>'Member',
-            'status' => 'Status',
-            'team_no'=>'Project  Req.. team',
-            'project_id' => 'project_id',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'created_by' => 'Created By',
-           
+            'end_clarification' => 'End Clarification',
+            'logo' => 'Logo',
+            'logo2' => 'Logo2',
+            'password'=>'Password',
+            'email'=>'Email',
+            'company'=>'Company',
+            'address'=>'Address',
+            'phone'=>'Phone'
+
         ];
     }
-
-
-
-
-
-public function getUsers()
-{
-    return $this->hasMany(User::class, ['id' => 'user_id'])
-        ->viaTable('team_user', ['team_id' => 'id']);
-}
 }

@@ -22,9 +22,13 @@ $this->context->layout = 'admin';
         <!-- ============================================================== -->
         <div class="row"></div>
 <div class="tender-update">
-
+<?php if(Yii::$app->user->can('admin')):?>
     <h1><?= Html::encode($this->title) ?></h1>
+    <?php endif;?>
 
+    <?php if(Yii::$app->user->can('author')&!Yii::$app->user->can('admin')):?>
+    <h1>Submit Document For:  <?= $model->title?></h1>
+    <?php endif;?>
     <?= $this->render('_edit', [
         'model' => $model,
     ]) ?>

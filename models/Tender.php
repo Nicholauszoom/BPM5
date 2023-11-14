@@ -66,7 +66,7 @@ class Tender extends \yii\db\ActiveRecord
     {
         return [
             [['title', 'description','document'], 'required'],
-            [['status', 'updated_at', 'created_by','budget','session','submit_to'], 'integer'],
+            [['status', 'updated_at', 'created_by','budget','session'], 'integer'],
             [['title', 'description','PE','TenderNo','coment'], 'string', 'max' => 255],
             [['session','budget'], 'default', 'value' => 0],
             [['coment'], 'default', 'value'=>'reason not submitted || not awarded'],
@@ -75,7 +75,7 @@ class Tender extends \yii\db\ActiveRecord
             ['publish_at', 'compare', 'compareValue' => date('Y-m-d'), 'operator' => '<='],
             ['expired_at', 'date', 'format' => 'php:Y-m-d'],
             ['publish_at', 'date', 'format' => 'php:Y-m-d'],
-
+            [['status'], 'default', 'value' => 5],
             ['date_from', 'date', 'format' => 'php:Y-m-d'],
             ['date_to', 'date', 'format' => 'php:Y-m-d'],
             // [['assigned_to'], 'each', 'rule' => ['integer']],
@@ -107,7 +107,6 @@ class Tender extends \yii\db\ActiveRecord
             // 'assigned_to'=>'Assigned To',
             'date_from'=>'Date From',
             'date_to'=>'Date To',
-            'submit_to'=>'Submitted To',
             // 'supervisor'=>'Supervisor',
             'created_by' => 'Created By',
         ];

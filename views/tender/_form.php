@@ -8,7 +8,6 @@
 
 use app\models\Department;
 use app\models\User;
-use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\jui\DatePicker;
 // use yii\jui\DatePicker;
@@ -53,17 +52,24 @@ $department=Department::find()->all();
 
 <?php if (Yii::$app->user->can('admin')) : ?>   
     
-    <?= $form->field($model, 'status', ['template' => "{label}\n<div class='input-group'>{input}\n<span class='input-group-addon'><i class='fa fa-info'></i></span></div>\n{error}"])->label('Status * <small class="text-muted">eg.awarded</small>')->dropDownList(
-            [
-                1 => 'awarded',
-                2 => 'not-awarded',
-                3 => 'submitted',
-                4 => 'not submitted',
-                5 => 'on-progress',
-            ],
-            ['prompt' => 'Select tender Status'] // Disable the field if the expiration date is not greater than the current date
-
-        ); ?>
+  <?= $form->field($model, 'status', ['template' => "{label}\n<div class='input-group'>{input}\n<span class='input-group-addon'><i class='fa fa-info'></i></span></div>\n{error}"])
+    ->label('Status * <small class="text-muted">eg.awarded</small>')
+    ->dropDownList(
+        [
+            1 => 'awarded',
+            2 => 'not-awarded',
+            3 => 'submitted',
+            4 => 'not submitted',
+            5 => 'on-progress',
+        ],
+        [
+            'prompt' => 'Select tender Status', // Disable the field if the expiration date is not greater than the current date
+            'options' => [
+                5 => ['selected' => true] // Set 'on-progress' as the default selected option
+            ]
+        ]
+    );
+?>
 
 </div>
 
@@ -108,14 +114,10 @@ $department=Department::find()->all();
   
 
 <?php endif; ?>
-    <?php if (Yii::$app->user->can('author')) : ?>
+    <?php if (Yii::$app->user->can('author') && !Yii::$app->user->can('author')) : ?>
 
     <?= $form->field($model, 'submission')->fileInput()?>
-    <?php echo $form->field($model, 'submit_to')->dropDownList(
-    ArrayHelper::map($department, 'id', 'name'),
-    ['prompt' => 'Department document to be submitted']
-); ?>
-
+ 
 <?php endif; ?>
 
     <div class="form-group">

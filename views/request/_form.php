@@ -187,7 +187,7 @@ Modal::end();
 </table>
 <!--
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Save', ['class' => 'btn bt<th scope="col">ref no</th>n-success']) ?>
     </div>
                 -->
 

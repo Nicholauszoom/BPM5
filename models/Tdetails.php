@@ -60,6 +60,7 @@ class Tdetails extends \yii\db\ActiveRecord
             ['bidmeet', 'compare', 'compareValue' => date('Y-m-d'), 'operator' => '>='],
             ['site_visit_date', 'compare', 'compareValue' => date('Y-m-d'), 'operator' => '>='],
             ['end_clarificatiion', 'compare', 'compareValue' => date('Y-m-d'), 'operator' => '>='],
+            [['site_visit'], 'default', 'value' => 1],
         ];
     }
 

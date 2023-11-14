@@ -1,6 +1,7 @@
 <?php
 
 use app\models\Department;
+use app\models\Setting;
 use app\models\Tender;
 use app\models\User;
 use yii\helpers\Html;
@@ -12,7 +13,7 @@ use yii\grid\GridView;
 /** @var app\models\UserSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Profile';
+$this->title = 'Setting';
 $this->params['breadcrumbs'][] = $this->title;
 $this->context->layout = 'admin';
 $currentUrl = Url::toRoute(Yii::$app->controller->getRoute());
@@ -29,7 +30,7 @@ $sidebarItems = [
 ];
 
 
-
+$model=Setting::find()->all();
 ?>
 
 
@@ -41,7 +42,7 @@ $sidebarItems = [
         <!-- ============================================================== -->
         <di class="row"></di>
 
-
+        <?php foreach($model as $model):?>
 <section style="background-color: #eee;">
   <div class="container py-5">
    
@@ -49,24 +50,22 @@ $sidebarItems = [
     <div class="row">
       <div class="col-lg-4">
         <div class="card mb-4">
+            
           <div class="card-body text-center">
-            <img src="https://cdn-icons-png.flaticon.com/128/1177/1177568.png?ga=GA1.1.812721869.1686883631" alt="avatar"
-              class="rounded-circle img-fluid" style="width: 150px;">
-            <h5 class="my-3"><?=$profile->username?></h5>
             <?php
-      $department = Department::findOne($profile->department);
-      if ($department !== null) {
-          ?>
-          <p class="text-muted mb-1"><?= $department->name ?></p>
-          <?php
-      } else {
-          ?>
-          <p class="text-muted mb-1">User has no department</p>
-          <?php
-      }
-      ?>
+              $fileName = $model->logo;
+              $filePath = Yii::getAlias('@webroot/upload/' . $fileName);
+              $downloadPath = Yii::getAlias('@web/upload/' . $fileName);
+            ?>
+            <img src=<?=$downloadPath?> alt="avatar"
+              class="rounded-circle img-fluid" style="width: 150px;">
+            <h5 class="my-3"><?=$model->logo?></h5>
+          <p class="text-muted mb-1"></p>
+      
+          <p class="text-muted mb-1"></p>
+        
            
-            <p class="text-muted mb-4">Salasala, Dar es Salaam, Tz</p>
+            <p class="text-muted mb-4"></p>
           
           </div>
         </div>
@@ -103,87 +102,95 @@ $sidebarItems = [
           <div class="card-body">
             <div class="row">
               <div class="col-sm-3">
-                <p class="mb-0">Full Name</p>
+                <p class="mb-0">End Clarification Days Interval</p>
               </div>
               <div class="col-sm-9">
-                <p class="text-muted mb-0"><?=$profile->username?></p>
+                <p class="text-muted mb-0"><?=$model->end_clarification?>  </p>
               </div>
             </div>
             <hr>
             <div class="row">
               <div class="col-sm-3">
-                <p class="mb-0">Email</p>
+                <p class="mb-0">Company Name</p>
               </div>
               <div class="col-sm-9">
-                <p class="text-muted mb-0"><?=$profile->email?></p>
+                <p class="text-muted mb-0"><?=$model->company?></p>
               </div>
             </div>
             <hr>
             <div class="row">
               <div class="col-sm-3">
-                <p class="mb-0">Mobile</p>
+                <p class="mb-0">Organization Email</p>
               </div>
               <div class="col-sm-9">
-                <p class="text-muted mb-0"> 0765432178</p>
+                <p class="text-muted mb-0"><?=$model->email?></p>
               </div>
             </div>
             <hr>
             <div class="row">
               <div class="col-sm-3">
-                <p class="mb-0">Address</p>
+                <p class="mb-0">Default Password</p>
               </div>
               <div class="col-sm-9">
-                <p class="text-muted mb-0">Salasala, Dar es Salaam, Tz</p>
+                <p class="text-muted mb-0"><?=$model->password?></p>
               </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <p class="mb-0">Organization Phone</p>
+              </div>
+              <div class="col-sm-9">
+                <p class="text-muted mb-0"><?=$model->phone?></p>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <p class="mb-0">Company Address</p>
+              </div>
+              <div class="col-sm-9">
+                <p class="text-muted mb-0"><?=$model->address?></p>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <p class="mb-0">Created Date</p>
+              </div>
+              <div class="col-sm-9">
+                <p class="text-muted mb-0"><?=Yii::$app->formatter->asDatetime($model->created_at)?></p>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <p class="mb-0">Updated Date</p>
+              </div>
+              <div class="col-sm-9">
+                <p class="text-muted mb-0"><?=Yii::$app->formatter->asDatetime($model->updated_at)?></p>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+            <div class="col-sm-9">
+            <?php if (Yii::$app->user->can('admin') && Yii::$app->user->can('author')) : ?>
+
+            <?= Html::a('<span class="glyphicon glyphicon-pencil"></span><span style="color:blue;">  Edit Setting </span>', ['update', 'id'=> $model->id], [
+                    'title' => 'edit',
+                    'data-method' => 'post',
+                    'data-pjax' => '0',
+                ]) ?>
+                <?php endif; ?>
+            </div>
             </div>
           </div>
         </div>
-        <div class="row">
-
-
-          <div class="col-md-6">
-            <div class="card mb-4 mb-md-0">
-              <div class="card-body">
-                <p class="mb-4"><span class="text-primary font-italic me-1">assigment</span> Tender Status
-                </p>
-                <?php foreach ($tender as $tender):?>
-
-                <p class="mb-1" style="font-size: .77rem;"><?=$tender->title?></p>
-               
-                <p class="text-muted mb-0 " style="font-size: .60rem;">Publish: <?=Yii::$app->formatter->asDatetime($tender->publish_at)?>, Submitt:<?=Yii::$app->formatter->asDatetime($tender->expired_at)?></p>
-                <?php endforeach;?>
-              </div>
-              
-            </div>
-          </div>
-
-
-          <div class="col-md-6">
-            <div class="card mb-4 mb-md-0">
-              <div class="card-body">
-                <p class="mb-4"><span class="text-primary font-italic me-1">assigment</span> Project Status
-                </p>
-               
-                <?php foreach ($project as $project):?>
-                  
-                  <?php
-                    $project_title=Tender::findOne($project->tender_id);
-                    ?>
-                <p class="mb-1" style="font-size: .77rem;"><?=$project_title->title?></p>
-               
-                <p class="text-muted mb-0 " style="font-size: .60rem;">Start: <?=Yii::$app->formatter->asDatetime($project->start_at)?>, End:<?=Yii::$app->formatter->asDatetime($project->end_at)?></p>
-                <?php endforeach;?>
-              </div>
-              
-
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
-
+<?php endforeach;?>
     </div>
 </div>

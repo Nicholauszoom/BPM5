@@ -2,14 +2,11 @@
 
 use app\models\Activity;
 use app\models\Adetail;
-use app\models\Department;
 use app\models\Office;
 use app\models\Tattachmentss;
 use app\models\User;
 use app\models\UserActivity;
-use app\models\UserAssignment;
 use yii\helpers\Html;
-use yii\helpers\Url;
 use yii\widgets\DetailView;
 
 /** @var yii\web\View $this */
@@ -238,7 +235,7 @@ span{
     <h1><?= Html::encode($this->title) ?></h1>
 
    
-<div class="bar-progrress mt-2 ">
+<div class="bar-progrress mt-2 mb-5">
 <ul class="bar">
     <li>
 
@@ -271,9 +268,9 @@ span{
 </ul>
 </div>
 
+<p>
+<?php if (Yii::$app->user->can('admin') && Yii::$app->user->can('author')) : ?>
 
-
-    <p >
         <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('Delete', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
@@ -283,21 +280,26 @@ span{
             ],
         ]) ?>
 
-<?= Html::a('Submitted', ['', 'id' => $model->id], [
+<?php if($model->status===5):?>
+<?= Html::a('Submit', ['submitst', 'tenderId' => $model->id], [
             'class' => 'btn btn-secondary',
             'data' => [
                 'confirm' => 'Are you sure you want to change the status to Submit of this item?',
                 'method' => 'post',
             ],
         ]) ?>
+<?php endif;?>
 
-<?= Html::a('Awarded', ['award', 'id' => $model->id], [
+<?php if($model->status===3):?>
+<?= Html::a('Award', ['award', 'tenderId' => $model->id], [
     'class' => 'btn btn-success',
     'data' => [
         'confirm' => 'Are you sure you want to change the status to Award of this item?',
         'method' => 'post',
     ],
 ]) ?>
+<?php endif;?>
+<?php endif;?>
     </p>
 
     <?= DetailView::widget([
@@ -497,15 +499,7 @@ span{
             //         return $model->submission ? Html::a('<i class="fa fa-download"></i> complete tender submitted document', Url::to($model->submission), ['class' => 'btn btn-warning']) : '';
             //     },
             // ],
-            [
-                'attribute'=>'submit_to',
-                'format'=>'raw',
-                'value'=>function ($model){
-                    $department = Department::findOne($model->submit_to);
-                    $departmentName =  $department ?  $department ->name : 'Unknown';
-                     return $departmentName;
-                },
-            ],
+           
 
             [
                 'attribute' => 'coment',
@@ -619,9 +613,10 @@ span{
        $office_loca=$office->location;
       ?>
       <td><?= $office_loca?></td>
+    
 
       <td>
-               
+      <?php if (Yii::$app->user->can('admin')&&Yii::$app->user->can('author')) : ?>
                 <?= Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['tdetail/update', 'id'=> $tdetail->id], [
                     'title' => 'edit',
                     'data-method' => 'post',
@@ -632,16 +627,23 @@ span{
                     'data-method' => 'post',
                     'data-pjax' => '0',
                 ]) ?>
+                <?php endif;?>
             </td>
     
 
     </tr>
+    
     <?php endforeach; ?>
     <tr>
+
       <td>
-             
+      <?php if (Yii::$app->user->can('admin')&&Yii::$app->user->can('author')) : ?>
       <?= Html::a('+ Add',  [ 'tdetail/create' , 'tenderId'=> $model->id]) ?>
+      <?php endif;?>
     </td>
+    
+      <td></td>
+      <td></td>
       <td></td>
       <td></td>
       <td></td>
@@ -676,6 +678,20 @@ function getSecurityLabel($status)
       1 => '<span class="">Security Declaration</span>',
       2 => '<span class="">Bid/Tender Security</span>',
      
+    ];
+
+    return isset($statusLabels[$status]) ? $statusLabels[$status] : '';
+}
+
+
+function getStatustLabel($status)
+{
+    $statusLabels = [
+        1 => '<span class="badge badge-success">awarded</span>',
+        2 => '<span class="badge badge-warning">not-awarded</span>',
+        3 => '<span class="badge badge-secondary">submitted</span>',
+        4 => '<span class="badge badge-secondary">not-submtted</span>',
+        5 => '<span class="badge badge-secondary">on-progress</span>',
     ];
 
     return isset($statusLabels[$status]) ? $statusLabels[$status] : '';
@@ -765,3 +781,30 @@ if (status === 1) {
     }
 
 </script>
+
+
+<script>
+$(document).ready(function() {
+    console.log('JavaScript code is executing.');
+    // Add a click event listener to the award button
+    $('#award-button').click(function() {
+        var tenderId = <?= $model->id ?>; // Assuming $tenderId is the variable that holds the tender ID in your view file
+        
+        // Make an AJAX request
+        $.ajax({
+            url: '/TenderController/award?tenderId=' + tenderId, // Replace with the actual controller and action
+            type: 'POST',
+            data: {status: 1}, // Data to be sent to the server
+            success: function(response) {
+                // Handle the success response
+                console.log('Award button clicked successfully');
+            },
+            error: function(xhr, status, error) {
+                // Handle the error response
+                console.error('Error occurred while clicking the award button');
+            }
+        });
+    });
+});
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

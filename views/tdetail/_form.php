@@ -1,5 +1,6 @@
 <?php
 
+use app\models\Setting;
 use app\models\Tender;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
@@ -16,7 +17,7 @@ use yii\jui\DatePicker;
 <div class="tdetails-form">
 
     <?php $form = ActiveForm::begin(); ?>
-
+<!--
     <?= $form->field($model, 'site_visit', ['template' => "{label}\n<div class='input-group'>{input}\n<span class='input-group-addon'><i class='fa fa-bell'></i></span></div>\n{error}"])->label('Sitevisit *<small class="text-muted">from tender department</small>')->dropDownList(
     [
         1 => 'a. YES',
@@ -27,8 +28,9 @@ use yii\jui\DatePicker;
         'prompt' => 'Tender requires site visit?',
     ]
 ) ?>
-<div id="additional-form" style="display: none;">
-<?= $form->field($model, 'site_visit_date', ['template' => "{label}\n<div class='input-group'>{input}\n<span class='input-group-addon'><i class='fa fa-calender'></i></span></div>\n{error}"])->label('Sitevisit Date *<small class="text-muted"></small>')->widget(DatePicker::class, [
+-->
+
+<?= $form->field($model, 'site_visit_date')->label('Site visit date * <small class="text-muted">eg.10-12-2025 03:00 AM</small>')->widget(DatePicker::class, [
     'language' => 'ru',
     'dateFormat' => 'MM/dd/yyyy',
     'options' => [
@@ -44,39 +46,25 @@ $tender_by_id = Tender::findOne($tenderId);
 $publish_date = $tender_by_id->publish_at;
 $submit_date = $tender_by_id->expired_at;
 
+$end_clarification_days= Setting::findOne(1);
+$end_clarification= $end_clarification_days->end_clarification;
+$end_clarification_days_interval=$submit_date  - ($end_clarification * 3600 * 24);
+
+
 ?>
-<div id="site-visit-date-warning" style="display: none; color: red;"><i class="fas fa-warning" style="color:orange ;"></i> Date must be between <span style = "color:dimgray;"><?=Yii::$app->formatter->asDatetime($publish_date)?></span>  and <span style = "color:dimgray;"><?=Yii::$app->formatter->asDatetime($submit_date)?></span></div>
+<div id="site-visit-date-warning" style="display: none; color: red;"><i class="fas fa-warning" style="color:orange ;"></i> Date must be between <span style = "color:dimgray;"><?=Yii::$app->formatter->asDatetime($publish_date)?></span>  and <span style = "color:dimgray;"><?=Yii::$app->formatter->asDatetime($end_clarification_days_interval)?></span></div>
 
 </div>
 
-
-    <?= $form->field($model, 'end_clarificatiion', ['template' => "{label}\n<div class='input-group'>{input}\n<span class='input-group-addon'><i class='fa fa-calender'></i></span></div>\n{error}"])->widget(DatePicker::class, [
-    'language' => 'ru',
-    'dateFormat' => 'MM/dd/yyyy',
-    'options' => [
-        'class' => 'form-control',
-        'type' => 'date', // Use 'text' type instead of 'date' to ensure consistent behavior across browsers
-        'id'=>'clarification-date-input'
-    ],
-    'value' => Yii::$app->formatter->asDate($model->end_clarificatiion, 'MM/dd/yyyy'), // Set the value of the date picker
-]) ?>
-<?php
-$tender_by_id = Tender::findOne($tenderId);
-$publish_date = $tender_by_id->publish_at;
-$submit_date = $tender_by_id->expired_at;
-
-?>
-<div id="clarification-date-warning" style="display: none; color: red;"><i class="fas fa-warning" style="color:orange ;"></i> Date must be between <span style = "color:dimgray;"><?=Yii::$app->formatter->asDatetime($publish_date)?></span>  and <span style = "color:dimgray;"><?=Yii::$app->formatter->asDatetime($submit_date)?></span></div>
-
     <?= $form->field($model, 'tender_id')->hiddenInput(['value' => $tenderId])->label(false) ?>
 
-    <?= $form->field($model, 'bidmeet', ['template' => "{label}\n<div class='input-group'>{input}\n<span class='input-group-addon'><i class='fa fa-calender'></i></span></div>\n{error}"])->widget(DatePicker::class, [
+    <?= $form->field($model, 'bidmeet')->label('Bid Meet Date * <small class="text-muted">eg.10-12-2025 03:00 AM</small>')->widget(DatePicker::class, [
     'language' => 'ru',
     'dateFormat' => 'MM/dd/yyyy',
     'options' => [
         'class' => 'form-control',
         'type' => 'date', // Use 'text' type instead of 'date' to ensure consistent behavior across browsers
-        'id'=> 'bidmeet-date-input'
+        'id'=> 'bidmeet-input'
     ],
     'value' => Yii::$app->formatter->asDate($model->bidmeet, 'MM/dd/yyyy'), // Set the value of the date picker
 ]) ?>
@@ -85,13 +73,42 @@ $tender_by_id = Tender::findOne($tenderId);
 $publish_date = $tender_by_id->publish_at;
 $submit_date = $tender_by_id->expired_at;
 
-?>
-<div id="bidmeet-date-warning" style="display: none; color: red;"><i class="fas fa-warning" style="color:orange ;"></i> Date must be between <span style = "color:dimgray;"><?=Yii::$app->formatter->asDatetime($publish_date)?></span>  and <span style = "color:dimgray;"><?=Yii::$app->formatter->asDatetime($submit_date)?></span></div>
+$end_clarification_days= Setting::findOne(1);
+$end_clarification= $end_clarification_days->end_clarification;
+$end_clarification_days_interval=$submit_date  - ($end_clarification * 3600 * 24);
 
+
+?>
+<div id="bidmeet-warning" style="display: none; color: red;"><i class="fas fa-warning" style="color:orange ;"></i> Date must be between <span style = "color:dimgray;"><?=Yii::$app->formatter->asDatetime($publish_date)?></span>  and <span style = "color:dimgray;"><?=Yii::$app->formatter->asDatetime($end_clarification_days_interval)?></span></div>
+
+
+
+<?= $form->field($model, 'end_clarificatiion')->label('End Of Clarification Date * <small class="text-muted">eg.10-12-2025 03:00 AM</small>')->widget(DatePicker::class, [
+    'language' => 'ru',
+    'dateFormat' => 'MM/dd/yyyy',
+    'options' => [
+        'class' => 'form-control',
+        'type' => 'date', // Use 'text' type instead of 'date' to ensure consistent behavior across browsers
+        'id'=> 'end_clarificatiion-input'
+    ],
+    'value' => Yii::$app->formatter->asDate($model->end_clarificatiion, 'MM/dd/yyyy'), // Set the value of the date picker
+]) ?>
+<?php
+$tender_by_id = Tender::findOne($tenderId);
+$publish_date = $tender_by_id->publish_at;
+$submit_date = $tender_by_id->expired_at;
+
+$end_clarification_days= Setting::findOne(1);
+$end_clarification= $end_clarification_days->end_clarification;
+$end_clarification_days_interval = $submit_date  - ($end_clarification * 3600 * 24);
+
+
+?>
+<div id="end_clarificatiion-warning" style="display: none; color: red;"><i class="fas fa-warning" style="color:orange ;"></i> Date must be between <span style = "color:dimgray;"><?=Yii::$app->formatter->asDatetime($publish_date)?></span>  and <span style = "color:dimgray;"><?=Yii::$app->formatter->asDatetime($end_clarification_days_interval)?></span></div>
 
 <div class="form-row">
     <div class="col">
-<?= $form->field($model, 'tender_security', ['template' => "{label}\n<div class='input-group'>{input}\n<span class='input-group-addon'><i class='fa fa-shield'></i></span></div>\n{error}"])->dropDownList(
+<?= $form->field($model, 'tender_security')->label('Tender Security * <small class="text-muted">eg.security declaration</small>')->dropDownList(
     [
         1 => 'a. Security Declaration',
         2 => 'b. Bid/Tender Security',
@@ -104,17 +121,17 @@ $submit_date = $tender_by_id->expired_at;
 <div id="add-form" style="display: none;">
     <div class="form-row">
         <div class="col">
-            <?= $form->field($model, 'amount', ['template' => "{label}\n<div class='input-group'>{input}\n<span class='input-group-addon'><i class='fa fa-'></i></span></div>\n{error}"])->textInput(['type'=>'number','placeholder'=>'TSH'])->label(false) ?>
+            <?= $form->field($model, 'amount')->label('Amount* <small class="text-muted">TSH</small>')->textInput(['type'=>'number','placeholder'=>'TSH'])?>
         </div>
         <div class="col">
-            <?= $form->field($model, 'percentage', ['template' => "{label}\n<div class='input-group'>{input}\n<span class='input-group-addon'><i class='fa fa-percent'></i></span></div>\n{error}"])->textInput(['type'=>'number','placeholder'=>'%'])->label(false) ?>
+            <?= $form->field($model, 'percentage')->label('Percentage <small class="text-muted">%</small>')->textInput(['type'=>'number','placeholder'=>'%']) ?>
         </div>
     </div>
 </div>
     </div>
     <div class="col">
     
-    <?php echo $form->field($model, 'office', ['template' => "{label}\n<div class='input-group'>{input}\n<span class='input-group-addon'><i class='fa fa-building'></i></span></div>\n{error}"])->dropDownList(
+    <?php echo $form->field($model, 'office')->label('Office * <small class="text-muted">eg. Dodoma/Dar es salaam/Zanzibar</small>')->dropDownList(
     ArrayHelper::map($office, 'id', function ($item) {
         return '<i class="fas fa-map-marker-alt" style="color: blue;"></i> ' . $item['location'];
     }),
@@ -187,14 +204,16 @@ JS;
 
 $this->registerJs($script);
 ?>
-
-
-
 <?php
 $tender_by_id = Tender::findOne($tenderId);
 $submit_date = $tender_by_id->expired_at;
-?>
 
+$end_clarification_days= Setting::findOne(1);
+
+$end_clarification=$end_clarification_days->end_clarification;
+
+$end_clarification_days_interval=$submit_date  - ($end_clarification * 3600 * 24);
+?>
 <script>
 // Get the publish date input element
 var sitevisitDateInput = document.getElementById('site-visit-date-input');
@@ -204,12 +223,11 @@ sitevisitDateInput.addEventListener('change', function() {
   // Get the entered publish date and current date
   var enteredDate = new Date(this.value);
   var currentDate = new Date();
-  var submitDate = new Date("<?php echo $submit_date; ?>"); // Convert PHP date to JavaScript date object
+  
+  var submitDate = new Date("<?php echo date('Y/m/d',$end_clarification_days_interval); ?>"); // Subtract 7 days from the submitted date
 
-  // Format the submitDate to compare it with the entered date
-  var formattedSubmitDate = submitDate.toLocaleDateString('en-ru', { year: 'numeric', month: '2-digit', day: '2-digit' });
   // Compare the entered publish date with the current date and submit date
-  if (enteredDate < currentDate || enteredDate > formattedSubmitDate ) {
+  if (enteredDate < currentDate || enteredDate > submitDate) {
     // Display a warning message
     var warningMessage = document.getElementById('site-visit-date-warning');
     warningMessage.style.display = 'block';
@@ -219,60 +237,56 @@ sitevisitDateInput.addEventListener('change', function() {
     warningMessage.style.display = 'none';
   }
 });
+</script>
 
-//bidmeet date script
-//Get the submit date input element
-var bidMeetDateInput = document.getElementById('bidmeet-date-input');
+
+<script>
+
+var bidmeetInput = document.getElementById('bidmeet-input');
 
 // Add an event listener to the change event
-bidMeetDateInput .addEventListener('change', function() {
+bidmeetInput.addEventListener('change', function() {
   // Get the entered publish date and current date
-  var enterBidDate = new Date(this.value);
+  var enteredDate = new Date(this.value);
   var currentDate = new Date();
+  
+  var submitDate = new Date("<?php echo date('Y/m/d',$end_clarification_days_interval); ?>"); // Subtract 7 days from the submitted date
 
-//   Remove the time information from the current date
-  currentDate.setHours(0, 0, 0, 0);
-
-  // Compare the entered publish date with the current date
-  if (enterBidDate < currentDate) {
+  // Compare the entered publish date with the current date and submit date
+  if (enteredDate < currentDate || enteredDate > submitDate) {
     // Display a warning message
-    var warningMessage = document.getElementById('bidmeet-date-warning');
+    var warningMessage = document.getElementById('bidmeet-warning');
     warningMessage.style.display = 'block';
   } else {
     // Hide the warning message
-    var warningMessage = document.getElementById('bidmeet-date-warning');
+    var warningMessage = document.getElementById('bidmeet-warning');
     warningMessage.style.display = 'none';
   }
-
 });
+</script>
 
 
+<script>
 
-//end clarification date script
-//Get the submit date input element
-var clarificationDateInput = document.getElementById('clarification-date-input');
+var end_clarificatiionInput = document.getElementById('end_clarificatiion-input');
 
 // Add an event listener to the change event
-clarificationDateInput .addEventListener('change', function() {
+end_clarificatiionInput.addEventListener('change', function() {
   // Get the entered publish date and current date
-  var enterClarifDate = new Date(this.value);
+  var enteredDate = new Date(this.value);
   var currentDate = new Date();
+  
+  var submitDate = new Date("<?php echo date('Y/m/d',$end_clarification_days_interval); ?>"); // Subtract 7 days from the submitted date
 
-//   Remove the time information from the current date
-  currentDate.setHours(0, 0, 0, 0);
-
-  // Compare the entered publish date with the current date
-  if (enterClarifDate  < currentDate) {
+  // Compare the entered publish date with the current date and submit date
+  if (enteredDate < currentDate || enteredDate >= submitDate) {
     // Display a warning message
-    var warningMessage = document.getElementById('clarification-date-warning');
+    var warningMessage = document.getElementById('end_clarificatiion-warning');
     warningMessage.style.display = 'block';
   } else {
     // Hide the warning message
-    var warningMessage = document.getElementById('clarification-date-warning');
+    var warningMessage = document.getElementById('end_clarificatiion-warning');
     warningMessage.style.display = 'none';
   }
-
 });
-
-
 </script>

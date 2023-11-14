@@ -6,6 +6,7 @@
 use app\assets\AppAsset;
 use app\assets\CustomAsset;
 use app\assets\RealAsset;
+use app\models\Adetail;
 use app\models\Project;
 use app\models\Tender;
 use app\models\UserAssignment;
@@ -28,7 +29,8 @@ $this->registerMetaTag(['charset' => Yii::$app->charset], 'charset');
 $this->registerMetaTag(['name' => 'viewport', 'content' => 'width=device-width, initial-scale=1, shrink-to-fit=no']);
 $this->registerMetaTag(['name' => 'description', 'content' => $this->params['meta_description'] ?? '']);
 $this->registerMetaTag(['name' => 'keywords', 'content' => $this->params['meta_keywords'] ?? '']);
-$this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii::getAlias('@web/favicon.ico')]);
+
+$this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii::getAlias('@web/')]);
 
 // JuiAsset::register($this->getView());
 AppAsset::register($this);
@@ -347,11 +349,11 @@ height:200px;
         <span class="badge bg-red animated-badge"><?= $projectCount ?></span>
     <?php endif; ?></a></li>
                       <?php endif; ?>
-                     
+                      <?php if (Yii::$app->user->can('admin')&&Yii::$app->user->can('author') || Yii::$app->user->can('author')) : ?>
                       <li><a href="/tender/pm">Assigned Tender<span class="badge bg-blue"><?=$newTender?></span></a></li>
 
                       <li><a href="/activity/create">Activity</a></li>
-                    
+                      <?php endif; ?>
                     </ul>
                   </li>
                  
@@ -387,11 +389,6 @@ height:200px;
                   </li>
                   -->
               
-                  <li><a><i class="fa fa-users"></i>Team<span class="fa fa-chevron-down"></span></a>
-                    <ul class="nav child_menu">
-                      <li><a href="/team">index</a></li>
-                    </ul>
-                  </li>
                   <?php endif; ?>
                   <li><a><i class="fa fa-user"></i>User & Department<span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
@@ -425,7 +422,7 @@ height:200px;
                  
                   <li><a><i class="fa fa-gear"></i>Settings<span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <li><a href="/site/profile">profile & resert</a></li>
+                      <li><a href="/setting">index</a></li>
                     </ul>
                   </li>
                 </ul>
@@ -483,11 +480,13 @@ height:200px;
                 <a href="javascript:;" class="dropdown-toggle info-number" id="navbarDropdown1" data-toggle="dropdown" aria-expanded="false">
                 <?php
     $userId = Yii::$app->user->id;
+    
     // Retrieve the projects assigned to the user
     $complete_tender_count = Tender::find()->all();
     $notificationCount = 0;
 
     foreach ($complete_tender_count as $cmpt_tender) {
+     
         $currentDate = date('Y-m-d'); // Get the current date
         $expiredDays = floor(($cmpt_tender->expired_at - strtotime($currentDate)) / (60 * 60 * 24));
 
@@ -497,7 +496,7 @@ height:200px;
     }
     ?>
 
-    <?php if (Yii::$app->user->can('admin')) : ?>
+  
         <i class="fa fa-envelope-o"></i>
         <?php if ($notificationCount > 0): ?>
             <span class="badge bg-red animated-badge"><?= $notificationCount ?></span>
@@ -515,11 +514,14 @@ $complete_tender = Tender::find()
   
   
 foreach ($complete_tender as $cmpt_tender) {
+  $assgn_user=Adetail::find()->where(['tender_id'=>$cmpt_tender->id])->all();
+  // foreach ($assgn_user as $a_user) {
   $currentDate = date('Y-m-d'); // Get the current date
   $expiredDays = floor(($cmpt_tender->expired_at - strtotime($currentDate)) / (60 * 60 * 24));
     if ($expiredDays >= 0 && $expiredDays < 7 ) {
+      // if( $userId===$a_user->user_id | $a_user->supervisor){
         ?>
-
+        
         <a href="<?= Url::to(['tender/view', 'id' => $cmpt_tender->id]) ?>" class="link border-top">
             <div class="d-flex no-block align-items-center p-7 " >
                 <span class="btn btn-primary btn-circle d-flex align-items-center justify-content-center ">
@@ -532,11 +534,12 @@ foreach ($complete_tender as $cmpt_tender) {
             </div>
         </a>
         <?php
-    
+    }
   }
-}
+// }
+// }
 ?>
-  <?php endif; ?>
+
   
             </div>
         </li>

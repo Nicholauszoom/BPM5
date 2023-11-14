@@ -38,7 +38,10 @@ $this->context->layout = 'admin';
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
+    <?php if (Yii::$app->user->can('admin') && Yii::$app->user->can('author')) : ?>
         <?= Html::a('Create Tender', ['create'], ['class' => 'btn btn-success']) ?>
+      <?php endif; ?>
+
         <?= Html::a('Generate Report', ['form'], ['class' => 'btn btn-primary']) ?>
 
     </p>
@@ -138,7 +141,7 @@ $this->context->layout = 'admin';
                 
                         $badgeHtml = '';
                         if ($isEligibleTender) {
-                            $badgeHtml = '';
+                            $badgeHtml = '<img src="https://img.icons8.com/?size=48&id=2EuI26KqYJ6b&format=png" class="truncate"></img>';
                         }
                 
                         return Html::a($badgeHtml, ['project/create', 'tenderId' => $model->id], [

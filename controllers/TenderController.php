@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Adetail;
 use app\models\Department;
 use app\models\Office;
 use app\models\Tdetails;
@@ -205,6 +206,7 @@ public function actionAssigned()
     }
 
     }
+    
 
     // public function scenarios()
     // {
@@ -253,7 +255,8 @@ public function actionAssigned()
                      if (Yii::$app->user->can('author')) {
 
                         $tender=Tender::findOne($id);
-                        $tender_supervisor=User::findOne($tender->supervisor);
+                        $tender_s=Adetail::findOne(['tender_id'=>$id]);
+                        $tender_supervisor=User::findOne($tender_s->supervisor);
 
                         $userId = Yii::$app->user->id;
                         $assigned_one=User::findOne($userId);
@@ -384,7 +387,7 @@ public function actionAssigned()
             $userId = Yii::$app->user->id;
     
             // Find user assignments
-            $user_assignments = UserAssignment::find()
+            $user_assignments = Adetail::find()
                 ->where(['user_id' => $userId])
                 ->all();
     
@@ -421,28 +424,55 @@ public function actionAssigned()
         }
     }
 
+    // public function actionAward($tenderId)
+    // {
+       
+    //         $model = Tender::findOne($tenderId);
+    
+    //         // Assign the new value to the status attribute
+    //         $model->status = 1;
+    
+    //         if ($model->save()) {
+    //             return $this->redirect(['project/create', 'tenderId' => $model->id]);
+    //         } else {
+    //             throw new NotFoundHttpException('The status could not be saved.');
+    //         }
+       
+    // }
 
-    public function actionAward($id)
+    public function actionAward($tenderId)
     {
-        if (Yii::$app->user->can('admin')) {
-            $model=Tender::findOne($id);
-          
-            if($model->save()){
-
-             $model->status=1;
-            }
-            else{
-                throw new NotFoundHttpException('the status is not saved');
-              }
+       
+            $tender=Tender::findOne($tenderId);
 
             
-        return $this->redirect(['project/create', 'tenderId' =>$model->id]);
-        }else{
-            throw new ForbiddenHttpException;
-        }
-       
+            // Update the status in the database based on the tender ID
+            // Replace 'YourModel' with your actual model class name, 'status' with the database column name, and 'tenderId' with the appropriate tender ID column name
+            $tender->status=1;
+            Tender::updateAll(['status' => $tender->status], ['id' => $tenderId]);
+            
+            return $this->redirect(['project/create', 'tenderId' => $tenderId]);
+        
+        
+        return 'Error'; // Return an error message or any other response if needed
     }
 
+    public function actionSubmitst($tenderId)
+    {
+       
+            $tender=Tender::findOne($tenderId);
+
+            
+            // Update the status in the database based on the tender ID
+            // Replace 'YourModel' with your actual model class name, 'status' with the database column name, and 'tenderId' with the appropriate tender ID column name
+            $tender->status=3;
+            Tender::updateAll(['status' => $tender->status], ['id' => $tenderId]);
+            
+            return $this->redirect(['tender/view', 'id' => $tenderId]);
+        
+        
+        return 'Error'; // Return an error message or any other response if needed
+    }
     /**
      * Finds the Tender model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
