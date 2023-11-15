@@ -19,11 +19,11 @@ $tender_attach=Tender::findOne($tenderId);
 
     <div class="form-row">
         <div class="col">
-        <?= $form->field($model, 'document')->fileInput()?>
+        <?= $form->field($model, 'document')->label('Openning result* <small class="text-muted">i.e.tender opening result document</small>')->fileInput()?>
         </div>
         <div class="col">
 
-       <?= $form->field($model, 'evaluation')->fileInput()?>
+       <?= $form->field($model, 'evaluation')->label('Evaluation* <small class="text-muted">i.e.evaluation document</small>')->fileInput()?>
         </div>
 
   
@@ -33,29 +33,29 @@ $tender_attach=Tender::findOne($tenderId);
 <div class="form-row">
 
 <div class="col">
-<?= $form->field($model, 'negotiation')->fileInput()?>
+<?= $form->field($model, 'negotiation')->label('Negotiation* <small class="text-muted">etc.negotiation document</small>')->fileInput()?>
 </div>
 <div class="col">
-<?= $form->field($model, 'award')->fileInput()?>
+<?= $form->field($model, 'award')->label('Award * <small class="text-muted">i.e.award document</small>')->fileInput()?>
 </div>
 </div>
 
 <div class="form-row">
 <div class="col">
-<?= $form->field($model, 'intention')->fileInput()?>
+<?= $form->field($model, 'intention')->label('Intention* <small class="text-muted">etc.intention document</small>')->fileInput()?>
 </div>
 <div class="col">
-<?= $form->field($model, 'arithmetic')->fileInput()?>
+<?= $form->field($model, 'arithmetic')->label('Arithmetic* <small class="text-muted">i.e.arithmentic document</small>')->fileInput()?>
 </div>
 
 </div>
   
 <div class="form-row">
 <div class="col">
-<?= $form->field($model, 'audit')->fileInput()?>
+<?= $form->field($model, 'audit')->label('Audit* <small class="text-muted">etc.audit document</small>')->fileInput()?>
 </div>
     <div class="col">
-    <?= $form->field($model, 'cancellation')->fileInput()?>
+    <?= $form->field($model, 'cancellation')->label('Cancellation* <small class="text-muted">i.e.cancellation document</small>')->fileInput()?>
     </div>
     
 </div>
@@ -63,7 +63,7 @@ $tender_attach=Tender::findOne($tenderId);
 <div class="form-rom">
 
 <div class="col">
-    <?= $form->field($model, 'contract')->fileInput()?>
+    <?= $form->field($model, 'contract')->label('Contract Document* <small class="text-muted">i.e.contract document</small>')->fileInput()?>
     </div>
 </div>
  

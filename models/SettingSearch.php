@@ -18,7 +18,7 @@ class SettingSearch extends Setting
     {
         return [
             [['id', 'created_at', 'updated_at', 'created_by', 'end_clarification'], 'integer'],
-            [['logo', 'logo2'], 'safe'],
+            [['logo'], 'safe'],
         ];
     }
 
@@ -65,8 +65,7 @@ class SettingSearch extends Setting
             'end_clarification' => $this->end_clarification,
         ]);
 
-        $query->andFilterWhere(['like', 'logo', $this->logo])
-            ->andFilterWhere(['like', 'logo2', $this->logo2]);
+        $query->andFilterWhere(['like', 'logo', $this->logo]);
 
         return $dataProvider;
     }

@@ -19,6 +19,7 @@ use yii\widgets\ActiveForm;
 // $this->registerAssetBundle(BootstrapAsset::class);
 $users=User::find()->all();
 $department=Department::find()->all();
+// phpinfo();exit;
 ?>
 
 <div class="tender-form">

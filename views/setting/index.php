@@ -174,23 +174,44 @@ $model=Setting::find()->all();
             <hr>
             <div class="row">
             <div class="col-sm-9">
+            
             <?php if (Yii::$app->user->can('admin') && Yii::$app->user->can('author')) : ?>
 
+              <?php if ($model->id!==null):?>
             <?= Html::a('<span class="glyphicon glyphicon-pencil"></span><span style="color:blue;">  Edit Setting </span>', ['update', 'id'=> $model->id], [
                     'title' => 'edit',
                     'data-method' => 'post',
                     'data-pjax' => '0',
                 ]) ?>
-                <?php endif; ?>
+              <div style="color:red; margin:5px;">
+              <?= Html::a('<span class="glyphicon glyphicon-trash"></span><span>  delete Setting </span>', ['delete','id'=>$model->id], [
+                    'title' => 'delete',
+                    'data-method' => 'post',
+                    'data-pjax' => '0',
+                ]) ?>
+              </div>
+    
+               <?php endif; ?>
+               <?php endif; ?>
+
             </div>
             </div>
           </div>
         </div>
         </div>
+        
       </div>
     </div>
   </div>
 </section>
 <?php endforeach;?>
+<?php if ($model==null):?>
+<?= Html::a('<span class="glyphicon glyphicon-plus"></span><span style="color:blue;">  New Setting </span>', ['create'], [
+                    'title' => 'create',
+                    'data-method' => 'post',
+                    'data-pjax' => '0',
+                ]) ?>
+    <?php endif; ?>
+             
     </div>
 </div>

@@ -117,8 +117,28 @@ class SettingController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load($this->request->post()) && $model->validate()) {
+                 // Save the project
+                 $model->logo = UploadedFile::getInstance($model, 'logo');
+   
+                
+                 if ($model->logo) {
+                   $uploadPath = Yii::getAlias('@webroot/upload/');
+                   $fileName = $model->logo->baseName . '.' . $model->logo->extension;
+                   $filePath = $uploadPath . $fileName;
+               
+                   if ($model->logo->saveAs($filePath)) {
+                       $model->logo = '' . $fileName;
+                   }
+                   
+                   }
+                   if( $model->save()){
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
+                   
+             
+        } else {
+            $model->loadDefaultValues();
         }
 
         return $this->render('update', [

@@ -5,6 +5,7 @@
 
 /** @var app\models\SignupForm $model */
 
+use app\models\Setting;
 use yii\bootstrap5\ActiveForm;
 use yii\bootstrap5\Html;
 use yii\helpers\ArrayHelper;
@@ -13,6 +14,7 @@ $this->title = 'Assign New User';
 $this->params['breadcrumbs'][] = $this->title;
 $this->context->layout = 'admin';
 
+$setting= Setting::findOne(1);
 ?>
 
 <a href="<?= Yii::$app->request->referrer ?>" class="back-arrow">
@@ -52,13 +54,10 @@ $this->context->layout = 'admin';
               <?= $form->field($model, 'email')->textInput(['autofocus' => true]) ?>
 
             <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
-          
 
-           
+            <?= $form->field($model, 'password')->passwordInput(['value' => $setting->password]) ?>
 
-            <?= $form->field($model, 'password')->passwordInput() ?>
-
-            <?= $form->field($model, 'password_repeat')->passwordInput() ?>
+            <?= $form->field($model, 'password_repeat')->passwordInput(['value' => $setting->password]) ?>
 
             <?= $form->field($model, 'address')->textInput()?>
 

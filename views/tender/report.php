@@ -122,12 +122,36 @@ h1{
                    if ($attachments !== null) {
                  ?>
     <ol>
-        <li><?= $attachments->evaluation ?>
-    
+    <?php
+              $fileName = $attachments->evaluation;
+              $filePath = Yii::getAlias('@webroot/upload/' . $fileName);
+              $downloadPath = Yii::getAlias('@web/upload/' . $fileName);
+            ?>
+                    <iframe src=<?=$downloadPath?> width="50%" height="100"></iframe>
+
+        <li>
+
     </li>
-        <li><?= $attachments->negotiation ?></li>
+        <li>
+        <?php
+              $fileName = $attachments->negotiation;
+              $filePath = Yii::getAlias('@webroot/upload/' . $fileName);
+              $downloadPath1 = Yii::getAlias('@web/upload/' . $fileName);
+            ?>    
+        
+        <iframe src=<?= Yii::getAlias($downloadPath1) ?> width="50%" height="100"></iframe>
+
+    </li>
         <li><?= $attachments->award ?></li>
-        <li><?= $attachments->intention ?></li>
+        <li>
+        <?php
+$fileName = $attachments->intention;
+$filePath = Yii::getAlias('@webroot/upload/' . $fileName);
+$downloadPath3 = Yii::getAlias('@web/upload/' . $fileName);
+?>
+<?=$downloadPath3 ?>
+<iframe src="<?= Yii::getAlias('@web/'.$downloadPath3) ?>" width="70%" height="200px"></iframe>
+</li>
         <li><?= $attachments->arithmetic ?></li>
         <li><?= $attachments->audit ?></li>
         <li><?= $attachments->cancellation ?></li>

@@ -21,9 +21,7 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'logo')->label('logo * <small class="text-muted">System url logo</small>')->fileInput() ?>
 
     </div>
-    <div class="col">
-    <?= $form->field($model, 'logo2')->label('logo 2  * <small class="text-muted">Internal System used logo</small>')->fileInput() ?>
-    </div>
+    
    </div>
    <div class="form-row">
    <div class="col">

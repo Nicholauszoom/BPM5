@@ -119,9 +119,6 @@ function getSiteVisitLabel($status)
     return isset($statusLabels[$status]) ? $statusLabels[$status] : '';
 }
 
-
-                     
-
                  
                 }
                

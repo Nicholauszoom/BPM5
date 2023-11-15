@@ -152,7 +152,7 @@ $this->context->layout = 'admin';
                     },
                 
                     'attachment' => function ($url, $model, $key) {
-                        return Html::a('<span class="fa fa-paperclip"></span>', ['tattachments/create', 'tenderId' => $model->id], [
+                        return Html::a('<span class="fa fa-paperclip"></span>', ['tattachmentss/create', 'tenderId' => $model->id], [
                             'title' => 'tender attachment',
                             'aria-label' => 'tender attachment',
                             'class' => 'icon-button', // Add a custom CSS class for the icon button

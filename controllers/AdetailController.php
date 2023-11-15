@@ -228,10 +228,9 @@ class AdetailController extends Controller
                                                     <img src="http://teratech.co.tz/local/images/uploads/logo/163277576061522e507c527.webp" alt="teralogo">
                                                 </div>
                                                 <p>Dear ' . Html::encode($assign->username) . ',</p>
-                                                <p>Your project has been assigned to you. Please find the details below:</p>
                                                 <ul>
                                                     <li>Tender Title: ' . Html::encode($tendr->title) . '</li>
-                                                    <li> Message: ' . Html::encode($tendr->description) . '</li>
+                                                    <li> Procurement Entity: ' . Html::encode($tendr->PE) . '</li>
                                                     <li> Site Visit: ' . Html::encode(getSiteVisitLabel($tdetail->site_visit)) . '</li>
                                                     <li>Site Visit Date: ' . Html::encode(date('Y-m-d', $tdetail->site_visit_date)). '</li>    
                                                     <li> End Clarification Date: ' . Html::encode(date('Y-m-d',$tdetail->end_clarificatiion)). '</li>
@@ -246,31 +245,8 @@ class AdetailController extends Controller
                                                 <a href="' . Yii::$app->request->getHostInfo() . '/upload/' . $tendr->document . '">View Attachment</a>                                </html>
                                     ');
         
-                                //     $user_assignments = UserAssignment::find()
-                                //     ->where(['tender_id' => $tenderId])
-                                //     ->all();
-                                
-                                // $assignedUserIds = [];
-                                // foreach ($user_assignments as $user_assignment) {
-                                //     $assignedUserIds[] = $user_assignment->user_id;
-                                // }
-                                
-                                // $assignedUsers = User::find()
-                                //     ->where(['id' => $assignedUserIds])
-                                //     ->all();
-                                
-                                // // Add CC recipients
-                                // foreach ($assignedUsers as $assignedUser) {
-                                //     $message->setCc($assignedUser->email);
-                                // }
-                                    
+                               
         
-                            // Attach the document file to the email
-            // foreach ($attachments as $attachment) {
-            //     $message->attach($attachment);
-            // }
-        
-                                // $message->send();
                                 $mailer->send($message);
                             }
 

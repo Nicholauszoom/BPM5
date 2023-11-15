@@ -17,7 +17,7 @@ use yii\jui\DatePicker;
 <div class="tdetails-form">
 
     <?php $form = ActiveForm::begin(); ?>
-<!--
+
     <?= $form->field($model, 'site_visit', ['template' => "{label}\n<div class='input-group'>{input}\n<span class='input-group-addon'><i class='fa fa-bell'></i></span></div>\n{error}"])->label('Sitevisit *<small class="text-muted">from tender department</small>')->dropDownList(
     [
         1 => 'a. YES',
@@ -28,7 +28,7 @@ use yii\jui\DatePicker;
         'prompt' => 'Tender requires site visit?',
     ]
 ) ?>
--->
+<div id="additional-form" style="display: none;">
 
 <?= $form->field($model, 'site_visit_date')->label('Site visit date * <small class="text-muted">eg.10-12-2025 03:00 AM</small>')->widget(DatePicker::class, [
     'language' => 'ru',
@@ -55,7 +55,7 @@ $end_clarification_days_interval=$submit_date  - ($end_clarification * 3600 * 24
 <div id="site-visit-date-warning" style="display: none; color: red;"><i class="fas fa-warning" style="color:orange ;"></i> Date must be between <span style = "color:dimgray;"><?=Yii::$app->formatter->asDatetime($publish_date)?></span>  and <span style = "color:dimgray;"><?=Yii::$app->formatter->asDatetime($end_clarification_days_interval)?></span></div>
 
 </div>
-
+</div>
     <?= $form->field($model, 'tender_id')->hiddenInput(['value' => $tenderId])->label(false) ?>
 
     <?= $form->field($model, 'bidmeet')->label('Bid Meet Date * <small class="text-muted">eg.10-12-2025 03:00 AM</small>')->widget(DatePicker::class, [

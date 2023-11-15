@@ -54,7 +54,7 @@ class Setting extends \yii\db\ActiveRecord
             [[ 'end_clarification'], 'integer'],
             [['end_clarification'], 'required'],
             [['created_at', 'updated_at', 'created_by','password','email','company','address','phone'], 'string', 'max' => 255],
-            [['logo', 'logo2'], 'safe'],
+            [['logo'], 'safe'],
         ];
     }
 
@@ -65,17 +65,15 @@ class Setting extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-            'created_by' => 'Created By',
             'end_clarification' => 'End Clarification',
-            'logo' => 'Logo',
-            'logo2' => 'Logo2',
             'password'=>'Password',
             'email'=>'Email',
             'company'=>'Company',
             'address'=>'Address',
-            'phone'=>'Phone'
+            'phone'=>'Phone',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
+            'created_by' => 'Created By',
 
         ];
     }
