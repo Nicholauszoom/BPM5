@@ -4,6 +4,7 @@ namespace app\commands;
 
 use app\models\Activity;
 use app\models\Adetail;
+use app\models\Setting;
 use app\models\Tender;
 use app\models\User;
 use app\models\UserActivity;
@@ -243,33 +244,136 @@ class CrontController extends Controller
      }
     }
     
-
-    public function actionStatus()
-    {
-        $tenderDetails = Tender::find()->where(['status' => 5])->all();
+    public function actionStatus(){
         $currentDate = date('Y-m-d'); // Get the current date
         
-        foreach ($tenderDetails as $tenderD) {
-            if ($tenderD->expired_at < $currentDate) {
-                $tenderD->status = 4;
-                $tenderD->save();
-            }
-        }
-    }
+        // Tender with expiration date less than a week from the current date
+        $tenders = Tender::find()->where(['status'=>3])
+            ->all();
+    
+        foreach ($tenders as $tender) {
+            
+    
+            // Calculate the difference in days between the expiration date and the current date
+            $expiredDays = floor((strtotime($currentDate) - $tender->expired_at) / (60 * 60 * 24));
 
+            $adetail_tender=Adetail::findOne(['tender_id'=>$tender->id]);
+           
 
-    public function actionStatus()
-    {
-        $tenderDetails = Tender::find()->where(['status' => 5])->all();
-        $currentDate = date('Y-m-d'); // Get the current date
-        
-        foreach ($tenderDetails as $tenderD) {
-            if ($tenderD->expired_at < $currentDate) {
-                $tenderD->status = 4;
-                $tenderD->save();
-            }
-        }
+            if ($adetail_tender !== null) {
+                $supervisor_ad = User::findOne(['id' => $adetail_tender->supervisor]);
+            // Only send the email if the expiration date is less than 7 days away
+            if ($expiredDays >= 45 && $expiredDays < 120) {
+                /** @var MailerInterface $mailer */
+                $mailer = Yii::$app->mailer;
+                $message = $mailer->compose()
+                    ->setFrom('nicholaussomi5@gmail.com')
+                    ->setTo($supervisor_ad->email)
+                    ->setSubject('Reminded to Update tender status as soon results are published')
+                    ->setHtmlBody('
+                        <html>
+                        <head>
+                            <!-- CSS styles for the email body -->
+                            <style>
+                            /* CSS styles for the email body */
+                            body {
+                                font-family: Arial, sans-serif;
+                                background-color: #f4f4f4;
+                            }
+
+                            .container {
+                                max-width: 600px;
+                                margin: 0 auto;
+                                padding: 20px;
+                                background-color: #ffffff;
+                                border: 1px solid #dddddd;
+                                border-radius: 4px;
+                                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                            }
+
+                            h1 {
+                                color: blue;
+                                text-align: center;
+                            }
+
+                            p {
+                                color: #666666;
+                            }
+
+                            .logo {
+                                text-align: center;
+                                margin-bottom: 20px;
+                            }
+
+                            .logo img {
+                                max-width: 200px;
+                            }
+
+                            .assigned-by {
+                                font-weight: bold;
+                            }
+
+                            .button {
+                                display: inline-block;
+                                padding: 10px 20px;
+                                background-color: #3366cc;
+                                color: white;
+                                text-decoration: none;
+                                border-radius: 4px;
+                                margin-top: 20px;
+                            }
+
+                            .button:hover {
+                                background-color: #235daa;
+                            }
+                        </style>
+                        </head>
+                        <body>
+                            <div class="container">
+                                <div class="logo">
+                                <img src="https://ci6.googleusercontent.com/proxy/s2ioZxU1n6rXmuUxz4xYQ36Pfr2j1HnbSNgHwy2c6pjTWEvzsLe9VdZGhYp-7dE-n6oTkJ79jUw9pHPeXRePiOT7U4irwAl5esSZrsPPqvZr8N1o6g2Bhh7k7M5UGUk=s0-d-e1-ft#http://teratech.co.tz/local/images/uploads/logo/163277576061522e507c527.webp" alt="teralogo">
+                                </div>
+                                <p>Dear ' . Html::encode($supervisor_ad->username) . ',</p>
+                                <p>This tender is range between 45 to 120 days, So you reminded to update the status either AWARD OR NOT AWARD based on results:</p>
+                                <ul>
+                                    <li>Tender Title: ' . Html::encode($tender->title) . '</li>
+                                    <li>Tender PE: ' . Html::encode($tender->PE) . '</li>
+                                    <li>Expired days: ' . Html::encode($expiredDays) . '</li>
+                                    <li>Submission Date: ' . Html::encode(date('Y-m-d', $tender->expired_at)) . '</li>
+                                </ul>
+                                <p>.</p>
+                                <a href="https://example.com">Link Text</a>
+                            </div>
+                        </body>
+                        </html>
+                    ');
+    
+                $mailer->send($message);
     }
+            }
+
+         
+ }
+    }
+  
+   
+
+    // public function actionStatus()
+    // {
+    //     $settings=Setting::findOne(1);
+    //     $result_interval=$settings->result;
+    //     $tenderDetails = Tender::find()->where(['status' => 5])->all();
+    //     $currentDate = date('Y-m-d'); // Get the current date
+    
+    //     foreach ($tenderDetails as $tenderD) {
+    //         $expiredDate = $tenderD->expired_at  + ($result_interval * 3600 * 24);
+    
+    //         if ($expiredDate <= $currentDate) {
+    //             $tenderD->status = 4;
+    //             $tenderD->save();
+    //         }
+    //     }
+    // }
 }
 
 

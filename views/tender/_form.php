@@ -23,6 +23,7 @@ $department=Department::find()->all();
 ?>
 
 <div class="tender-form">
+<small>The inputs with this * indicate are required to be filled before submit th form. </small>
 
     <?php $form = ActiveForm::begin(['id'=>'my-form']); ?>
     <?php if (Yii::$app->user->can('admin')) : ?>
@@ -65,6 +66,7 @@ $department=Department::find()->all();
         ],
         [
             'prompt' => 'Select tender Status', // Disable the field if the expiration date is not greater than the current date
+            'disabled' => true,
             'options' => [
                 5 => ['selected' => true] // Set 'on-progress' as the default selected option
             ]

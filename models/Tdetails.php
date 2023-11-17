@@ -53,14 +53,17 @@ class Tdetails extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['office','end_clarificatiion','tender_security'], 'required'],
             [['site_visit','created_at', 'updated_at', 'created_by','tender_id','tender_security','office','amount','percentage'], 'integer'],
-            ['end_clarificatiion', 'date', 'format' => 'php:Y-m-d'],
+            // ['end_clarificatiion', 'date', 'format' => 'php:Y-m-d'],
             ['site_visit_date', 'date', 'format' => 'php:Y-m-d'],
             ['bidmeet', 'date', 'format' => 'php:Y-m-d'],
             ['bidmeet', 'compare', 'compareValue' => date('Y-m-d'), 'operator' => '>='],
             ['site_visit_date', 'compare', 'compareValue' => date('Y-m-d'), 'operator' => '>='],
-            ['end_clarificatiion', 'compare', 'compareValue' => date('Y-m-d'), 'operator' => '>='],
-            [['site_visit'], 'default', 'value' => 1],
+            // ['end_clarificatiion', 'compare', 'compareValue' => date('Y-m-d'), 'operator' => '>='],
+            // [['site_visit'], 'default', 'value' => 1],
+            // [['amount','percentage'], 'default', 'value' => 0],
+
         ];
     }
 

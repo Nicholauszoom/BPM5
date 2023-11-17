@@ -136,6 +136,20 @@ $sidebarItems = [
                 <p class="text-muted mb-0"><?=$profile->address?> , <?=$profile->region?>, <?=$profile->nationality?></p>
               </div>
             </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+              </div>
+              <div class="col-sm-9">
+                <p class="text-muted mb-0"> 
+                <?= Html::a('<span class="glyphicon glyphicon-pencil"></span><span style="color:blue;">  Edit Profile </span>', ['user/update', 'id'=> $profile->id], [
+                    'title' => 'edit',
+                    'data-method' => 'post',
+                    'data-pjax' => '0',
+                ]) ?>
+                </p>
+              </div>
+            </div>
           </div>
         </div>
         <div class="row">

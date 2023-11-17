@@ -21,6 +21,10 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'logo')->label('logo * <small class="text-muted">System url logo</small>')->fileInput() ?>
 
     </div>
+    <div class="col">
+   <?= $form->field($model, 'result')->label('Estimate Days Until Result * <small class="text-muted">eg.days + 3</small>')->textInput() ?>
+
+   </div>
     
    </div>
    <div class="form-row">

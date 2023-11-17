@@ -52,8 +52,15 @@ $this->context->layout = 'admin';
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
+            [
+                'attribute' => 'title',
+                'format' => 'raw',
+                'value' => function ($model) {
+                    $label = $model->session ? '' : Html::tag('span', 'new', ['class' => 'badge badge-warning']);
+                    return '<div style="display: flex; align-items: flex-start;">' . $label . '<span style="margin-left: 5px;">' . $model->title . '</span></div>';
+                },
+            ],
             'PE',
-            'title',
             'TenderNo',
             'budget',
             [
@@ -103,14 +110,14 @@ $this->context->layout = 'admin';
                 },
             ],
             // 'document',
-            [
-                'attribute' => 'session',
-                'label' => 'alert',
-                'format' => 'raw',
-                'value' => function ($model) {
-                    return $model->session ? '' : Html::tag('span', 'New', ['class' => 'badge badge-success']);
-                },
-            ],
+            // [
+            //     'attribute' => 'session',
+            //     'label' => 'alert',
+            //     'format' => 'raw',
+            //     'value' => function ($model) {
+            //         return $model->session ? '' : Html::tag('span', 'New', ['class' => 'badge badge-success']);
+            //     },
+            // ],
             // 'status',
             //'created_at',
             //'updated_at',

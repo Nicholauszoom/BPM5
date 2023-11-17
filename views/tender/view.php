@@ -18,6 +18,9 @@ $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 $this->context->layout = 'admin';
 $expireDater=$model->expired_at;
+
+$t_attachmentss=Tattachmentss::findOne(['tender_id'=>$model->id]);
+
 ?>
 <style>
     *{
@@ -269,6 +272,7 @@ span{
 </div>
 
 <p>
+
 <?php if (Yii::$app->user->can('admin') && Yii::$app->user->can('author')) : ?>
 
         <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
@@ -279,8 +283,9 @@ span{
                 'method' => 'post',
             ],
         ]) ?>
+<?php if ($model->expired_at <= strtotime(date('Y-m-d'))) : ?>
 
-<?php if($model->status===5):?>
+<?php if($model->status===5 && $model->submission!==null):?>
 <?= Html::a('Submit', ['submitst', 'tenderId' => $model->id], [
             'class' => 'btn btn-secondary',
             'data' => [
@@ -288,9 +293,21 @@ span{
                 'method' => 'post',
             ],
         ]) ?>
+        <?php endif;?>
+
+<?php if($model->status===5):?>
+<?= Html::a('Not Submit', ['nonsubmitst', 'tenderId' => $model->id], [
+            'class' => 'btn btn-secondary',
+            'data' => [
+                'confirm' => 'Are you sure you want to change the status to Not Submit of this item?',
+                'method' => 'post',
+            ],
+        ]) ?>
 <?php endif;?>
 
-<?php if($model->status===3):?>
+
+    <?php if ($model->status === 3 && $t_attachmentss !== null && $t_attachmentss->contract !== null): ?>
+
 <?= Html::a('Award', ['award', 'tenderId' => $model->id], [
     'class' => 'btn btn-success',
     'data' => [
@@ -299,6 +316,18 @@ span{
     ],
 ]) ?>
 <?php endif;?>
+<?php if($model->status===3):?>
+<?= Html::a('Not Award', ['unsucess', 'tenderId' => $model->id], [
+            'class' => 'btn btn-secondary',
+            'data' => [
+                'confirm' => 'Are you sure you want to change the status to Not Award of this item?',
+                'method' => 'post',
+            ],
+        ]) ?>
+<?php endif;?>
+
+<?php endif;?>
+
 <?php endif;?>
     </p>
 
@@ -328,6 +357,21 @@ span{
             [
                 'attribute' => 'expired_at',
                 'format' => ['date', 'php:Y-m-d H:i:s'],
+            ],
+            [
+                'attribute' => 'Supervisor',
+                'format' => 'raw',
+                'value' => function ($model) {
+                    $adetailt = Adetail::findOne(['tender_id' => $model->id]);
+                    $supervisorByName = 'Unknown';
+            
+                    if ($adetailt !== null) {
+                        $supervisor = User::findOne($adetailt->supervisor);
+                        $supervisorByName = $supervisor !== null ? $supervisor->username : 'Unknown';
+                    }
+            
+                    return $supervisorByName;
+                },
             ],
         //     [
         //     'attribute' => 'assigned_to',
@@ -458,6 +502,7 @@ span{
             ],
             // 'created_at',
             // 'updated_at',
+           
             [
                 'attribute'=>'created_by',
                 'format'=>'raw',
@@ -484,9 +529,8 @@ span{
                 'format' => 'raw',
                 'value' => function ($model) {
                     $fileName = $model->submission;
-                    $filePath = Yii::getAlias('@webroot/' . $fileName);
-                    $downloadPath = Yii::getAlias('@web/.
-                    ' . $fileName);
+                    $filePath = Yii::getAlias('@webroot/upload/' . $fileName);
+                    $downloadPath = Yii::getAlias('@web/upload/' . $fileName);
                     return $model->submission ? Html::a('<i class="fa fa-file-pdf" aria-hidden="true" style="font-size: 24px;"></i> ' . $model->submission, $downloadPath, ['class' => 'btn btn-', 'target' => '_blank']) : '';
                 },
             ],

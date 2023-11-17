@@ -111,6 +111,15 @@ $model=Setting::find()->all();
             <hr>
             <div class="row">
               <div class="col-sm-3">
+                <p class="mb-0">Estimate Days Until Publish Result</p>
+              </div>
+              <div class="col-sm-9">
+                <p class="text-muted mb-0"><?=$model->result?>  </p>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
                 <p class="mb-0">Company Name</p>
               </div>
               <div class="col-sm-9">

@@ -64,7 +64,7 @@ class Project extends \yii\db\ActiveRecord
     {
         return [
             [[ 'description', 'budget','status'], 'required'],
-            [['description'], 'string'],
+            [['description','contract'], 'string'],
             [['created_at', 'updated_at','progress','status','created_by','user_id','tender_id'], 'integer'],
             [[ 'budget'], 'string', 'max' => 255],
             
@@ -105,6 +105,7 @@ class Project extends \yii\db\ActiveRecord
             'start_at'=>'Start Date',
             'end_at'=> 'End Date',
             'invite_letter'=>'Invitation Letter',
+            'contract'=>'Contract',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'created_by' => 'Created By',

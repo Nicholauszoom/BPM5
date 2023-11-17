@@ -33,6 +33,9 @@ $sidebarItems = [
     ['url' => ['/report'], 'label' => 'Report', 'icon' => 'bi bi-file-text'],
     ['url' => ['/setting'], 'label' => 'Settings', 'icon' => 'bi bi-gear'],
 ];
+       /*s AIM OF THIS OPERATION IS TO SHOW THE BUDGET PROGRESS / REMAINNING*/
+//project budget per request
+
 ?>
 
 <!--
@@ -80,39 +83,19 @@ $sidebarItems = [
                     ['class' => 'yii\grid\SerialColumn'],
                     // 'id',
                     [
-                        'attribute'=>'tender_id',
-                        'format'=>'raw',
-                        'value'=>function ($model){
+                        'attribute' => 'tender_id',
+                        'format' => 'raw',
+                        'value' => function ($model) {
                             $tender = Tender::findOne($model->tender_id);
                             $tenderTitle = $tender ? $tender->title : 'Unknown';
-                             return $tenderTitle;
+                            $label = $model->isViewed ? '' : Html::tag('span', 'New', ['class' => 'badge badge-success']);
+                            return '<div style="display: flex; align-items: flex-start;">' . $label . '<span style="margin-left: 5px;">' . $tenderTitle . '</span></div>';
                         },
                     ],
                     // 'description:ntext',
                     'budget',
 
-                    [
-                        'attribute' => 'progress',
-                        'format' => 'raw',
-                        'value' => function ($model) {
-                            $progress = $model->progress;
-                            $progressBar = '<div class="progress progress_sm">';
-                            $progressBar .= '<div class="progress-bar bg-green" role="progressbar" style="width: ' . $progress . '%;"></div>';
-                            $progressBar .= '</div>';
-                            $progressBar .= '<small>' . $progress . '% Complete</small>';
-                            return $progressBar;
-                        },
-                    ],
-                    [
-                        'attribute' => 'status',
-                        'value' => function ($model) {
-                            return getStatusLabel($model->status);
-                        },
-                        'format' => 'raw',
-                        'contentOptions' => function ($model) {
-                            return ['class' => getStatusClass($model->status)];
-                        },
-                    ],
+                   
                     [
                         'attribute' => 'end_at',
                         'format' => 'raw',
@@ -148,6 +131,18 @@ $sidebarItems = [
                 //         },
                        
                 // ],
+
+
+                [
+                    'attribute' => 'status',
+                    'value' => function ($model) {
+                        return getStatusLabel($model->status);
+                    },
+                    'format' => 'raw',
+                    'contentOptions' => function ($model) {
+                        return ['class' => getStatusClass($model->status)];
+                    },
+                ],
                 [
                     'attribute'=>'user_id',
                     'format'=>'raw',
@@ -157,14 +152,14 @@ $sidebarItems = [
                          return $createdByName;
                     },
                 ],
-                [
-                    'attribute' => 'isViewed',
-                    'label' => 'alert',
-                    'format' => 'raw',
-                    'value' => function ($model) {
-                        return $model->isViewed ? '' : Html::tag('span', 'New', ['class' => 'badge badge-success']);
-                    },
-                ],
+                // [
+                //     'attribute' => 'isViewed',
+                //     'label' => 'alert',
+                //     'format' => 'raw',
+                //     'value' => function ($model) {
+                //         return $model->isViewed ? '' : Html::tag('span', 'New', ['class' => 'badge badge-success']);
+                //     },
+                // ],
                 
 
                     //'updated_at',

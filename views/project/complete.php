@@ -77,12 +77,13 @@ $sidebarItems = [
                     ['class' => 'yii\grid\SerialColumn'],
                     // 'id',
                     [
-                        'attribute'=>'tender_id',
-                        'format'=>'raw',
-                        'value'=>function ($model){
+                        'attribute' => 'tender_id',
+                        'format' => 'raw',
+                        'value' => function ($model) {
                             $tender = Tender::findOne($model->tender_id);
                             $tenderTitle = $tender ? $tender->title : 'Unknown';
-                             return $tenderTitle;
+                            $label = $model->isViewed ? '' : Html::tag('span', 'New', ['class' => 'badge badge-success']);
+                            return $tenderTitle . ' ' . $label;
                         },
                     ],
                     // 'description:ntext',
@@ -154,14 +155,14 @@ $sidebarItems = [
                          return $createdByName;
                     },
                 ],
-                [
-                    'attribute' => 'isViewed',
-                    'label' => 'alert',
-                    'format' => 'raw',
-                    'value' => function ($model) {
-                        return $model->isViewed ? '' : Html::tag('span', 'New', ['class' => 'badge badge-success']);
-                    },
-                ],
+                // [
+                //     'attribute' => 'isViewed',
+                //     'label' => 'alert',
+                //     'format' => 'raw',
+                //     'value' => function ($model) {
+                //         return $model->isViewed ? '' : Html::tag('span', 'New', ['class' => 'badge badge-success']);
+                //     },
+                // ],
                 
 
                     //'updated_at',

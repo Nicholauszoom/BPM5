@@ -76,6 +76,7 @@ $department=Department::find()->all();
                 5 => 'on-progress',
             ],
             ['prompt' => 'Select tender Status',
+            'disabled' => true,
             ] // Disable the field if the expiration date is not greater than the current date
 
         ); ?>
@@ -122,10 +123,7 @@ $department=Department::find()->all();
     <?php if (Yii::$app->user->can('author')) : ?>
 
     <?= $form->field($model, 'submission')->fileInput()?>
-    <?php echo $form->field($model, 'submit_to')->dropDownList(
-    ArrayHelper::map($department, 'id', 'name'),
-    ['prompt' => 'Department document to be submitted']
-); ?>
+ 
 
 <?php endif; ?>
 

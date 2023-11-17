@@ -51,7 +51,7 @@ class Setting extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [[ 'end_clarification'], 'integer'],
+            [[ 'end_clarification','result'], 'integer'],
             [['end_clarification'], 'required'],
             [['created_at', 'updated_at', 'created_by','password','email','company','address','phone'], 'string', 'max' => 255],
             [['logo'], 'safe'],
@@ -71,6 +71,7 @@ class Setting extends \yii\db\ActiveRecord
             'company'=>'Company',
             'address'=>'Address',
             'phone'=>'Phone',
+            'result'=>'Result interval',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'created_by' => 'Created By',

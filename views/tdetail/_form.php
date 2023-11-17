@@ -11,11 +11,19 @@ use yii\jui\DatePicker;
 /** @var app\models\Tdetails $model */
 /** @var yii\widgets\ActiveForm $form */
 
+$tender_by_id = Tender::findOne($tenderId);
+$publish_date = $tender_by_id->publish_at;
+$submit_date = $tender_by_id->expired_at;
+
+$end_clarification_days= Setting::findOne(1);
+$end_clarification= $end_clarification_days->end_clarification;
+$end_clarification_days_interval=$submit_date  - ($end_clarification * 3600 * 24);
+
 
 ?>
 
 <div class="tdetails-form">
-
+<small>The inputs with this * indicate are required to be fill and also End of clarification Date of this tender: <span style="color: dark-grey;"><?=Yii::$app->formatter->asDate($end_clarification_days_interval)?></span> </small>
     <?php $form = ActiveForm::begin(); ?>
 
     <?= $form->field($model, 'site_visit', ['template' => "{label}\n<div class='input-group'>{input}\n<span class='input-group-addon'><i class='fa fa-bell'></i></span></div>\n{error}"])->label('Sitevisit *<small class="text-muted">from tender department</small>')->dropDownList(
@@ -82,29 +90,18 @@ $end_clarification_days_interval=$submit_date  - ($end_clarification * 3600 * 24
 <div id="bidmeet-warning" style="display: none; color: red;"><i class="fas fa-warning" style="color:orange ;"></i> Date must be between <span style = "color:dimgray;"><?=Yii::$app->formatter->asDatetime($publish_date)?></span>  and <span style = "color:dimgray;"><?=Yii::$app->formatter->asDatetime($end_clarification_days_interval)?></span></div>
 
 
-
-<?= $form->field($model, 'end_clarificatiion')->label('End Of Clarification Date * <small class="text-muted">eg.10-12-2025 03:00 AM</small>')->widget(DatePicker::class, [
-    'language' => 'ru',
-    'dateFormat' => 'MM/dd/yyyy',
-    'options' => [
-        'class' => 'form-control',
-        'type' => 'date', // Use 'text' type instead of 'date' to ensure consistent behavior across browsers
-        'id'=> 'end_clarificatiion-input'
-    ],
-    'value' => Yii::$app->formatter->asDate($model->end_clarificatiion, 'MM/dd/yyyy'), // Set the value of the date picker
-]) ?>
 <?php
 $tender_by_id = Tender::findOne($tenderId);
 $publish_date = $tender_by_id->publish_at;
 $submit_date = $tender_by_id->expired_at;
 
-$end_clarification_days= Setting::findOne(1);
-$end_clarification= $end_clarification_days->end_clarification;
-$end_clarification_days_interval = $submit_date  - ($end_clarification * 3600 * 24);
+$end_clarification_days = Setting::findOne(1);
+$end_clarification = $end_clarification_days->end_clarification;
+$end_clarification_days_interval = $submit_date - ($end_clarification * 3600 * 24);
 
-
+$model->end_clarificatiion = date('m/d/Y', $end_clarification_days_interval);
 ?>
-<div id="end_clarificatiion-warning" style="display: none; color: red;"><i class="fas fa-warning" style="color:orange ;"></i> Date must be between <span style = "color:dimgray;"><?=Yii::$app->formatter->asDatetime($publish_date)?></span>  and <span style = "color:dimgray;"><?=Yii::$app->formatter->asDatetime($end_clarification_days_interval)?></span></div>
+    <?= $form->field($model, 'end_clarificatiion')->hiddenInput(['value' => $model->end_clarificatiion ])->label(false) ?>
 
 <div class="form-row">
     <div class="col">

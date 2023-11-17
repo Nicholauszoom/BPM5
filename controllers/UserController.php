@@ -113,11 +113,25 @@ class UserController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+    
+        if ($this->request->isPost) {
+            // Load the form data
+            $model->load($this->request->post());
+    
+            // Check if a new password is provided
+            if (!empty($model->password)) {
+                // Encrypt the plaintext password
+                $model->setPassword($model->password);
+            }
+    
+            // Save the model
+            if ($model->save()) {
+               
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+                // return $this->redirect(['view', 'id' => $model->id]);
+            }
         }
-
+    
         return $this->render('update', [
             'model' => $model,
         ]);

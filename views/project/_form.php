@@ -1,5 +1,6 @@
 <?php
 
+use app\models\Tattachmentss;
 use app\models\Tender;
 use kartik\datecontrol\DateControl;
 use yii\helpers\ArrayHelper;
@@ -37,8 +38,7 @@ use yii\web\View;
 // ]);
 // ");
 
-
-    
+$t_attachmentss=Tattachmentss::findOne(['tender_id'=>$tenderId]);
 
 ?>
 
@@ -107,6 +107,8 @@ use yii\web\View;
 
 
 <?= $form->field($model, 'tender_id')->hiddenInput(['value' => $tenderId])->label(false)?>
+<?= $form->field($model, 'contract')->textInput(['value' => $t_attachmentss->contract])->label(false)?>
+
 
 <?= $form->field($model, 'end_at')->widget(DatePicker::class, [
     'language' => 'ru',

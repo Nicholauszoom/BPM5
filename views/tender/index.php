@@ -50,11 +50,12 @@ $this->context->layout = 'admin';
 
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); 
-            $dataProvider = new ActiveDataProvider([
-                'query' => Tender::find()->orderBy(['created_at' => SORT_DESC]),
-              
-            ]);
-            $model=Tender::find()->all();
+        $dataProvider = new ActiveDataProvider([
+            'query' => Tender::find()->orderBy(['created_at' => SORT_ASC]),
+        ]);
+        
+        $model = Tender::find()->all();
+        
             
             ?>
 
@@ -70,9 +71,15 @@ $this->context->layout = 'admin';
         ]),
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
+            [
+                'attribute' => 'title',
+                'format' => 'raw',
+                'value' => function ($model) {
+                    $label = $model->session ? '' : Html::tag('span', 'new', ['class' => 'badge badge-warning']);
+                    return '<div style="display: flex; align-items: flex-start;">' . $label . '<span style="margin-left: 5px;">' . $model->title . '</span></div>';
+                },
+            ],
             'PE',
-            'title',
             'TenderNo',
             [
                 'attribute' => 'publish_at',

@@ -132,6 +132,8 @@ class SiteController extends Controller
     
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            Yii::$app->session->setFlash('success', 'You successfully sigin.');
+
             return $this->redirect(['/dashboard/admin']);
         }
     
@@ -381,11 +383,15 @@ public function actionResetPassword($token)
 
     $model = new ResetPasswordForm();
     $model->token = $token;
-
+    
     if ($model->load(Yii::$app->request->post()) && $model->validate()) {
         // Reset the user's password
         $user->setPassword($model->password);
         $user->removePasswordResetToken();
+    
+        // Set a non-null value for the access_token
+        $user->access_token = 'your_access_token_value';
+    
         if ($user->save(false)) {
             Yii::$app->session->setFlash('success', 'Your password has been reset successfully.');
             return $this->redirect(['site/login']);

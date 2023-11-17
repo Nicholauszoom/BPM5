@@ -261,6 +261,8 @@ height:200px;
 
    
 </head>
+<?php if (Yii::$app->user->can('admin') || Yii::$app->user->can('author')) : ?>
+
 <body class="nav-md">
   <?php $this->beginBody() ?>
   
@@ -583,5 +585,6 @@ foreach ($complete_tender as $cmpt_tender) {
 
 ?>
 </body>
+<?php endif;?>
 </html>
 <?php $this->endPage() ?>

@@ -107,18 +107,15 @@ public function actionAssigned()
         $model= $this->findModel($id);
 
         
-        if ($model !== null) {
+        if ($model !== null && $model->submission !== null) {
            
             // Set isViewed attribute to 1
             $model->session= 1;
+            Tender::updateAll(['session' => $model->status], ['id' => $id]);
     
             // Save the model to persist the changes
-            $model->save();
-            
-
-            
-
-            
+            // $model->save();
+    
         }
 
         $tdetail=Tdetails::find()
@@ -365,6 +362,8 @@ public function actionAssigned()
                     $model->publish_at=$model->publish_at;
                     $model->save();
                 }
+                Yii::$app->session->setFlash('success', 'Upload successfull.');
+
                 return $this->redirect(['view', 'id' => $model->id]);
                 }
             
@@ -473,6 +472,42 @@ public function actionAssigned()
         
         return 'Error'; // Return an error message or any other response if needed
     }
+
+    public function actionNonsubmitst($tenderId)
+    {
+       
+            $tender=Tender::findOne($tenderId);
+
+            
+            // Update the status in the database based on the tender ID
+            // Replace 'YourModel' with your actual model class name, 'status' with the database column name, and 'tenderId' with the appropriate tender ID column name
+            $tender->status=4;
+            Tender::updateAll(['status' => $tender->status], ['id' => $tenderId]);
+            
+            return $this->redirect(['tender/view', 'id' => $tenderId]);
+        
+        
+        return 'Error'; // Return an error message or any other response if needed
+    }
+
+
+    public function actionUnsucess($tenderId)
+    {
+       
+            $tender=Tender::findOne($tenderId);
+
+            
+            // Update the status in the database based on the tender ID
+            // Replace 'YourModel' with your actual model class name, 'status' with the database column name, and 'tenderId' with the appropriate tender ID column name
+            $tender->status=2;
+            Tender::updateAll(['status' => $tender->status], ['id' => $tenderId]);
+            
+            return $this->redirect(['tender/view', 'id' => $tenderId]);
+        
+        
+        return 'Error'; // Return an error message or any other response if needed
+    }
+
     /**
      * Finds the Tender model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
@@ -610,6 +645,7 @@ public function actionUnsubmit()
 }
 }
 
+
 public function actionSubmit()
 {
     if (Yii::$app->user->can('admin')) {
@@ -625,6 +661,5 @@ public function actionSubmit()
     throw new ForbiddenHttpException;
 }
 }
-
 
 }

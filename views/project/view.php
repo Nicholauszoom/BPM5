@@ -149,18 +149,7 @@ $userId = Yii::$app->user->id;
                     return Yii::$app->formatter->asDatetime($model->updated_at);
                 },
             ],
-            [
-                'attribute' => 'progress',
-                'format' => 'raw',
-                'value' => function ($model) {
-                    $progress = $model->progress;
-                    $progressBar = '<div class="progress progress_sm">';
-                    $progressBar .= '<div class="progress-bar bg-green" role="progressbar" style="width: ' . $progress . '%;"></div>';
-                    $progressBar .= '</div>';
-                    $progressBar .= '<small>' . $progress . '% Complete</small>';
-                    return $progressBar;
-                },
-            ],
+          
             [
               'attribute' => 'remainingBudget',
               'format' => 'raw',

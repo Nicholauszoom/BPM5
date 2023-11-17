@@ -311,7 +311,7 @@ $budgetDataJson = Json::encode($budgetData);
     <div class="row">
 <!-- Earnings (Monthly) Card Example -->
 <div class="col-xl-3 col-md-6 mb-4">
-<a href="/project/complete">
+<a href="">
     <div class="card border-left-success shadow h-100 py-2">
         <div class="card-body">
             <div class="row no-gutters align-items-center">
@@ -331,7 +331,7 @@ $budgetDataJson = Json::encode($budgetData);
 
 <!-- Earnings (Monthly) Card Example -->
 <div class="col-xl-3 col-md-6 mb-4">
-<a  href="/project/progress">
+<a  href="">
     <div class="card border-left-info shadow h-100 py-2">
         <div class="card-body">
             <div class="row no-gutters align-items-center">
@@ -393,7 +393,7 @@ $budgetDataJson = Json::encode($budgetData);
 
 <!-- Earnings (Monthly) Card Example -->
 <div class="col-xl-3 col-md-6 mb-4">
-<a  href="/project">
+<a  href="">
     <div class="card border-left-primary shadow h-100 py-2">
         <div class="card-body">
             <div class="row no-gutters align-items-center">
@@ -420,7 +420,7 @@ $budgetDataJson = Json::encode($budgetData);
 
 <!-- Earnings (Monthly) Card Example -->
 <div class="col-xl-3 col-md-6 mb-4">
-<a  href="/project">
+<a  href="">
     <div class="card border-left-primary shadow h-100 py-2">
         <div class="card-body">
             <div class="row no-gutters align-items-center">
@@ -447,7 +447,7 @@ $budgetDataJson = Json::encode($budgetData);
 
 <!-- Earnings (Monthly) Card Example -->
 <div class="col-xl-3 col-md-6 mb-4">
-<a  href="/project">
+<a  href="">
     <div class="card border-left-primary shadow h-100 py-2">
         <div class="card-body">
             <div class="row no-gutters align-items-center">
@@ -521,24 +521,21 @@ $formattedBudget = number_format($projectBudget, 2)
   <div class="col-md-12 col-sm-12">
     
      
-      <?php if (Yii::$app->user->can('admin')) : ?>
+      <?php if (Yii::$app->user->can('admin') && !Yii::$app->user->can('author')) : ?>
     <!-- Include the latest version of Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <!-- Include jQuery library -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
+ 
 <div class="container">
   <div class="row">
-    <div class="col-md-8 offset-md-2">
+    <div class="col-md-6">
       <h2 class="text-muted mt-10 text-center">A Graph Of Project Against Profit</h2>
       <div class="chart-container">
         <canvas id="lineChart" style="width: 100%; height: 400px;"></canvas>
       </div>
     </div>
-  </div>
-
-  <div class="row mt-30">
-    <div class="col-md-8 offset-md-2">
+    <div class="col-md-6">
       <h2 class="text-muted mt-20 text-center">A Graph of Tender per Day</h2>
       <div class="chart-container">
         <canvas id="myChart" style="width: 100%; height: 400px;"></canvas>

@@ -173,15 +173,17 @@ class ProjectController extends Controller
 
         $model= $this->findModel($id);
 
+    
+          
         if ($model !== null) {
            
             // Set isViewed attribute to 1
-            $model->isViewed =1;
-
-            
+            $model->isViewed= 1;
+            Project::updateAll(['isViewed' => $model->isViewed], ['id' => $id]);
     
             // Save the model to persist the changes
-            $model->save(true);
+            // $model->save();
+    
         }
        
 

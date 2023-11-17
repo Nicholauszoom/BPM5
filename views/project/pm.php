@@ -75,7 +75,8 @@ $sidebarItems = [
             'value'=>function ($model){
                 $tender = Tender::findOne($model->tender_id);
                 $tenderTitle = $tender ? $tender->title : 'Unknown';
-                 return $tenderTitle;
+                $label = $model->isViewed ? '' : Html::tag('span', 'New', ['class' => 'badge badge-success']);
+                return '<div style="display: flex; align-items: flex-start;">' . $label . '<span style="margin-left: 5px;">' . $tenderTitle . '</span></div>';
             },
         ],
         'budget',
@@ -93,16 +94,7 @@ $sidebarItems = [
                 return $progressBar;
             },
         ],
-        [
-            'attribute' => 'status',
-            'value' => function ($model) {
-                return getStatusLabel($model->status);
-            },
-            'format' => 'raw',
-            'contentOptions' => function ($model) {
-                return ['class' => getStatusClass($model->status)];
-            },
-        ],
+       
         [
             'attribute' => 'end_at',
             'format' => 'raw',
@@ -136,15 +128,24 @@ $sidebarItems = [
         //     },
         // ],
        
+        // [
+        //     'attribute' => 'isViewed',
+        //     'label' => 'alert',
+        //     'format' => 'raw',
+        //     'value' => function ($model) {
+        //         return $model->isViewed ? '' : Html::tag('span', 'New', ['class' => 'badge badge-success']);
+        //     },
+        // ],
         [
-            'attribute' => 'isViewed',
-            'label' => 'alert',
-            'format' => 'raw',
+            'attribute' => 'status',
             'value' => function ($model) {
-                return $model->isViewed ? '' : Html::tag('span', 'New', ['class' => 'badge badge-success']);
+                return getStatusLabel($model->status);
+            },
+            'format' => 'raw',
+            'contentOptions' => function ($model) {
+                return ['class' => getStatusClass($model->status)];
             },
         ],
-        
         [
             'attribute'=>'created_by',
             'format'=>'raw',

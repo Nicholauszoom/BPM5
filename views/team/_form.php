@@ -11,15 +11,9 @@ $this->context->layout = 'admin';
 
 ?>
 
-
-
-
 <div class="team-form">
 
     <?php $form = ActiveForm::begin(); ?>
-
-
- 
 
 <?= $form->field($model, 'project_id')->hiddenInput(['value' => $projectId])->label(false)?>
 
@@ -58,7 +52,7 @@ $project_pm=Project::findOne($projectId);
     </div>
         <div class="col">
 
-        <?= $form->field($model, 'user_id')->checkboxList(
+ <?= $form->field($model, 'user_id')->checkboxList(
     \yii\helpers\ArrayHelper::map($userList, 'id', 'username')
 ) ?>
 

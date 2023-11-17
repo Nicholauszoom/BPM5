@@ -142,9 +142,11 @@ class AdetailController extends Controller
                             if ($assignment && !empty($assignment->user_id)) {
 
                                 
-
+                                 $activity_role =Activity::findOne($assignment->activity_id);
                                 //find by user id
                                 $assign=User::findOne(['id'=>$assignment->user_id]);
+
+                                // $activity_role=Adetail::find()->where(['tender_id'=>$tenderId])->andWhere([])
 
                                 //find by tender id
                                 $tendr=Tender::findOne(['id'=>$assignment->tender_id]);
@@ -237,6 +239,7 @@ class AdetailController extends Controller
                                                     <li> Bid Meeting Date: ' . Html::encode(date('Y-m-d',$tdetail->bidmeet)) . '</li>
                                                     <li>Tender Security: ' . Html::encode(getStatusLabel($tdetail->tender_security)) . '</li>
                                                     <li>Submission Date: ' . Html::encode(date('Y-m-d',$tendr->expired_at)) . '</li>
+                                                    <li>Assign Role: ' . Html::encode($activity_role->name) . '</li>
                                                     <li> Security Amount: ' . Html::encode($tdetail->amount) . '</li>
                                                     <li>Security %: ' . Html::encode($tdetail->percentage) . '</li>
                                                     <li>Office: ' . Html::encode($office->location) . '</li>
@@ -255,7 +258,7 @@ class AdetailController extends Controller
 
                        
                     }
-
+                    Yii::$app->session->setFlash('success', 'saved and email notification successfully.');
                     return $this->redirect(['adetail/create', 'tenderId' => $tenderId]);
             }
         } else {

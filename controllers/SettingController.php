@@ -113,38 +113,53 @@ class SettingController extends Controller
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
+    // public function actionUpdate($id)
+    // {
+    //     $model = $this->findModel($id);
+
+    //     if ($model->load($this->request->post()) && $model->validate()) {
+    //              // Save the project
+    //              $model->logo = UploadedFile::getInstance($model, 'logo');
+   
+                
+    //              if ($model->logo) {
+    //                $uploadPath = Yii::getAlias('@webroot/upload/');
+    //                $fileName = $model->logo->baseName . '.' . $model->logo->extension;
+    //                $filePath = $uploadPath . $fileName;
+               
+    //                if ($model->logo->saveAs($filePath)) {
+    //                    $model->logo = '' . $fileName;
+    //                }
+                   
+    //                }
+    //                if( $model->save()){
+    //                 return $this->redirect(['view', 'id' => $model->id]);
+    //             }
+                   
+             
+    //     } else {
+    //         $model->loadDefaultValues();
+    //     }
+
+    //     return $this->render('update', [
+    //         'model' => $model,
+    //     ]);
+    // }
+
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
 
-        if ($model->load($this->request->post()) && $model->validate()) {
-                 // Save the project
-                 $model->logo = UploadedFile::getInstance($model, 'logo');
-   
-                
-                 if ($model->logo) {
-                   $uploadPath = Yii::getAlias('@webroot/upload/');
-                   $fileName = $model->logo->baseName . '.' . $model->logo->extension;
-                   $filePath = $uploadPath . $fileName;
-               
-                   if ($model->logo->saveAs($filePath)) {
-                       $model->logo = '' . $fileName;
-                   }
-                   
-                   }
-                   if( $model->save()){
-                    return $this->redirect(['view', 'id' => $model->id]);
-                }
-                   
-             
-        } else {
-            $model->loadDefaultValues();
+        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
         }
+        Setting::updateAll(['id' => $id]);
 
         return $this->render('update', [
             'model' => $model,
         ]);
     }
+
 
     /**
      * Deletes an existing Setting model.
