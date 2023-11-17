@@ -88,7 +88,7 @@ $sidebarItems = [
                         'value' => function ($model) {
                             $tender = Tender::findOne($model->tender_id);
                             $tenderTitle = $tender ? $tender->title : 'Unknown';
-                            $label = $model->isViewed ? '' : Html::tag('span', 'New', ['class' => 'badge badge-success']);
+                            $label = $model->isViewed ? '' : Html::tag('span', 'New', ['class' => 'badge badge-warning']);
                             return '<div style="display: flex; align-items: flex-start;">' . $label . '<span style="margin-left: 5px;">' . $tenderTitle . '</span></div>';
                         },
                     ],

@@ -52,11 +52,7 @@ $end_clarification_days_interval=$submit_date  - ($end_clarification * 3600 * 24
 
         </div>
         <div class="col">
-
-        <?= $form->field($model, 'activity_id')->checkboxList(
-    ArrayHelper::map($activity, 'id', 'name'),
-    ['prompt' => 'Select Activity', 'id' => 'activity']
-)?>
+        <?= $form->field($model, 'activity_id')->checkboxList( ArrayHelper::map($activity, 'id', 'name'), ['prompt' => 'Select Activity', 'id' => 'activity'] )?>
 
         </div>
         <div class="col">
@@ -142,4 +138,7 @@ submitatInput.addEventListener('change', function() {
     warningMessage.style.display = 'none';
   }
 });
+
+
+
 </script>

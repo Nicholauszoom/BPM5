@@ -35,7 +35,7 @@ class Tattachmentss extends \yii\db\ActiveRecord
             // [['open_results'], 'required'],
             [['tender_id'], 'integer'],
             // [['open_results'], 'string', 'max' => 255],
-            [['document','evaluation','negotiation','award','intention','arithmetic','audit','cancellation','contract'], 'safe'],
+            [['document','evaluation','negotiation','award','intention','arithmetic','audit','cancellation','contract','acceptance','performance'], 'safe'],
         ];
     }
 
@@ -52,6 +52,8 @@ class Tattachmentss extends \yii\db\ActiveRecord
             'negotiation'=>'Negotiation letter',
             'award'=>'Award letter',
             'contract'=>'Contract',
+            'acceptance'=>'acceptance',
+            'performance'=>'performance',
             'intention'=>'Intention letter',
             'arithmetic'=>'Arithmetic letter',
             'audit'=>'Audit letter',

@@ -86,7 +86,10 @@ class TattachmentssController extends Controller
                     $model->audit = UploadedFile::getInstance($model, 'audit');
                     $model->cancellation = UploadedFile::getInstance($model, 'cancellation');
                     $model->contract = UploadedFile::getInstance($model, 'contract');
-                    
+                    $model->acceptance = UploadedFile::getInstance($model, 'acceptance');
+                    $model->performance = UploadedFile::getInstance($model, 'performance');
+
+
                     // Perform additional validation or other operations here
                     if ($model->validate()) {
                         $uploadPath = Yii::getAlias('@webroot/upload/');
@@ -171,6 +174,24 @@ class TattachmentssController extends Controller
                             
                             if ($model->contract->saveAs($documentFilePath)) {
                                 $model->contract = $documentFileName;
+                            }
+                        }
+
+                        if ($model->acceptance) {
+                            $documentFileName = $model->acceptance->baseName . '.' . $model->acceptance->extension;
+                            $documentFilePath = $uploadPath . $documentFileName;
+                            
+                            if ($model->acceptance->saveAs($documentFilePath)) {
+                                $model->acceptance = $documentFileName;
+                            }
+                        }
+
+                        if ($model->performance) {
+                            $documentFileName = $model->performance->baseName . '.' . $model->performance->extension;
+                            $documentFilePath = $uploadPath . $documentFileName;
+                            
+                            if ($model->performance->saveAs($documentFilePath)) {
+                                $model->performance = $documentFileName;
                             }
                         }
                 }

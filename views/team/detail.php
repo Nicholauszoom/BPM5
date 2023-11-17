@@ -74,7 +74,7 @@ $this->context->layout = 'admin';
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'name',
+           
             [
                 'attribute' => 'team_no',
                 'value' => function ($model) {

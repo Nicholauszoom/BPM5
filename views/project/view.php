@@ -207,6 +207,26 @@ $userId = Yii::$app->user->id;
                   return $model->invite_letter ? Html::a('<i class="fa fa-file-pdf" aria-hidden="true"></i> ' . $model->invite_letter, $downloadPath, ['class' => 'btn btn-', 'target' => '_blank']) : '';
               },
           ],
+          [
+            'attribute' => 'Performance Guarantee',
+            'format' => 'raw',
+            'value' => function ($model) {
+                $fileName = $model->performance;
+                $filePath = Yii::getAlias('/upload/' . $fileName);
+                $downloadPath = Yii::getAlias('/upload/' . $fileName);
+                return $model->performance ? Html::a('<i class="fa fa-file-pdf" aria-hidden="true"></i> ' . $model->performance, $downloadPath, ['class' => 'btn btn-', 'target' => '_blank']) : '';
+            },
+        ],
+        [
+          'attribute' => 'Contract Document',
+          'format' => 'raw',
+          'value' => function ($model) {
+              $fileName = $model->contract;
+              $filePath = Yii::getAlias('/upload/' . $fileName);
+              $downloadPath = Yii::getAlias('/upload/' . $fileName);
+              return $model->contract ? Html::a('<i class="fa fa-file-pdf" aria-hidden="true"></i> ' . $model->contract, $downloadPath, ['class' => 'btn btn-', 'target' => '_blank']) : '';
+          },
+      ],
             [
               'attribute' => 'document',
               'format' => 'raw',
@@ -400,7 +420,6 @@ function getStatusClass($status)
       <th scope="col">Task</th>
       <th scope="col">Budget</th>
       <th scope="col">Description</th>
-      <th scope="col">Team</th>
       <th scope="col">Start At</th>
       <th scope="col">End At</th>
       <th scope="col">Status</th>
@@ -415,7 +434,6 @@ function getStatusClass($status)
       <td><?= $task->title ?></td>
       <td><?= $task->budget ?></td>
       <td><?= $task->description ?></td>
-      <td><?= $task->team->name?></td>
       <td><?= Yii::$app->formatter->asDatetime($task->start_at) ?></td>
       <td><?= Yii::$app->formatter->asDatetime($task->end_at) ?></td>
       <td><?=getStatusLabel($task->status)?></td>

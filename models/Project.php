@@ -106,6 +106,7 @@ class Project extends \yii\db\ActiveRecord
             'end_at'=> 'End Date',
             'invite_letter'=>'Invitation Letter',
             'contract'=>'Contract',
+            'performance'=>'Performance',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'created_by' => 'Created By',

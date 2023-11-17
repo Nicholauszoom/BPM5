@@ -37,9 +37,7 @@ $project_pm=Project::findOne($projectId);
 ) ?>
 <div id="add-form" style="display: none;">
     <div class="form-row">
-        <div class="col">
-            <?= $form->field($model, 'name', ['template' => "{label}\n<div class='input-group'>{input}\n<span class='input-group-addon'><i class='fa fa-pencil'></i></span></div>\n{error}"])->textInput(['placeholder'=>'team name'])->label() ?>
-        </div>
+     
         <div class="col">
     <?= $form->field($model, 'status')->dropDownList(
     [

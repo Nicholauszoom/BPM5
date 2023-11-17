@@ -81,7 +81,6 @@ Modal::end();
       <th scope="col">budget</th>
       <th scope="col">code</th>
       <th scope="col">description</th>
-      <th scope="col">team</th>
       <th scope="col">Start At</th>
       <th scope="col">End At</th>
       <th scope="col">status</th>
@@ -95,7 +94,6 @@ Modal::end();
       <td><?= $task->title ?></td>
       <td><?= $task->budget ?></td>
       <td><?= $task->description ?></td>
-      <td><?= $task->team->name?></td>
       <td><?= Yii::$app->formatter->asDatetime($task->start_at) ?></td>
       <td><?= Yii::$app->formatter->asDatetime($task->end_at) ?></td>
       <td><?=getStatusLabel($task->status)?></td>

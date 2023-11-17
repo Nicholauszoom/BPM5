@@ -40,8 +40,7 @@ $this->context->layout = 'admin';
         'options' => ['class' => 'table table-striped table-bordered'], // Add custom CSS classes to the table
         'columns' => [
             'id',
-            'name',
-            
+        
            
             [
                 'attribute' => 'created_at',

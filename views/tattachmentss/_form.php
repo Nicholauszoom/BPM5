@@ -54,7 +54,7 @@ $t_attachmentss=Tattachmentss::findOne(['tender_id'=>$tenderId]);
 <div class="col">
 <?php if($t_attachmentss->award === null):?>
 
-<?= $form->field($model, 'award')->label('Award * <small class="text-muted">i.e.award document</small>')->fileInput()?>
+<?= $form->field($model, 'award')->label('Award Letter* <small class="text-muted">i.e.award document</small>')->fileInput()?>
 
 <?php else :?>
     <?= $form->field($model, 'award')->hiddenInput(['value'=>$t_attachmentss->award])?>
@@ -113,6 +113,25 @@ $t_attachmentss=Tattachmentss::findOne(['tender_id'=>$tenderId]);
         <?php endif;?>
 
 </div>
+<div class="col">
+<?php if($t_attachmentss->acceptance === null):?>
+    <?= $form->field($model, 'acceptance')->label('Acceptance Document* <small class="text-muted">i.e.acceptance document</small>')->fileInput()?>
+    <?php else :?>
+    <?= $form->field($model, 'acceptance')->hiddenInput(['value'=>$t_attachmentss->acceptance])?>
+        <?php endif;?>
+
+</div>
+</div>
+
+<div class="form-rom">
+
+<div class="col">
+<?php if($t_attachmentss->performance === null):?>
+    <?= $form->field($model, 'performance')->label('Performance Guarantee* <small class="text-muted">i.e.performance document</small>')->fileInput()?>
+    <?php else :?>
+    <?= $form->field($model, 'performance')->hiddenInput(['value'=>$t_attachmentss->performance])?>
+        <?php endif;?>
+</div>
 </div>
  
 
@@ -134,6 +153,10 @@ $t_attachmentss=Tattachmentss::findOne(['tender_id'=>$tenderId]);
     <?= $form->field($model, 'contract')->hiddenInput()->label(false) ?>
 
     <?= $form->field($model, 'document')->hiddenInput()->label(false) ?>
+
+    <?= $form->field($model, 'acceptance')->hiddenInput()->label(false) ?>
+
+<?= $form->field($model, 'performance')->hiddenInput()->label(false) ?>
 
     <p>hidden inputs wait until document to be submitted</p>
 

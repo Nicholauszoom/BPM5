@@ -108,6 +108,7 @@ $t_attachmentss=Tattachmentss::findOne(['tender_id'=>$tenderId]);
 
 <?= $form->field($model, 'tender_id')->hiddenInput(['value' => $tenderId])->label(false)?>
 <?= $form->field($model, 'contract')->textInput(['value' => $t_attachmentss->contract])->label(false)?>
+<?= $form->field($model, 'performance')->textInput(['value' => $t_attachmentss->performance])->label(false)?>
 
 
 <?= $form->field($model, 'end_at')->widget(DatePicker::class, [
