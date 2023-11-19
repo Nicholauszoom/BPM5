@@ -164,7 +164,7 @@ $sidebarItems = [
         // ],
         [
             'class' => 'yii\grid\ActionColumn',
-            'template' => '{view} {start}',
+            'template' => '{view} {start} {prequest}',
             'buttons' => [
                 'create-analysis' => function ($url, $model, $key) {
                     return Html::a('<span class="glyphicon glyphicon-file"></span>', ['analysis/create', 'projectId' => $model->id], [
@@ -216,6 +216,14 @@ $sidebarItems = [
                         // 'class' => 'btn btn-success',
                         'title' => ' project team',
                         'aria-label' => 'Project team',
+                    ]);
+                },
+
+                'prequest' => function ($url, $model, $key) {
+                    return Html::a('<span class="fas fa-balance-scale"></span>', ['prequest/create', 'projectId' => $model->id], [
+                        // 'class' => 'btn btn-success',
+                        'title' => 'request',
+                        'aria-label' => 'request',
                     ]);
                 },
             ],

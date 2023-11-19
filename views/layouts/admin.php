@@ -8,6 +8,7 @@ use app\assets\CustomAsset;
 use app\assets\RealAsset;
 use app\models\Adetail;
 use app\models\Project;
+use app\models\Setting;
 use app\models\Tender;
 use app\models\UserAssignment;
 use app\widgets\Alert;
@@ -29,8 +30,11 @@ $this->registerMetaTag(['charset' => Yii::$app->charset], 'charset');
 $this->registerMetaTag(['name' => 'viewport', 'content' => 'width=device-width, initial-scale=1, shrink-to-fit=no']);
 $this->registerMetaTag(['name' => 'description', 'content' => $this->params['meta_description'] ?? '']);
 $this->registerMetaTag(['name' => 'keywords', 'content' => $this->params['meta_keywords'] ?? '']);
-
-$this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii::getAlias('@web/')]);
+$setting=Setting::findOne(1);
+$fileName = $setting->logo;
+$filePath = Yii::getAlias('@webroot/upload/' . $fileName);
+$downloadPath = Yii::getAlias('@web/upload/' . $fileName);
+$this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii::getAlias($downloadPath)]);
 
 // JuiAsset::register($this->getView());
 AppAsset::register($this);
@@ -56,7 +60,7 @@ $sidebarItems = [
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>" class="h-100">
 <head>
-    <title><?= Html::encode($this->title) ?></title>
+    <title><?=$setting->website?> | <?= Html::encode($this->title) ?></title>
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
 
   
@@ -76,7 +80,6 @@ $sidebarItems = [
 
       $this->registerCssFile('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
       // $this->registerJsFile('https://code.jquery.com/ui/1.12.1/jquery-ui.js');
-
 
 
       // echo Html::img('@web/images/favicon.png', ['alt' => 'Image'ng">
@@ -182,7 +185,6 @@ justify-content: center;
 border-radius: 50%;
 
 }
-
 
 #counter {
     font-family: "Times New Roman", Times, serif;
@@ -382,6 +384,16 @@ height:200px;
         <?php endif; ?>
                     </ul>
                   </li>
+                  <li><a><i class="fas fa-box-open"></i>  Items<span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      <li><a href="/item">index</a></li>
+                    </ul>
+                  </li>
+                  <li><a><i class="fas fa-balance-scale"></i>  Request<span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      <li><a href="/prequest">index</a></li>
+                    </ul>
+                  </li>
                   <?php if (Yii::$app->user->can('admin')) : ?>
                     <!--
                   <li><a><i class="fa fa-check-square"></i>Task<span class="fa fa-chevron-down"></span></a>
@@ -392,6 +404,8 @@ height:200px;
                   -->
               
                   <?php endif; ?>
+                 
+
                   <li><a><i class="fa fa-user"></i>User & Department<span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
                     <?php if (Yii::$app->user->can('admin')) : ?>
@@ -413,6 +427,7 @@ height:200px;
                       <li><a href="#">index</a></li>
                     </ul>
                   </li>
+                  
                  <!--
                   <li><a><i class="fa fa-folder-o"></i>Analysis & Requests<span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
@@ -427,6 +442,7 @@ height:200px;
                       <li><a href="/setting">index</a></li>
                     </ul>
                   </li>
+
                 </ul>
               </div>
             
@@ -514,7 +530,7 @@ height:200px;
 $complete_tender = Tender::find()
     ->all();
   
-  
+ 
 foreach ($complete_tender as $cmpt_tender) {
   $assgn_user=Adetail::find()->where(['tender_id'=>$cmpt_tender->id])->all();
   // foreach ($assgn_user as $a_user) {
@@ -538,10 +554,10 @@ foreach ($complete_tender as $cmpt_tender) {
         <?php
     }
   }
-// }
-// }
+
 ?>
 
+           
   
             </div>
         </li>
@@ -564,15 +580,16 @@ foreach ($complete_tender as $cmpt_tender) {
         
         </div>
         </div>
-    
+       
          <!-- /page content -->
-
+  
         <!-- footer content -->
         <footer style="">
           <div class="pull-right" >
             Teratech - web application <a href="teratech.co.tz">about us</a>
           </div>
           <div class="clearfix"></div>
+      
         </footer>
         <!-- /footer content -->
         </div>
@@ -580,7 +597,7 @@ foreach ($complete_tender as $cmpt_tender) {
 
 
         <!--begin::Body-->
-  
+
 <?php $this->endBody();
 
 ?>

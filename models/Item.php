@@ -3,6 +3,8 @@
 namespace app\models;
 
 use Yii;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "item".
@@ -29,9 +31,20 @@ class Item extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name'], 'required'],
+            
             [['created_at', 'updated_at', 'created_by'], 'integer'],
-            [['name'], 'string', 'max' => 255],
+            [['name','quantity','unit','serio'], 'string', 'max' => 255],
+            [['files'], 'file'],
+        ];
+    }
+    public function behaviors(){
+        return [
+            TimestampBehavior::class,
+            [
+                'class'=>BlameableBehavior::class,
+                'updatedByAttribute'=>false,
+            ],
+            
         ];
     }
 
@@ -43,6 +56,9 @@ class Item extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'name' => 'Name',
+            'quantity'=>'Quantity',
+            'unit'=> 'Unit',
+            'files'=>'Files',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'created_by' => 'Created By',

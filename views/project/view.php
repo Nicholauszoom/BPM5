@@ -385,6 +385,7 @@ $this->registerJs($js);
 ?>
 
 </div>
+
 <?php
 function getStatusLabel($status)
 {

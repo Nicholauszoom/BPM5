@@ -9,6 +9,8 @@ $this->title = 'Update Item: ' . $model->name;
 $this->params['breadcrumbs'][] = ['label' => 'Items', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Update';
+$this->context->layout=('admin');
+
 ?>
 <div class="item-update">
 

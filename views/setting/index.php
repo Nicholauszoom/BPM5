@@ -165,6 +165,15 @@ $model=Setting::find()->all();
             <hr>
             <div class="row">
               <div class="col-sm-3">
+                <p class="mb-0">Web</p>
+              </div>
+              <div class="col-sm-9">
+                <p class="text-muted mb-0"><?=$model->website?></p>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
                 <p class="mb-0">Created Date</p>
               </div>
               <div class="col-sm-9">

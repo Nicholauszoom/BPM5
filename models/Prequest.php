@@ -7,24 +7,25 @@ use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 
 /**
- * This is the model class for table "setting".
+ * This is the model class for table "prequest".
  *
  * @property int $id
  * @property int|null $created_at
  * @property int|null $updated_at
  * @property int|null $created_by
- * @property int $end_clarification
- * @property string $logo
- * @property string $logo2
+ * @property string $payee
+ * @property int $department
+ * @property int $mode
+ * @property int $project_id
  */
-class Setting extends \yii\db\ActiveRecord
+class Prequest extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'setting';
+        return 'prequest';
     }
 
     public function behaviors(){
@@ -34,16 +35,11 @@ class Setting extends \yii\db\ActiveRecord
                 'class'=>BlameableBehavior::class,
                 'updatedByAttribute'=>false,
             ],
-
-            // [
-
-            //     'class'=>SluggableBehavior::class,
-            //     'attribute'=>'title',
-            // ],
+          
+           
             
         ];
     }
-
 
     /**
      * {@inheritdoc}
@@ -51,10 +47,10 @@ class Setting extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [[ 'end_clarification','result'], 'integer'],
-            [['end_clarification'], 'required'],
-            [['created_at', 'updated_at', 'created_by','password','email','company','address','phone','website'], 'string', 'max' => 255],
-            [['logo'], 'safe'],
+            [['created_at', 'updated_at', 'created_by', 'department', 'mode', 'project_id','status'], 'integer'],
+            [['payee', 'department', 'mode', 'project_id'], 'required'],
+            [['payee'], 'string', 'max' => 255],
+            [['status'], 'default', 'value' => 1],
         ];
     }
 
@@ -65,18 +61,25 @@ class Setting extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'end_clarification' => 'End Clarification',
-            'password'=>'Password',
-            'email'=>'Email',
-            'company'=>'Company',
-            'address'=>'Address',
-            'phone'=>'Phone',
-            'website'=>'Website',
-            'result'=>'Result interval',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'created_by' => 'Created By',
-
+            'payee' => 'Payee',
+            'department' => 'Department',
+            'mode' => 'Mode',
+            'project_id' => 'Project ID',
+            'status'=>'Status'
         ];
     }
+
+    public function getUser()
+    {
+        return $this->hasOne(User::class, ['id' => 'payee']);
+    }
+    
+    public function getDepartment()
+    {
+        return $this->hasOne(Department::class, ['id' => 'department']);
+    }
+    
 }

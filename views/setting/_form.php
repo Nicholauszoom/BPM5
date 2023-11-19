@@ -46,6 +46,10 @@ use yii\widgets\ActiveForm;
    <?= $form->field($model, 'phone')->label('Comapny Phone * <small class="text-muted">eg.+255 67849..</small>')->textInput() ?>
 
    </div>
+   <div class="col">
+   <?= $form->field($model, 'website')->label('Web * <small class="text-muted">eg.System Name</small>')->textInput() ?>
+
+   </div>
    </div>
 
     <div class="form-group">

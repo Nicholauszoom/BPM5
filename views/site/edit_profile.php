@@ -160,12 +160,14 @@ $sidebarItems = [
               <div class="card-body">
                 <p class="mb-4"><span class="text-primary font-italic me-1">assigment</span> Tender Status
                 </p>
+                <?php if ($tender !== null):?>
                 <?php foreach ($tender as $tender):?>
                   
                 <p class="mb-1" style="font-size: .77rem;"><?=$tender->title?></p>
                
                 <p class="text-muted mb-0 " style="font-size: .60rem;">Publish: <?=Yii::$app->formatter->asDatetime($tender->publish_at)?>, Submitt:<?=Yii::$app->formatter->asDatetime($tender->expired_at)?></p>
                 <?php endforeach;?>
+                <?php endif;?>
               </div>
               
             </div>
@@ -177,16 +179,18 @@ $sidebarItems = [
               <div class="card-body">
                 <p class="mb-4"><span class="text-primary font-italic me-1">assigment</span> Project Status
                 </p>
-               
+                <?php if ($project !== null):?>
                 <?php foreach ($project as $project):?>
                   
                   <?php
                     $project_title=Tender::findOne($project->tender_id);
                     ?>
+                    <?php if ($project_title !== null):?>
                 <p class="mb-1" style="font-size: .77rem;"><?=$project_title->title?></p>
-               
+                <?php endif;?>
                 <p class="text-muted mb-0 " style="font-size: .60rem;">Start: <?=Yii::$app->formatter->asDatetime($project->start_at)?>, End:<?=Yii::$app->formatter->asDatetime($project->end_at)?></p>
                 <?php endforeach;?>
+                <?php endif;?>
               </div>
               
 

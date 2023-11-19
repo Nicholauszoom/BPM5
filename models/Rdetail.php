@@ -7,24 +7,25 @@ use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 
 /**
- * This is the model class for table "setting".
+ * This is the model class for table "rdetail".
  *
  * @property int $id
  * @property int|null $created_at
  * @property int|null $updated_at
  * @property int|null $created_by
- * @property int $end_clarification
- * @property string $logo
- * @property string $logo2
+ * @property int $iteam
+ * @property string $unit
+ * @property string $amount
+ * @property int $prequest_id
  */
-class Setting extends \yii\db\ActiveRecord
+class Rdetail extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'setting';
+        return 'rdetail';
     }
 
     public function behaviors(){
@@ -34,16 +35,11 @@ class Setting extends \yii\db\ActiveRecord
                 'class'=>BlameableBehavior::class,
                 'updatedByAttribute'=>false,
             ],
-
-            // [
-
-            //     'class'=>SluggableBehavior::class,
-            //     'attribute'=>'title',
-            // ],
+          
+           
             
         ];
     }
-
 
     /**
      * {@inheritdoc}
@@ -51,10 +47,9 @@ class Setting extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [[ 'end_clarification','result'], 'integer'],
-            [['end_clarification'], 'required'],
-            [['created_at', 'updated_at', 'created_by','password','email','company','address','phone','website'], 'string', 'max' => 255],
-            [['logo'], 'safe'],
+            [['created_at', 'updated_at', 'created_by', 'iteam', 'prequest_id'], 'integer'],
+            [['iteam', 'unit', 'amount', 'prequest_id'], 'required'],
+            [['unit', 'amount','quantity'], 'string', 'max' => 255],
         ];
     }
 
@@ -65,18 +60,19 @@ class Setting extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'end_clarification' => 'End Clarification',
-            'password'=>'Password',
-            'email'=>'Email',
-            'company'=>'Company',
-            'address'=>'Address',
-            'phone'=>'Phone',
-            'website'=>'Website',
-            'result'=>'Result interval',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'created_by' => 'Created By',
-
+            'iteam' => 'Iteam',
+            'unit' => 'Unit',
+            'amount' => 'Amount',
+            'prequest_id' => 'Prequest ID',
+            'quantity'=>'QTY',
         ];
     }
+    public function getItem()
+    {
+        return $this->hasOne(Item::class, ['id' => 'iteam']);
+    }
+    
 }

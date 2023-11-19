@@ -4,16 +4,16 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /** @var yii\web\View $this */
-/** @var app\models\Item $model */
+/** @var app\models\Rdetail $model */
 
-$this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Items', 'url' => ['index']];
+$this->title = $model->id;
+$this->params['breadcrumbs'][] = ['label' => 'Rdetails', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
-$this->context->layout=('admin');
+$this->context->layout = 'admin';
 
 ?>
-<div class="item-view">
+<div class="rdetail-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -32,10 +32,13 @@ $this->context->layout=('admin');
         'model' => $model,
         'attributes' => [
             'id',
-            'name',
             'created_at',
             'updated_at',
             'created_by',
+            'iteam',
+            'unit',
+            'amount',
+            'prequest_id',
         ],
     ]) ?>
 

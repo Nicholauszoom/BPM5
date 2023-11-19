@@ -6,6 +6,7 @@
 
 use yii\bootstrap5\ActiveForm;
 use yii\bootstrap5\Html;
+use app\models\Setting;
 
 $this->title = 'Login';
 $this->context->layout = 'main2';
@@ -32,7 +33,16 @@ $this->context->layout = 'main2';
             ]); ?>
                 <div class="d-flex align-items-center mb-3 pb-1">
                     <i class="fas fa-cubes fa-2x me-3" style="color: #ff6219;"></i>
-                    <span class="h1 fw-bold mb-0 "><img src="http://teratech.co.tz/local/images/uploads/logo/163277576061522e507c527.webp" style="height: 60px;" />
+                    <?php
+                          
+                          $setting=Setting::findOne(1);
+                          $fileName = $setting->logo;
+                          $filePath = Yii::getAlias('@webroot/upload/' . $fileName);
+                          $downloadPath = Yii::getAlias('@web/upload/' . $fileName);
+
+
+                    ?>
+                    <span class="h1 fw-bold mb-0 "><img src= <?=$downloadPath?> style="height: 60px;" />
 </span>
                   </div>
 

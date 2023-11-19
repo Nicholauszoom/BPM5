@@ -11,19 +11,29 @@ use yii\widgets\ActiveForm;
 <div class="item-form">
 
     <?php $form = ActiveForm::begin(); ?>
+    <div class="card-body">
+        <p>Inputs with the * symbol are highly required to be filled</p>
+   
+<hr>
+    <h2 style="text-align:center;">-------OR------</h2>
+<hr>
+    <!--Image-->
+    <div>
+<div class="mb-4 d-flex justify-content-center">
+<img id="selectedImage" src="https://img.icons8.com/?size=80&id=ut1zOcqcXWhJ&format=png" alt="example placeholder" style="width: 150px;" />
+</div>
+<div class="d-flex justify-content-center">
+<?= $form->field($model, 'files')->fileInput(['maxlength' => true])->label(' <small class="text-muted">Select exel/csv file</small>') ?>
+</div>
 
-    <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'created_at')->textInput() ?>
-
-    <?= $form->field($model, 'updated_at')->textInput() ?>
-
-    <?= $form->field($model, 'created_by')->textInput() ?>
+  
+   
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
     </div>
-
+    </div>
+    </div>
     <?php ActiveForm::end(); ?>
 
 </div>

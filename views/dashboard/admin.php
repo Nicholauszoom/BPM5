@@ -306,7 +306,7 @@ $budgetDataJson = Json::encode($budgetData);
       
 
 <!-- /Project Manager Dashboard -->
-<?php if (Yii::$app->user->can('author')) : ?>
+<?php if (Yii::$app->user->can('author') && ! Yii::$app->user->can('admin')) : ?>
     <div class="tile_count">
     <div class="row">
 <!-- Earnings (Monthly) Card Example -->

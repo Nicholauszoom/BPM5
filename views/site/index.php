@@ -12,6 +12,84 @@ use yii\grid\GridView;
 
 $this->context->layout = 'main';
 ?>
+<style>
+  .mail-icon {
+  position: fixed;
+  bottom: 40px;
+  right: 20px;
+  z-index: 9999;
+  width: 50px;
+  height: 50px;
+  background-color:aliceblue;
+  color: #fff;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 50px;
+  cursor: pointer;
+}
+
+.mail-icon:hover {
+  background-color:#fff;
+}
+.mail-form {
+  display: none;
+  position: absolute;
+  top: -200px;
+  right: 0;
+  left: 5;
+  bottom:50px;
+  margin: auto;
+  background-color: #fff;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 9999;
+  width: 200px;
+}
+
+.mail-form h3 {
+  margin-top: 0;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+}
+
+.form-control {
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+  transition: border-color 0.2s ease-in-out;
+}
+
+.form-control:focus {
+  border-color: #66afe9;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+</style>
  
     <div class="templateux-cover" style="background-image: url(images/hod.jpeg);">
       <div class="container">
@@ -20,7 +98,7 @@ $this->context->layout = 'main';
           <div class="col-lg-6 order-lg-1">
             <h1 class="heading mb-3 text-white" data-aos="fade-up">Bussiness Process Management <strong></strong></h1>
             <p class="lead mb-5 text-white" data-aos="fade-up"  data-aos-delay="100">A “team” is not just people who work at the same time in the same place. A real team is a group of very different individuals who enjoy working together.</p>
-            <p data-aos="fade-up" data-aos-delay="200"><a href="#" class="btn btn-primary py-3 px-4 mr-3">Get Started</a> <a href="#" class="text-white">Learn More</a></p>
+            <p data-aos="fade-up" data-aos-delay="200"> <a href="#" class="text-white"></a></p>
           </div>
           
         </div>
@@ -159,5 +237,31 @@ $this->context->layout = 'main';
 
 </div> <!-- .templateux-section -->
 
+<div class="mail-icon">
+  <a href="#" class="fa fa-envelope">
+    <img src="https://img.icons8.com/?size=80&id=xLIkjgcmFOsC&format=png" style="width:35px;">
+  </a>
+  <div class="mail-form">
+    <h6>Contact Us</h6>
+    <form>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" class="form-control" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+</div>
 
+<script>
 
+  // Get the mail icon button and the mail form
+const mailIcon = document.querySelector('.mail-icon');
+const mailForm = document.querySelector('.mail-form');
+
+// Toggle the visibility of the mail form when the mail icon button is clicked
+mailIcon.addEventListener('click', function(event) {
+  event.preventDefault();
+  mailForm.style.display = mailForm.style.display === 'block' ? 'none' : 'block';
+});
+</script>

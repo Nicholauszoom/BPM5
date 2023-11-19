@@ -8,6 +8,8 @@ use yii\helpers\Html;
 $this->title = 'Create Item';
 $this->params['breadcrumbs'][] = ['label' => 'Items', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+$this->context->layout=('admin');
+
 ?>
 <div class="item-create">
 
