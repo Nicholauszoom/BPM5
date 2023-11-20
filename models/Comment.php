@@ -43,6 +43,8 @@ class Comment extends \yii\db\ActiveRecord
     {
         return [
             [['comment', 'request_id','created_at', 'created_by'], 'integer'],
+            [['comment'], 'string', 'max' => 255],
+
         ];
     }
 

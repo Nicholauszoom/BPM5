@@ -65,13 +65,13 @@ class CommentController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
-    public function actionCreate()
+    public function actionCreate($prequestId)
     {
         $model = new Comment();
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+                return $this->redirect(['prequest']);
             }
         } else {
             $model->loadDefaultValues();
@@ -79,6 +79,7 @@ class CommentController extends Controller
 
         return $this->render('create', [
             'model' => $model,
+            'prequestId'=>$prequestId,
         ]);
     }
 

@@ -10,15 +10,15 @@ use yii\grid\GridView;
 /** @var app\models\CommentSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Comments';
+$this->title = 'Request Comments';
 $this->params['breadcrumbs'][] = $this->title;
+$this->context->layout = 'admin';
 ?>
 <div class="comment-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Create Comment', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>

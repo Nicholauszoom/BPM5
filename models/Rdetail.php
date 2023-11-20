@@ -49,7 +49,9 @@ class Rdetail extends \yii\db\ActiveRecord
         return [
             [['created_at', 'updated_at', 'created_by', 'iteam', 'prequest_id'], 'integer'],
             [['iteam', 'unit', 'amount', 'prequest_id'], 'required'],
-            [['unit', 'amount','quantity'], 'string', 'max' => 255],
+            [['unit', 'amount','quantity','selectedItemID'], 'string', 'max' => 255],
+            [['selectedItemID'], 'default', 'value' => 0],
+
         ];
     }
 
@@ -68,6 +70,7 @@ class Rdetail extends \yii\db\ActiveRecord
             'amount' => 'Amount',
             'prequest_id' => 'Prequest ID',
             'quantity'=>'QTY',
+            'selectedItemID'=>'selectedItemID',
         ];
     }
     public function getItem()

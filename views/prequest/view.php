@@ -27,6 +27,7 @@ $rdetails=Rdetail::find()
         ->where(['prequest_id'=>$model->id])
         ->all();
 
+      
 ?>
 <div class="prequest-view">
 
@@ -43,7 +44,7 @@ $rdetails=Rdetail::find()
             ],
         ]) ?>
 
-<?php if($model->status===1 && $project->user_id===$userId):?>
+<?php if($model->status===1 || $model->status===4 && $project->user_id===$userId):?>
 
 <?= Html::a('pm aprove', ['pmapprove', 'prequestId' => $model->id], [
     'class' => 'btn btn-secondary',
@@ -62,7 +63,7 @@ $rdetails=Rdetail::find()
 ]) ?>
 <?php endif;?>
 
-<?php if(Yii::$app->user->can('admin') &&! Yii::$app->user->can('author') && $model->status===2):?>
+<?php if(Yii::$app->user->can('admin') &&! Yii::$app->user->can('author') && $model->status===2 ):?>
 
 
 <?= Html::a('Management Approve', ['approve', 'prequestId' => $model->id], [

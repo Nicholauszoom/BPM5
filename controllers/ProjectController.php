@@ -297,7 +297,6 @@ class ProjectController extends Controller
                     if ($model->document->saveAs($filePath)) {
                         $model->document = '' . $fileName;
                     }
-                
     
                         // if ($model->document->saveAs($filePath)) {
                         //     $model->document = $filePath;

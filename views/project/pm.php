@@ -121,21 +121,7 @@ $sidebarItems = [
                 return $label;
             },
         ],
-        // [
-        //     'attribute' => 'created_at',
-        //     'value' => function ($model) {
-        //         return Yii::$app->formatter->asDatetime($model->created_at);
-        //     },
-        // ],
-       
-        // [
-        //     'attribute' => 'isViewed',
-        //     'label' => 'alert',
-        //     'format' => 'raw',
-        //     'value' => function ($model) {
-        //         return $model->isViewed ? '' : Html::tag('span', 'New', ['class' => 'badge badge-success']);
-        //     },
-        // ],
+      
         [
             'attribute' => 'status',
             'value' => function ($model) {

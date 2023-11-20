@@ -1,7 +1,9 @@
 <?php
 
 use app\models\Analysis;
+use app\models\Prequest;
 use app\models\Project;
+use app\models\Rdetail;
 use app\models\Request;
 use app\models\TeamAssignment;
 use app\models\Tender;
@@ -29,15 +31,16 @@ $this->context->layout = 'admin';
        /*s AIM OF THIS OPERATION IS TO SHOW THE BUDGET PROGRESS / REMAINNING*/
 //project budget per request
 $remainingBudget = 0;
-$budgetss = Request::find()
+$budgetss = Prequest::find()
 ->where(['project_id' => $model->id])
-->andWhere(['status'=>1])
+->andWhere(['status'=>3])
 ->all();
 
 $budget_prog = 0;
 foreach ($budgetss as $progress) {
-$budget_prog += $progress->amount;
-
+    $progressr=Rdetail::findOne(['prequest_id'=>$progress->id]);
+$budget_prog += $progressr->amount;
+    
 $remainingBudget = $projectAmount - $budget_prog;
 
 }

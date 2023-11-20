@@ -12,10 +12,7 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
     <div class="card-body">
-        <p>Inputs with the * symbol are highly required to be filled</p>
-   
-<hr>
-    <h2 style="text-align:center;">-------OR------</h2>
+
 <hr>
     <!--Image-->
     <div>

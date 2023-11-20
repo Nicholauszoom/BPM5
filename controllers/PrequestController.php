@@ -63,13 +63,31 @@ foreach ($projects as $project){
 
     //management
     $approved_prequest= Prequest::find()->where(['status'=>2])->all();
+    $p_member_prequestst= Prequest::find()->where(['created_by'=> $userId]);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'prequest'=>$prequest,
             'approved_prequest'=>$approved_prequest,
+            'p_member_prequestst'=>$p_member_prequestst,
         ]);
+    }
+    public function actionMember()
+    {
+        $searchModel = new PrequestSearch();
+        $dataProvider = $searchModel->search($this->request->queryParams);
+
+        $userId = Yii::$app->user->id;
+          
+           $p_member_prequestst= Prequest::find()->where(['created_by'=> $userId])->all();
+       
+               return $this->render('member', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+                   'p_member_prequestst'=>$p_member_prequestst,
+               ]);
+
     }
 
     public function actionPm2(){
@@ -108,6 +126,7 @@ foreach ($projects as $project){
     public function actionView($id)
     {
         $model= $this->findModel($id);
+        
 
         $prequest=Rdetail::find()
         ->where(['prequest_id'=>$id])
@@ -281,7 +300,8 @@ foreach ($projects as $project){
             $prequest->status=4;
             Prequest::updateAll(['status' => $prequest->status], ['id' => $prequestId]);
           
-            return $this->redirect(['prequest/view', 'id' => $prequestId]);
+            return $this->redirect(['comment/create', 
+            'prequestId' => $prequestId]);
         
         
         return 'Error'; // Return an error message or any other response if needed

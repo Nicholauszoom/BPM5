@@ -9,6 +9,7 @@ $this->title = 'Update Comment: ' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Comments', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Update';
+$this->context->layout = 'admin';
 ?>
 <div class="comment-update">
 

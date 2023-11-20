@@ -11,6 +11,7 @@ use app\models\Prequest;
 use app\models\Project;
 use app\models\Setting;
 use app\models\Tender;
+use app\models\User;
 use app\models\UserAssignment;
 use app\widgets\Alert;
 use yii\bootstrap5\Breadcrumbs;
@@ -408,9 +409,40 @@ height:200px;
         }
     }
     ?>
+     <?php
+    $userId = Yii::$app->user->id;
+    // Retrieve the projects assigned to the user
+    $sent_prequest = Prequest::find()
+        ->where(['status' => 1])
+        ->andWhere(['session'=>0])
+        ->all();
+    
+        
+    $prequestsentCount = 0;
+
+    foreach ($sent_prequest as $sent_prequest) {
+        // $exist_prequest = Prequest::findOne(['tender_id' => $approved_prequest->id]);
+        if ($sent_prequest !== null) {
+            $prequestsentCount++;
+        }
+    }
+    ?>
                   <li><a><i class="fas fa-balance-scale"></i>  Request  <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <li><a href="/prequest">index<span class="badge bg-primary animated-badge"><?= $prequestCount ?></span></a></li>
+                      <li><a href="/prequest">index
+                      <?php if(Yii::$app->user->can('admin') &&! Yii::$app->user->can('author') && $prequestCount!== 0 ):?>
+                      <span class="badge bg-primary animated-badge"><?= $prequestCount ?></span>
+                      <?php endif;?>
+
+                      <?php if(Yii::$app->user->can('author') &&! Yii::$app->user->can('admin') && $prequestsentCount!== 0 ):?>
+                      <span class="badge bg-secondary animated-badge"><?= $prequestsentCount ?></span></a>
+                      <?php endif;?>
+                    </li>
+                      <li><a href="/prequest/member">Project Member
+                      <?php if(Yii::$app->user->can('author') &&! Yii::$app->user->can('admin') && $prequestCount!== 0 ):?>
+                        <span class="badge bg-primary animated-badge"><?= $prequestCount ?></span>
+                        <?php endif;?>
+                        </a></li>
                     </ul>
                   </li>
                   <?php if (Yii::$app->user->can('admin')) : ?>
@@ -516,6 +548,28 @@ height:200px;
                 <li role="presentation" class="nav-item dropdown open">
                 <a href="javascript:;" class="dropdown-toggle info-number" id="navbarDropdown1" data-toggle="dropdown" aria-expanded="false">
                 <?php
+
+
+
+                  //MANAGEMENT NOTIFICATIONS ON REQUEST PART COUNT
+                  $userId = Yii::$app->user->id;
+                  // Retrieve the projects assigned to the user
+                  $approved_prequest = Prequest::find()
+                      ->where(['status' => 2])
+                      ->andWhere(['session'=>0])
+                      ->all();
+                  
+                  $prequestCount = 0;
+              
+                  foreach ($approved_prequest as $approved_prequest) {
+                      // $exist_prequest = Prequest::findOne(['tender_id' => $approved_prequest->id]);
+                      if ($approved_prequest !== null) {
+                          $prequestCount++;
+                      }
+                  }
+                   //...REQUEST COUNT SCRIPT END HERE...
+
+
     $userId = Yii::$app->user->id;
     
     // Retrieve the projects assigned to the user
@@ -539,6 +593,12 @@ height:200px;
             <span class="badge bg-red animated-badge"><?= $notificationCount ?></span>
         <?php endif; ?>
     
+        <?php if ($prequestCount > 0): ?>
+            <span class="badge bg-primary animated-badge"><?= $prequestCount ?></span>
+        <?php endif; ?>
+        <?php if(Yii::$app->user->can('author') &&! Yii::$app->user->can('admin') && $prequestsentCount!== 0 ):?>
+          <span class="badge bg-secondary animated-badge"><?= $prequestsentCount ?></span></a>
+         <?php endif;?>
 </a>
    
     <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown1">
@@ -546,6 +606,7 @@ height:200px;
         <li>
             <div class="notification-items ">
               <?php
+
 $complete_tender = Tender::find()
     ->all();
   
@@ -557,7 +618,12 @@ foreach ($complete_tender as $cmpt_tender) {
   $expiredDays = floor(($cmpt_tender->expired_at - strtotime($currentDate)) / (60 * 60 * 24));
     if ($expiredDays >= 0 && $expiredDays < 7 ) {
       // if( $userId===$a_user->user_id | $a_user->supervisor){
+
+
+    
         ?>
+
+
         
         <a href="<?= Url::to(['tender/view', 'id' => $cmpt_tender->id]) ?>" class="link border-top">
             <div class="d-flex no-block align-items-center p-7 " >
@@ -570,12 +636,87 @@ foreach ($complete_tender as $cmpt_tender) {
                 </div>
             </div>
         </a>
+       
         <?php
     }
   }
 
 ?>
 
+          <?php
+
+                  //MANAGEMENT NOTIFICATIONS ON REQUEST PART
+                  $userId = Yii::$app->user->id;
+                  // Retrieve the projects assigned to the user
+                  $approved_prequest = Prequest::find()
+                      ->where(['status' => 2])
+                      ->andWhere(['session'=>0])
+                      ->all();
+                 
+                  //...REQUEST SCRIPT END HERE...
+       foreach ($approved_prequest  as $approved_p) {         
+          
+             $project= Project::findOne($approved_p->project_id);
+             $tender = Tender::findOne($project->tender_id);
+             $tenderTitle = $tender ? $tender->title : 'Unknown';
+
+             $pm=User::findOne($project->user_id);
+            ?>
+        <a href="<?= Url::to(['prequest/view', 'id' => $approved_p->id]) ?>" class="link border-top">
+            <div class="d-flex no-block align-items-center p-7 " >
+                <span class="btn btn-primary btn-circle d-flex align-items-center justify-content-center ">
+                    <i class="fas uil-mailbox-alt text-white fs-4"></i>
+                </span>
+                <div class="ms-2 ">
+                    <h5 class="mb-0 " style="color:grey; text-align: justify; font-size: 12px; font-weight: 600;"><?= $tenderTitle ?></h5>
+                    <span class="mail-des" style="color:grey; text-align: justify; font-size: 11px;">Reminded: New Request from Project Manager <span style="color:#3498db; font-weight:bold;font-size: 11px;"> Eng.<?=$pm->username?></span>...<span style="color:#3498db;font-size: 11px;">View</span></span>
+                </div>
+            </div>
+        </a>
+     
+<?php 
+       }
+      
+?>
+
+<?php
+
+//MANAGEMENT NOTIFICATIONS ON REQUEST PART
+$userId = Yii::$app->user->id;
+// Retrieve the projects assigned to the user
+$userId = Yii::$app->user->id;
+    // Retrieve the projects assigned to the user
+    $sent_prequest = Prequest::find()
+        ->where(['status' => 1])
+        ->andWhere(['session'=>0])
+        ->all();
+    
+      
+//...REQUEST SCRIPT END HERE...
+foreach ($sent_prequest  as $sent_prequest) {         
+
+$project= Project::findOne($sent_prequest->project_id);
+$tender = Tender::findOne($project->tender_id);
+$tenderTitle = $tender ? $tender->title : 'Unknown';
+
+$pm=User::findOne($project->user_id);
+?>
+<a href="<?= Url::to(['prequest/view', 'id' => $sent_prequest->id]) ?>" class="link border-top">
+<div class="d-flex no-block align-items-center p-7 " >
+<span class="btn btn-primary btn-circle d-flex align-items-center justify-content-center ">
+  <i class="fas uil-mailbox-alt text-white fs-4"></i>
+</span>
+<div class="ms-2 ">
+  <h5 class="mb-0 " style="color:grey; text-align: justify; font-size: 12px; font-weight: 600;"><?= $tenderTitle ?></h5>
+  <span class="mail-des" style="color:grey; text-align: justify; font-size: 11px;">Reminded: New Request from team member sent to a PM <span style="color:#3498db; font-weight:bold;font-size: 11px;"> Eng.<?=$pm->username?></span>...<span style="color:#3498db;font-size: 11px;">View</span></span>
+</div>
+</div>
+</a>
+
+<?php 
+}
+
+?>
            
   
             </div>

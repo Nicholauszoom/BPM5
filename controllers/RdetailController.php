@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Analysis;
 use app\models\Rdetail;
 use app\models\RdetailSearch;
 use yii\web\Controller;
@@ -68,9 +69,11 @@ class RdetailController extends Controller
     public function actionCreate($prequestId)
     {
         $model = new Rdetail();
+
         $prequest=Rdetail::find()
         ->where(['prequest_id'=>$prequestId])
         ->all();
+    
 
         $total_amount= 0;
         foreach ($prequest as $prequest) {
@@ -79,7 +82,7 @@ class RdetailController extends Controller
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+                return $this->redirect(['prequest']);
             }
         } else {
             $model->loadDefaultValues();
