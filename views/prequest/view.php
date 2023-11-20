@@ -2,6 +2,7 @@
 
 use app\models\Department;
 use app\models\Item;
+use app\models\Project;
 use app\models\Rdetail;
 use app\models\User;
 use yii\helpers\Html;
@@ -15,6 +16,13 @@ $this->params['breadcrumbs'][] = ['label' => 'Prequests', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 $this->context->layout = 'admin';
+
+
+$userId = Yii::$app->user->id;
+
+$project= Project::findOne(['id'=>$model->project_id]);
+
+
 $rdetails=Rdetail::find()
         ->where(['prequest_id'=>$model->id])
         ->all();
@@ -23,6 +31,7 @@ $rdetails=Rdetail::find()
 <div class="prequest-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
+
 
     <p>
         <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
@@ -33,6 +42,46 @@ $rdetails=Rdetail::find()
                 'method' => 'post',
             ],
         ]) ?>
+
+<?php if($model->status===1 && $project->user_id===$userId):?>
+
+<?= Html::a('pm aprove', ['pmapprove', 'prequestId' => $model->id], [
+    'class' => 'btn btn-secondary',
+    'data' => [
+        'confirm' => 'Are you sure you want to change the status to Submit of this item?',
+        'method' => 'post',
+    ],
+]) ?>
+
+<?= Html::a('Not Approve', ['notapprove', 'prequestId' => $model->id], [
+    'class' => 'btn btn-secondary',
+    'data' => [
+        'confirm' => 'Are you sure you want to change the status to Not Submit of this item?',
+        'method' => 'post',
+    ],
+]) ?>
+<?php endif;?>
+
+<?php if(Yii::$app->user->can('admin') &&! Yii::$app->user->can('author') && $model->status===2):?>
+
+
+<?= Html::a('Management Approve', ['approve', 'prequestId' => $model->id], [
+'class' => 'btn btn-success',
+'data' => [
+'confirm' => 'Are you sure you want to change the status to Award of this item?',
+'method' => 'post',
+],
+]) ?>
+
+<?= Html::a('Not Approve', ['notapprove', 'prequestId' => $model->id], [
+    'class' => 'btn btn-secondary',
+    'data' => [
+        'confirm' => 'Are you sure you want to change the status to Not Submit of this item?',
+        'method' => 'post',
+    ],
+]) ?>
+<?php endif;?>
+
     </p>
 
     <?= DetailView::widget([

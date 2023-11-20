@@ -5,9 +5,11 @@ namespace app\controllers;
 use app\models\Department;
 use app\models\Prequest;
 use app\models\PrequestSearch;
+use app\models\Project;
 use app\models\Rdetail;
 use app\models\User;
 use Mpdf\Mpdf;
+use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -45,10 +47,56 @@ class PrequestController extends Controller
         $searchModel = new PrequestSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
+
+    $userId = Yii::$app->user->id;
+
+ $projects = Project::find()
+        ->where(['user_id' => $userId])
+        ->all();
+
+$prequest=[];
+foreach ($projects as $project){
+    $prequest = Prequest::find()
+            ->where(['project_id' => $project->id])
+            ->all();
+}
+
+    //management
+    $approved_prequest= Prequest::find()->where(['status'=>2])->all();
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'prequest'=>$prequest,
+            'approved_prequest'=>$approved_prequest,
         ]);
+    }
+
+    public function actionPm2(){
+
+
+
+    $userId = Yii::$app->user->id;
+
+    $projects = Project::find()
+           ->where(['user_id' => $userId])
+           ->all();
+   
+   $prequest=[];
+   foreach ($projects as $project){
+       $prequest = Prequest::find()
+               ->where(['project_id' => $project->id])
+               ->all();
+   }
+   
+       //management
+       $approved_prequest= Prequest::find()->where(['status'=>1])->all();
+   
+       return $this->render('pm2', [
+    
+        'prequest'=>$prequest,
+        'approved_prequest'=>$approved_prequest,
+    ]);
     }
 
     /**
@@ -59,6 +107,8 @@ class PrequestController extends Controller
      */
     public function actionView($id)
     {
+        $model= $this->findModel($id);
+
         $prequest=Rdetail::find()
         ->where(['prequest_id'=>$id])
         ->all();
@@ -66,6 +116,17 @@ class PrequestController extends Controller
         $total_amount= 0;
         foreach ($prequest as $prequest) {
             $total_amount += $prequest->amount;
+        }
+
+        if ($model !== null && Yii::$app->user->can('admin') &&! Yii::$app->user->can('author')) {
+           
+            // Set isViewed attribute to 1
+            $model->session= 1;
+            Prequest::updateAll(['session' => $model->session], ['id' => $id]);
+    
+            // Save the model to persist the changes
+            // $model->save();
+    
         }
 
         return $this->render('view', [
@@ -136,6 +197,20 @@ class PrequestController extends Controller
         return $this->redirect(['index']);
     }
 
+    public function actionPm(){
+        $userId = Yii::$app->user->id;
+     //   retrieve the prequest assigned to the user
+
+        $prequest = Prequest::find()
+            ->where(['created_by' => $userId])
+            ->all();
+            return $this->render('pm', [
+                'prequest' => $prequest,
+                
+            ]);
+
+    }
+
 
     public function actionReport($id)
     {
@@ -161,6 +236,57 @@ class PrequestController extends Controller
         $pdf->Output();
         exit;
     }
+
+    public function actionApprove($prequestId)
+    {
+       
+            $prequest=Prequest::findOne($prequestId);
+
+            
+            // Update the status in the database based on the tender ID
+            // Replace 'YourModel' with your actual model class name, 'status' with the database column name, and 'tenderId' with the appropriate tender ID column name
+            $prequest->status=3;
+            Prequest::updateAll(['status' => $prequest->status], ['id' => $prequestId]);
+          
+            return $this->redirect(['prequest/view', 'id' => $prequestId]);
+        
+        
+        return 'Error'; // Return an error message or any other response if needed
+    }
+    public function actionPmapprove($prequestId)
+    {
+       
+            $prequest=Prequest::findOne($prequestId);
+
+            
+            // Update the status in the database based on the tender ID
+            // Replace 'YourModel' with your actual model class name, 'status' with the database column name, and 'tenderId' with the appropriate tender ID column name
+            $prequest->status=2;
+            Prequest::updateAll(['status' => $prequest->status], ['id' => $prequestId]);
+          
+            return $this->redirect(['prequest/view', 'id' => $prequestId]);
+        
+        
+        return 'Error'; // Return an error message or any other response if needed
+    }
+
+    public function actionNotapprove($prequestId)
+    {
+       
+            $prequest=Prequest::findOne($prequestId);
+
+            
+            // Update the status in the database based on the tender ID
+            // Replace 'YourModel' with your actual model class name, 'status' with the database column name, and 'tenderId' with the appropriate tender ID column name
+            $prequest->status=4;
+            Prequest::updateAll(['status' => $prequest->status], ['id' => $prequestId]);
+          
+            return $this->redirect(['prequest/view', 'id' => $prequestId]);
+        
+        
+        return 'Error'; // Return an error message or any other response if needed
+    }
+
 
 
     /**

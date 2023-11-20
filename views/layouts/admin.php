@@ -7,6 +7,7 @@ use app\assets\AppAsset;
 use app\assets\CustomAsset;
 use app\assets\RealAsset;
 use app\models\Adetail;
+use app\models\Prequest;
 use app\models\Project;
 use app\models\Setting;
 use app\models\Tender;
@@ -389,9 +390,27 @@ height:200px;
                       <li><a href="/item">index</a></li>
                     </ul>
                   </li>
-                  <li><a><i class="fas fa-balance-scale"></i>  Request<span class="fa fa-chevron-down"></span></a>
+
+                  <?php
+    $userId = Yii::$app->user->id;
+    // Retrieve the projects assigned to the user
+    $approved_prequest = Prequest::find()
+        ->where(['status' => 2])
+        ->andWhere(['session'=>0])
+        ->all();
+    
+    $prequestCount = 0;
+
+    foreach ($approved_prequest as $approved_prequest) {
+        // $exist_prequest = Prequest::findOne(['tender_id' => $approved_prequest->id]);
+        if ($approved_prequest !== null) {
+            $prequestCount++;
+        }
+    }
+    ?>
+                  <li><a><i class="fas fa-balance-scale"></i>  Request  <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <li><a href="/prequest">index</a></li>
+                      <li><a href="/prequest">index<span class="badge bg-primary animated-badge"><?= $prequestCount ?></span></a></li>
                     </ul>
                   </li>
                   <?php if (Yii::$app->user->can('admin')) : ?>
