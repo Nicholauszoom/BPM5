@@ -353,11 +353,12 @@ height:200px;
                     <?php if (Yii::$app->user->can('admin')) : ?>
                       <li><a href="/tender">index <?php if ($projectCount !== null): ?>
         <span class="badge bg-red animated-badge"><?= $projectCount ?></span>
-    <?php endif; ?></a></li>
+                  <?php endif; ?></a></li>
                       <?php endif; ?>
                       <?php if (Yii::$app->user->can('admin')&&Yii::$app->user->can('author') || Yii::$app->user->can('author')) : ?>
+                        <?php if($newTender!== 0):?>
                       <li><a href="/tender/pm">Assigned Tender<span class="badge bg-blue"><?=$newTender?></span></a></li>
-
+                         <?php endif;?>
                       <li><a href="/activity/create">Activity</a></li>
                       <?php endif; ?>
                     </ul>

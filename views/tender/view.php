@@ -4,6 +4,7 @@ use app\models\Activity;
 use app\models\Adetail;
 use app\models\Office;
 use app\models\Tattachmentss;
+use app\models\Tcomment;
 use app\models\User;
 use app\models\UserActivity;
 use yii\helpers\Html;
@@ -549,11 +550,12 @@ span{
                 'attribute' => 'coment',
                 'format' => 'raw',
                 'value' => function ($model) {
-                    $tstatus = $model->status;
-                    if ($tstatus==1 || $tstatus==3 ) {
+                    $comment=Tcomment::findOne(['tender_id'=>$model->id]);
+                    
+                    if ($comment===null) {
                        return 'no comment';
                     }
-                    return $model->coment;
+                    return $comment->comment;
                 },
             ],
              

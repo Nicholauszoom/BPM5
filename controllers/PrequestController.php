@@ -62,7 +62,7 @@ foreach ($projects as $project){
 }
 
     //management
-    $approved_prequest= Prequest::find()->where(['status'=>2])->all();
+    $approved_prequest= Prequest::find()->where(['status'=>2])->orWhere(['status'=>3])->all();
     $p_member_prequestst= Prequest::find()->where(['created_by'=> $userId]);
 
         return $this->render('index', [

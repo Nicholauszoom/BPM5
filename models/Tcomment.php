@@ -7,23 +7,24 @@ use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 
 /**
- * This is the model class for table "comment".
+ * This is the model class for table "tcomment".
  *
  * @property int $id
- * @property int|null $comment
  * @property int|null $created_at
+ * @property int|null $updated_at
  * @property int|null $created_by
+ * @property string|null $comment
+ * @property int $tender_id
  */
-class Comment extends \yii\db\ActiveRecord
+class Tcomment extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'comment';
+        return 'tcomment';
     }
-
     public function behaviors(){
         return [
             TimestampBehavior::class,
@@ -36,15 +37,17 @@ class Comment extends \yii\db\ActiveRecord
             
         ];
     }
+
+
     /**
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['prequest_id','created_at', 'created_by','updated_by','updated_at'], 'integer'],
+            [['created_at', 'updated_at', 'created_by', 'tender_id'], 'integer'],
+            [['tender_id'], 'required'],
             [['comment'], 'string', 'max' => 255],
-
         ];
     }
 
@@ -55,12 +58,11 @@ class Comment extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'comment' => 'Comment',
-            'request_id'=>'request id',
             'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
             'created_by' => 'Created By',
-            'updated_by'=>'updated By',
-            'updated_at'=>'Updated At'
+            'comment' => 'Comment',
+            'tender_id' => 'Tender ID',
         ];
     }
 }

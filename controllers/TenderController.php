@@ -484,7 +484,7 @@ public function actionAssigned()
             $tender->status=4;
             Tender::updateAll(['status' => $tender->status], ['id' => $tenderId]);
             
-            return $this->redirect(['tender/view', 'id' => $tenderId]);
+            return $this->redirect(['tcomment', 'tenderId' => $tenderId]);
         
         
         return 'Error'; // Return an error message or any other response if needed
@@ -502,7 +502,8 @@ public function actionAssigned()
             $tender->status=2;
             Tender::updateAll(['status' => $tender->status], ['id' => $tenderId]);
             
-            return $this->redirect(['tender/view', 'id' => $tenderId]);
+            return $this->redirect(['/tcomment/create', 'tenderId' => $tenderId]);
+
         
         
         return 'Error'; // Return an error message or any other response if needed
