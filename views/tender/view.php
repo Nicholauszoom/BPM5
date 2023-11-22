@@ -21,6 +21,7 @@ $this->context->layout = 'admin';
 $expireDater=$model->expired_at;
 
 $t_attachmentss=Tattachmentss::findOne(['tender_id'=>$model->id]);
+$tattachmentst = Tattachmentss::find()->where(['tender_id'=>$model->id])->all();
 
 ?>
 <style>
@@ -286,7 +287,7 @@ span{
         ]) ?>
 <?php if ($model->expired_at <= strtotime(date('Y-m-d'))) : ?>
 
-<?php if($model->status===5 && $model->submission!==null):?>
+<?php if($model->status===5 && !empty($model->submission)):?>
 <?= Html::a('Submit', ['submitst', 'tenderId' => $model->id], [
             'class' => 'btn btn-secondary',
             'data' => [
@@ -305,9 +306,20 @@ span{
             ],
         ]) ?>
 <?php endif;?>
+<?php
+$hasContract = false;
+foreach ($tattachmentst as $tattachment) {
+    if ($tattachment->contract !== null) {
+        $hasContract = true;
+        break;
+    }
+}
+?>
+
+<?php if ($hasContract): ?>
 
 
-    <?php if ($model->status === 3 && $t_attachmentss !== null && $t_attachmentss->contract !== null): ?>
+    <?php if ($model->status === 3): ?>
 
 <?= Html::a('Award', ['award', 'tenderId' => $model->id], [
     'class' => 'btn btn-success',
@@ -317,6 +329,8 @@ span{
     ],
 ]) ?>
 <?php endif;?>
+<?php endif;?>
+
 <?php if($model->status===3):?>
 <?= Html::a('Not Award', ['unsucess', 'tenderId' => $model->id], [
             'class' => 'btn btn-secondary',

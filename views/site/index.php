@@ -13,6 +13,9 @@ use yii\grid\GridView;
 $this->context->layout = 'main';
 ?>
 <style>
+p{
+  color: black;
+}
   .mail-icon {
   position: fixed;
   bottom: 40px;
@@ -236,7 +239,7 @@ label {
   </div> <!-- .templateux-section -->
 
 </div> <!-- .templateux-section -->
-
+<!--
 <div class="mail-icon">
   <a href="#" class="fa fa-envelope">
     <img src="https://img.icons8.com/?size=80&id=xLIkjgcmFOsC&format=png" style="width:35px;">
@@ -252,7 +255,7 @@ label {
     </form>
   </div>
 </div>
-
+-->
 <script>
 
   // Get the mail icon button and the mail form

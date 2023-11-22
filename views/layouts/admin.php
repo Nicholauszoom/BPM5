@@ -12,6 +12,7 @@ use app\models\Project;
 use app\models\Setting;
 use app\models\Tender;
 use app\models\User;
+use app\models\UserActivity;
 use app\models\UserAssignment;
 use app\widgets\Alert;
 use yii\bootstrap5\Breadcrumbs;
@@ -355,10 +356,13 @@ height:200px;
         <span class="badge bg-red animated-badge"><?= $projectCount ?></span>
                   <?php endif; ?></a></li>
                       <?php endif; ?>
-                      <?php if (Yii::$app->user->can('admin')&&Yii::$app->user->can('author') || Yii::$app->user->can('author')) : ?>
-                        <?php if($newTender!== 0):?>
+                      <?php if (Yii::$app->user->can('author') && !Yii::$app->user->can('admin')) : ?>
+                        
                       <li><a href="/tender/pm">Assigned Tender<span class="badge bg-blue"><?=$newTender?></span></a></li>
-                         <?php endif;?>
+                      <?php endif; ?>
+
+                      <?php if (Yii::$app->user->can('admin')&&Yii::$app->user->can('author') || Yii::$app->user->can('author')) : ?>
+
                       <li><a href="/activity/create">Activity</a></li>
                       <?php endif; ?>
                     </ul>
@@ -578,11 +582,21 @@ height:200px;
     $notificationCount = 0;
 
     foreach ($complete_tender_count as $cmpt_tender) {
-     
+      $assigncompl=UserActivity::find()->where(['tender_id'=>$cmpt_tender])->all();
+
+      $hasContract = false;
+foreach ($assigncompl as $assigncompl) {
+    if ($assigncompl->user_id === $userId) {
+        $hasContract = true;
+        break;
+    }
+  }
+  
+
         $currentDate = date('Y-m-d'); // Get the current date
         $expiredDays = floor(($cmpt_tender->expired_at - strtotime($currentDate)) / (60 * 60 * 24));
 
-        if (Yii::$app->user->can('admin') && $expiredDays >= 0 && $expiredDays < 7) {
+        if (($hasContract ||  (Yii::$app->user->can('admin') && Yii::$app->user->can('author'))) && $expiredDays >= 0 && $expiredDays < 8) {
             $notificationCount++;
         }
     }
@@ -614,10 +628,22 @@ $complete_tender = Tender::find()
  
 foreach ($complete_tender as $cmpt_tender) {
   $assgn_user=Adetail::find()->where(['tender_id'=>$cmpt_tender->id])->all();
+
+  $assigncompl=UserActivity::find()->where(['tender_id'=>$cmpt_tender])->all();
+
+  $hasContract = false;
+foreach ($assigncompl as $assigncompl) {
+if ($assigncompl->user_id === $userId) {
+    $hasContract = true;
+    break;
+}
+
+
+}
   // foreach ($assgn_user as $a_user) {
   $currentDate = date('Y-m-d'); // Get the current date
   $expiredDays = floor(($cmpt_tender->expired_at - strtotime($currentDate)) / (60 * 60 * 24));
-    if ($expiredDays >= 0 && $expiredDays < 7 ) {
+    if (($hasContract ||  (Yii::$app->user->can('admin') && Yii::$app->user->can('author'))) && $expiredDays >= 0 && $expiredDays < 8 ) {
       // if( $userId===$a_user->user_id | $a_user->supervisor){
 
 

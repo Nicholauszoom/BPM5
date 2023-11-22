@@ -102,79 +102,49 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
         <?= $content ?>
   
 
-<footer class="templateux-footer bg-light">
-  <div class="container">
-
-    <div class="row mb-5">
-      <div class="col-md-4 pr-md-5">
-        <div class="block-footer-widget">
-          <h3>About</h3>
-          <p>Bussiness Processes Management .</p>
-        </div>
-      </div>
-
-      <div class="col-md-8">
-        <div class="row">
-          <div class="col-md-3">
-            <div class="block-footer-widget">
-              <h3>Learn More</h3>
-              <ul class="list-unstyled">
-                <li><a href="#">How it works?</a></li>
-                <li><a href="#">Useful Tools</a></li>
-                <li><a href="#">Pricing</a></li>
-                <li><a href="#">Sitemap</a></li>
-              </ul>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="block-footer-widget">
-              <h3>Support</h3>
-              <ul class="list-unstyled">
-                <li><a href="#">FAQ</a></li>
-                <li><a href="#">Contact Us</a></li>
-                <li><a href="#">Help Desk</a></li>
-                <li><a href="#">Knowledgebase</a></li>
-              </ul>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="block-footer-widget">
-              <h3>About Us</h3>
-              <ul class="list-unstyled">
-                <li><a href="#">About Us</a></li>
-                <li><a href="#">Careers</a></li>
-                <li><a href="#">Terms of Service</a></li>
-                <li><a href="#">Privacy Policy</a></li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="col-md-3">
-            <div class="block-footer-widget">
-              <h3>Connect With Us</h3>
-              <ul class="list-unstyled block-social">
-                <li><a href="#" class="p-1"><span class="icon-facebook"></span></a></li>
-                <li><a href="#" class="p-1"><span class="icon-twitter"></span></a></li>
-                <li><a href="#" class="p-1"><span class="icon-github"></span></a></li>
-              </ul>
-            </div>
-          </div>
-        </div> <!-- .row -->
-
-      </div>
-    </div> <!-- .row -->
-
-    <div class="row pt-5 text-center">
-      <div class="col-md-12 text-center"><p>
-        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-        Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This application is made with  <a href="" target="_blank" class="text-primary">teratech</a>
-        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-      </p></div>
-    </div> <!-- .row -->
-
-  </div>
-</footer> <!-- .templateux-footer -->
-
+        <footer class="footer">
+  	 <div class="container">
+  	 	<div class="row">
+  	 		<div class="footer-col">
+  	 			<h4>company</h4>
+  	 			<ul>
+  	 				<li><a href="#">about us</a></li>
+  	 				<li><a href="#">our services</a></li>
+  	 				<li><a href="#">privacy policy</a></li>
+  	 				<li><a href="#">affiliate program</a></li>
+  	 			</ul>
+  	 		</div>
+  	 		<div class="footer-col">
+  	 			<h4>get help</h4>
+  	 			<ul>
+  	 				<li><a href="#">FAQ</a></li>
+  	 				<li><a href="#">HRM</a></li>
+  	 				<li><a href="#">returns</a></li>
+  	 				<li><a href="#">order status</a></li>
+  	 				
+  	 			</ul>
+  	 		</div>
+  	 		<div class="footer-col">
+  	 			<h4>process</h4>
+  	 			<ul>
+  	 				<li><a href="#">employement</a></li>
+  	 				<li><a href="#">budgeting</a></li>
+  	 				<li><a href="#">profits</a></li>
+  	 				<li><a href="#">management</a></li>
+  	 			</ul>
+  	 		</div>
+  	 		<div class="footer-col">
+  	 			<h4>follow us</h4>
+  	 			<div class="social-links">
+  	 				<a href="#"><i class="fab fa-facebook-f"></i></a>
+  	 				<a href="#"><i class="fab fa-twitter"></i></a>
+  	 				<a href="#"><i class="fab fa-instagram"></i></a>
+  	 				<a href="#"><i class="fab fa-linkedin-in"></i></a>
+  	 			</div>
+  	 		</div>
+  	 	</div>
+  	 </div>
+  </footer>
 
 </div> <!-- .js-animsition -->
 

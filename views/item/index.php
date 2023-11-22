@@ -32,7 +32,7 @@ $this->context->layout=('admin');
 
             'name',
             'quantity',
-            'unit',
+           
             
            
             [
