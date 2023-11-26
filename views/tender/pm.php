@@ -62,7 +62,7 @@ $this->context->layout = 'admin';
             ],
             'PE',
             'TenderNo',
-            'budget',
+            
             [
                 'attribute' => 'publish_at',
                 'format' => ['date', 'php:Y-m-d H:i:s'],

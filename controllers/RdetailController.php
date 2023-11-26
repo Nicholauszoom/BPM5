@@ -3,11 +3,17 @@
 namespace app\controllers;
 
 use app\models\Analysis;
+use app\models\Prequest;
+use app\models\Project;
 use app\models\Rdetail;
 use app\models\RdetailSearch;
+use app\models\Tender;
+use app\models\User;
+use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\Html;
 
 /**
  * RdetailController implements the CRUD actions for Rdetail model.
@@ -82,7 +88,9 @@ class RdetailController extends Controller
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['prequest']);
+
+
+                return $this->redirect(['create','prequestId'=>$prequestId]);
             }
         } else {
             $model->loadDefaultValues();
@@ -94,6 +102,108 @@ class RdetailController extends Controller
             'prequest'=>$prequest,
             'total_amount'=>$total_amount,
         ]);
+    }
+
+
+    public function actionRequestmail($prequestId){
+
+        if ($prequestId && !empty($prequestId)) {
+
+            $proquest =Prequest::findOne([$prequestId]);
+
+            $project=Project::findOne([$proquest->project_id]);
+            $user=User::findOne(['id'=>$project->user_id]);
+
+            $tender=Tender::findOne(['id'=>$project->tender_id]);
+        
+           /** @var MailerInterface $mailer */
+           $mailer = Yii::$app->mailer;
+           $message = $mailer->compose()
+               ->setFrom('nicholaussomi5@gmail.com')
+               ->setTo($user->email)
+               ->setSubject('tera tech company project new request')
+               ->setHtmlBody('
+                   <html>
+                   <head>
+                       <style>
+                           /* CSS styles for the email body */
+                           body {
+                               font-family: Arial, sans-serif;
+                               background-color: #f4f4f4;
+                           }
+
+                           .container {
+                               max-width: 600px;
+                               margin: 0 auto;
+                               padding: 20px;
+                               background-color: #ffffff;
+                               border: 1px solid #dddddd;
+                               border-radius: 4px;
+                               box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                           }
+
+                           h1 {
+                               color: blue;
+                               text-align: center;
+                           }
+
+                           p {
+                               color: #666666;
+                           }
+
+                           .logo {
+                               text-align: center;
+                               margin-bottom: 20px;
+                           }
+
+                           .logo img {
+                               max-width: 200px;
+                           }
+
+                           .assigned-by {
+                               font-weight: bold;
+                           }
+
+                           .button {
+                               display: inline-block;
+                               padding: 10px 20px;
+                               background-color: #3366cc;
+                               color: white;
+                               text-decoration: none;
+                               border-radius: 4px;
+                               margin-top: 20px;
+                           }
+
+                           .button:hover {
+                               background-color: #235daa;
+                           }
+                       </style>
+                   </head>
+                   <body>
+                       <div class="container">
+                           <div class="logo">
+                               <img src="http://teratech.co.tz/local/images/uploads/logo/163277576061522e507c527.webp" alt="teralogo">
+                           </div>
+                           <p>Dear ' . Html::encode($user->username) . ',</p>
+                           <ul>
+                               <li>Project Title: ' . Html::encode($tender->title) . '</li>
+                             
+                           </ul>
+                           <p>For more information visit the site.</p>
+                                                    </html>
+               ');
+
+          
+
+           $mailer->send($message);
+       }
+              Yii::$app->session->setFlash('success', 'Email is successfull sent to pm.');
+                return $this->redirect(['/prequest', 'id' => $prequestId]);
+
+
+            return 'Error'; // Return an error message or any other response if needed
+    
+
     }
 
     /**

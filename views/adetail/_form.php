@@ -33,8 +33,8 @@ $end_clarification_days_interval=$submit_date  - ($end_clarification * 3600 * 24
         <div class="col">
             
         <?php
- $user= User::find()->all();
-?>
+        $user= User::find()->all();
+         ?>
         <?= $form->field($model, 'user_id')->label('Description * <small class="text-muted">eg.information on tender</small>')->dropDownList(
     ArrayHelper::map($user, 'id', function ($user) use ($model) {
         $assignActivity = UserActivity::findOne(['user_id' => $user->id, 'tender_id' => $model->tender_id]);
@@ -47,6 +47,7 @@ $end_clarification_days_interval=$submit_date  - ($end_clarification * 3600 * 24
         return $user->username . ($label ? ' <span class="badge badge-success">' . $label . '</span>' : ''). ($activity ? ' <span class="badge badge-success">' . $activity . '</span>' : '');
     }),
     ['prompt' => 'Assigned to', 'id' => 'user-to', 'encode' => false]
+
 ) ?>
 
 
@@ -111,9 +112,6 @@ $end_clarification_days_interval=$submit_date  - ($end_clarification * 3600 * 24
     <?php ActiveForm::end(); ?>
 
 </div>
-
-
-
 
 <script>
 

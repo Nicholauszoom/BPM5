@@ -220,6 +220,7 @@ public function actionAssigned()
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionUpdate($id)
+    
     {
         // if (Yii::$app->user->can('admin')) {
         $model = $this->findModel($id);
@@ -338,7 +339,7 @@ public function actionAssigned()
                                             <p>Dear ' . Html::encode($tender_supervisor->username) . ',</p>
                                             <p>Your project has been assigned to you. Please find the details below:</p>
                                             <ul>
-                                                <li>Tender Title: ' . Html::encode($tender->title) . '</li>                                                
+                                                <li>Tender Title: ' . Html::encode($tender->title) . '</li>
                                                 <li>Submitted By: ' . Html::encode($assigned_one->username) . '</li>
                                                 <li>Office: ' . Html::encode($office->location) . '</li>
                                             </ul>
@@ -603,7 +604,6 @@ public function actionAssigned()
         if (Yii::$app->user->can('admin')) {
             $model=Tender::find()
              ->where(['status'=>1])->all();
-      
 
         return $this->render('success', [
           
@@ -635,7 +635,6 @@ public function actionUnsubmit()
     if (Yii::$app->user->can('admin')) {
         $model=Tender::find()
          ->where(['status'=>4])->all();
-  
 
     return $this->render('unsubmit', [
       

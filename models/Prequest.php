@@ -50,7 +50,7 @@ class Prequest extends \yii\db\ActiveRecord
             [['created_at', 'updated_at', 'created_by', 'department', 'mode', 'project_id','status'], 'integer'],
             [['payee', 'department', 'mode', 'project_id'], 'required'],
             [['payee'], 'string', 'max' => 255],
-            [['status','session'], 'default', 'value' => 0],
+            [['session'], 'default', 'value' => 0],
             [['status'], 'default', 'value' => 1],
         ];
     }

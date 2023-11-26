@@ -10,6 +10,8 @@ $this->params['breadcrumbs'][] = ['label' => 'Rdetails', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 $this->context->layout = ('admin');
 ?>
+        <?= Html::a('Next', ['requestmail', 'prequestId' => $prequestId], ['class' => 'back-arrow fas fa-arrow-right']) ?>
+
 <div class="rdetail-create">
 
     <h1><?= Html::encode($this->title) ?></h1>

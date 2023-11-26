@@ -7,6 +7,7 @@ use app\models\Prequest;
 use app\models\PrequestSearch;
 use app\models\Project;
 use app\models\Rdetail;
+use app\models\Tender;
 use app\models\User;
 use Mpdf\Mpdf;
 use Yii;
@@ -269,9 +270,102 @@ foreach ($projects as $project){
             // Replace 'YourModel' with your actual model class name, 'status' with the database column name, and 'tenderId' with the appropriate tender ID column name
             $prequest->status=3;
             Prequest::updateAll(['status' => $prequest->status], ['id' => $prequestId]);
-          
+            if ($prequestId && !empty($prequestId)) {
+                $loger=Yii::$app->user->id;
+                $userloger=User::findOne(['id'=>$loger]);
+
+                $proquest =Prequest::findOne([$prequestId]);
+    
+                $project=Project::findOne([$proquest->project_id]);
+                $user=User::findOne(['id'=>$project->user_id]);
+                $createdBy=User::findOne(['id'=>$proquest->created_by]);
+    
+                $tender=Tender::findOne(['id'=>$project->tender_id]);
+            
+               /** @var MailerInterface $mailer */
+               $mailer = Yii::$app->mailer;
+               $message = $mailer->compose()
+                   ->setFrom('nicholaussomi5@gmail.com')
+                   ->setCc($createdBy->email)
+                   ->setTo($user->email)
+                   ->setSubject('tera tech company project request approval ')
+                   ->setHtmlBody('
+                       <html>
+                       <head>
+                           <style>
+                               /* CSS styles for the email body */
+                               body {
+                                   font-family: Arial, sans-serif;
+                                   background-color: #f4f4f4;
+                               }
+    
+                               .container {
+                                   max-width: 600px;
+                                   margin: 0 auto;
+                                   padding: 20px;
+                                   background-color: #ffffff;
+                                   border: 1px solid #dddddd;
+                                   border-radius: 4px;
+                                   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                               }
+    
+                               h1 {
+                                   color: blue;
+                                   text-align: center;
+                               }
+    
+                               p {
+                                   color: #666666;
+                               }
+    
+                               .logo {
+                                   text-align: center;
+                                   margin-bottom: 20px;
+                               }
+    
+                               .logo img {
+                                   max-width: 200px;
+                               }
+    
+                               .assigned-by {
+                                   font-weight: bold;
+                               }
+    
+                               .button {
+                                   display: inline-block;
+                                   padding: 10px 20px;
+                                   background-color: #3366cc;
+                                   color: white;
+                                   text-decoration: none;
+                                   border-radius: 4px;
+                                   margin-top: 20px;
+                               }
+    
+                               .button:hover {
+                                   background-color: #235daa;
+                               }
+                           </style>
+                       </head>
+                       <body>
+                           <div class="container">
+                               <div class="logo">
+                                   <img src="http://teratech.co.tz/local/images/uploads/logo/163277576061522e507c527.webp" alt="teralogo">
+                               </div>
+                               <p>Dear ' . Html::encode($user->username) . ',</p>
+                               <ul>
+                                   <li>Project Title: ' . Html::encode($tender->title) . '</li>
+                                   <li>Project Title: Request approved from management</li>
+                               </ul>
+                               <p>For more information visit the site.</p>
+                                </html>
+                   ');
+    
+              
+    
+               $mailer->send($message);
+           }
+           Yii::$app->session->setFlash('success', 'Email is successfull sent to pm.');
             return $this->redirect(['prequest/view', 'id' => $prequestId]);
-        
         
         return 'Error'; // Return an error message or any other response if needed
     }
@@ -285,7 +379,101 @@ foreach ($projects as $project){
             // Replace 'YourModel' with your actual model class name, 'status' with the database column name, and 'tenderId' with the appropriate tender ID column name
             $prequest->status=2;
             Prequest::updateAll(['status' => $prequest->status], ['id' => $prequestId]);
-          
+
+
+            if ($prequestId && !empty($prequestId)) {
+
+                $proquest =Prequest::findOne([$prequestId]);
+    
+                $project=Project::findOne([$proquest->project_id]);
+                $user=User::findOne(['id'=>$project->user_id]);
+                $createdBy=User::findOne(['id'=>$proquest->created_by]);
+    
+                $tender=Tender::findOne(['id'=>$project->tender_id]);
+            
+               /** @var MailerInterface $mailer */
+               $mailer = Yii::$app->mailer;
+               $message = $mailer->compose()
+                   ->setFrom('nicholaussomi5@gmail.com')
+                   ->setCc($createdBy->email)
+                   ->setTo('samson@gmail.com')
+                   ->setSubject('tera tech company new project request')
+                   ->setHtmlBody('
+                       <html>
+                       <head>
+                           <style>
+                               /* CSS styles for the email body */
+                               body {
+                                   font-family: Arial, sans-serif;
+                                   background-color: #f4f4f4;
+                               }
+    
+                               .container {
+                                   max-width: 600px;
+                                   margin: 0 auto;
+                                   padding: 20px;
+                                   background-color: #ffffff;
+                                   border: 1px solid #dddddd;
+                                   border-radius: 4px;
+                                   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                               }
+    
+                               h1 {
+                                   color: blue;
+                                   text-align: center;
+                               }
+    
+                               p {
+                                   color: #666666;
+                               }
+    
+                               .logo {
+                                   text-align: center;
+                                   margin-bottom: 20px;
+                               }
+    
+                               .logo img {
+                                   max-width: 200px;
+                               }
+    
+                               .assigned-by {
+                                   font-weight: bold;
+                               }
+    
+                               .button {
+                                   display: inline-block;
+                                   padding: 10px 20px;
+                                   background-color: #3366cc;
+                                   color: white;
+                                   text-decoration: none;
+                                   border-radius: 4px;
+                                   margin-top: 20px;
+                               }
+    
+                               .button:hover {
+                                   background-color: #235daa;
+                               }
+                           </style>
+                       </head>
+                       <body>
+                           <div class="container">
+                               <div class="logo">
+                                   <img src="http://teratech.co.tz/local/images/uploads/logo/163277576061522e507c527.webp" alt="teralogo">
+                               </div>
+                               <p>Dear ' . Html::encode($user->username) . ',</p>
+                               <ul>
+                                   <li>Project Title: ' . Html::encode($tender->title) . '</li>
+                               </ul>
+                               <p>For more information visit the site.</p>
+                                </html>
+                   ');
+    
+              
+    
+               $mailer->send($message);
+           }
+
+            Yii::$app->session->setFlash('success', 'Email is successfull sent to management.');
             return $this->redirect(['prequest/view', 'id' => $prequestId]);
         
         
@@ -303,6 +491,101 @@ foreach ($projects as $project){
             $prequest->status=4;
             Prequest::updateAll(['status' => $prequest->status], ['id' => $prequestId]);
           
+            if ($prequestId && !empty($prequestId)) {
+                $loger=Yii::$app->user->id;
+                $userloger=User::findOne(['id'=>$loger]);
+
+                $proquest =Prequest::findOne([$prequestId]);
+    
+                $project=Project::findOne([$proquest->project_id]);
+                $user=User::findOne(['id'=>$project->user_id]);
+                $createdBy=User::findOne(['id'=>$proquest->created_by]);
+    
+                $tender=Tender::findOne(['id'=>$project->tender_id]);
+            
+               /** @var MailerInterface $mailer */
+               $mailer = Yii::$app->mailer;
+               $message = $mailer->compose()
+                   ->setFrom('nicholaussomi5@gmail.com')
+                   ->setCc($createdBy->email)
+                   ->setTo($user->email)
+                   ->setSubject('tera tech company project request approval ')
+                   ->setHtmlBody('
+                       <html>
+                       <head>
+                           <style>
+                               /* CSS styles for the email body */
+                               body {
+                                   font-family: Arial, sans-serif;
+                                   background-color: #f4f4f4;
+                               }
+    
+                               .container {
+                                   max-width: 600px;
+                                   margin: 0 auto;
+                                   padding: 20px;
+                                   background-color: #ffffff;
+                                   border: 1px solid #dddddd;
+                                   border-radius: 4px;
+                                   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                               }
+    
+                               h1 {
+                                   color: blue;
+                                   text-align: center;
+                               }
+    
+                               p {
+                                   color: #666666;
+                               }
+    
+                               .logo {
+                                   text-align: center;
+                                   margin-bottom: 20px;
+                               }
+    
+                               .logo img {
+                                   max-width: 200px;
+                               }
+    
+                               .assigned-by {
+                                   font-weight: bold;
+                               }
+    
+                               .button {
+                                   display: inline-block;
+                                   padding: 10px 20px;
+                                   background-color: #3366cc;
+                                   color: white;
+                                   text-decoration: none;
+                                   border-radius: 4px;
+                                   margin-top: 20px;
+                               }
+    
+                               .button:hover {
+                                   background-color: #235daa;
+                               }
+                           </style>
+                       </head>
+                       <body>
+                           <div class="container">
+                               <div class="logo">
+                                   <img src="http://teratech.co.tz/local/images/uploads/logo/163277576061522e507c527.webp" alt="teralogo">
+                               </div>
+                               <p>Dear ' . Html::encode($user->username) . ',</p>
+                               <ul>
+                                   <li>Project Title: ' . Html::encode($tender->title) . '</li>
+                                   <li>Project Title: Not approved</li>
+                               </ul>
+                               <p>For more information visit the site.</p>
+                                </html>
+                   ');
+    
+              
+    
+               $mailer->send($message);
+           }
+           Yii::$app->session->setFlash('success', 'Email is successfull sent .');
             return $this->redirect(['comment/create', 
             'prequestId' => $prequestId]);
         

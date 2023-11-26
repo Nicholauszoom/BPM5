@@ -1,6 +1,7 @@
 <?php
 
 use app\models\Activity;
+use app\models\User;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
@@ -45,12 +46,28 @@ $this->context->layout = 'admin';
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
             'name',
-            'created_at',
-            'updated_at',
-            'created_by',
+            [
+                'attribute' => 'created_at',
+                'value' => function ($model) {
+                    return Yii::$app->formatter->asDatetime($model->created_at);
+                },
+            ],
+            [
+                'attribute' => 'updated_at',
+                'value' => function ($model) {
+                    return Yii::$app->formatter->asDatetime($model->updated_at);
+                },
+            ],
+            [
+                'attribute'=>'created_by',
+                'format'=>'raw',
+                'value'=>function ($model){
+                    $createdByUser = User::findOne($model->created_by);
+                    $createdByName = $createdByUser ? $createdByUser->username : 'Unknown';
+                     return $createdByName;
+                },
+            ],
             [
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, Activity $model, $key, $index, $column) {

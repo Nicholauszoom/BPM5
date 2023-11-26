@@ -353,7 +353,7 @@ height:200px;
                     <ul class="nav child_menu">
                     <?php if (Yii::$app->user->can('admin')) : ?>
                       <li><a href="/tender">index <?php if ($projectCount !== null): ?>
-        <span class="badge bg-red animated-badge"><?= $projectCount ?></span>
+                 <span class="badge bg-red animated-badge"><?= $projectCount ?></span>
                   <?php endif; ?></a></li>
                       <?php endif; ?>
                       <?php if (Yii::$app->user->can('author') && !Yii::$app->user->can('admin')) : ?>
@@ -361,10 +361,7 @@ height:200px;
                       <li><a href="/tender/pm">Assigned Tender<span class="badge bg-blue"><?=$newTender?></span></a></li>
                       <?php endif; ?>
 
-                      <?php if (Yii::$app->user->can('admin')&&Yii::$app->user->can('author') || Yii::$app->user->can('author')) : ?>
-
-                      <li><a href="/activity/create">Activity</a></li>
-                      <?php endif; ?>
+                     
                     </ul>
                   </li>
                  
@@ -432,6 +429,7 @@ height:200px;
         }
     }
     ?>
+    <?php if(!(Yii::$app->user->can('author') && Yii::$app->user->can('admin') )):?>
                   <li><a><i class="fas fa-balance-scale"></i>  Request  <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
                       <li><a href="/prequest">index
@@ -444,12 +442,17 @@ height:200px;
                       <?php endif;?>
                     </li>
                       <li><a href="/prequest/member">Project Member
+                      <?php if(Yii::$app->user->can('author') &&! Yii::$app->user->can('admin') && $prequestsentCount!== 0 ):?>
+                      <span class="badge bg-secondary animated-badge"><?= $prequestsentCount ?></span></a>
+                      <?php endif;?>
                       <?php if(Yii::$app->user->can('author') &&! Yii::$app->user->can('admin') && $prequestCount!== 0 ):?>
                         <span class="badge bg-primary animated-badge"><?= $prequestCount ?></span>
                         <?php endif;?>
                         </a></li>
                     </ul>
                   </li>
+                  <?php endif;?>
+
                   <?php if (Yii::$app->user->can('admin')) : ?>
                     <!--
                   <li><a><i class="fa fa-check-square"></i>Task<span class="fa fa-chevron-down"></span></a>
@@ -468,10 +471,15 @@ height:200px;
                       <li><a href="/user">index</a></li>
                       <li><a href="/role">role</a></li>
                       <li><a href="/department">department</a></li>
+                      </li>
+                  <?php if (Yii::$app->user->can('admin')&&Yii::$app->user->can('author') || Yii::$app->user->can('author')) : ?>
+
+                    <li><a href="/activity">Activity</a></li>
                       <?php endif; ?>
                      
                     </ul>
-                  </li>
+                
+                        <?php endif; ?>
                   <li><a><i class="fa fa-building"></i>Office<span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
                       <li><a href="/office">index</a></li>
@@ -603,17 +611,18 @@ foreach ($assigncompl as $assigncompl) {
     ?>
 
   
-        <i class="fa fa-envelope-o"></i>
         <?php if ($notificationCount > 0): ?>
-            <span class="badge bg-red animated-badge"><?= $notificationCount ?></span>
+            <span class="badge bg-red animated-badge " style="position:relative;"><?= $notificationCount ?></span>
         <?php endif; ?>
     
         <?php if ($prequestCount > 0): ?>
             <span class="badge bg-primary animated-badge"><?= $prequestCount ?></span>
         <?php endif; ?>
         <?php if(Yii::$app->user->can('author') &&! Yii::$app->user->can('admin') && $prequestsentCount!== 0 ):?>
-          <span class="badge bg-secondary animated-badge"><?= $prequestsentCount ?></span></a>
+          <span class="badge bg-secondary animated-badge " style="position:relative;"><?= $prequestsentCount ?></span></a>
          <?php endif;?>
+
+        <i class="fa fa-envelope-o"></i>
 </a>
    
     <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown1">
