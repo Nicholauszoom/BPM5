@@ -1,12 +1,14 @@
 <?php
 
+use app\models\Tender;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
 /** @var yii\web\View $this */
 /** @var app\models\Adetail $model */
 
-$this->title = '';
+$tendertitle=Tender::findOne($tenderId);
+$this->title = 'Tender '.$tendertitle->title;
 $this->params['breadcrumbs'][] = ['label' => 'Adetails', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 $this->context->layout = 'admin';

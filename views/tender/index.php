@@ -2,6 +2,7 @@
 
 use app\models\Project;
 use app\models\Tender;
+use app\models\UserActivity;
 use yii\bootstrap5\LinkPager;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
@@ -25,6 +26,13 @@ $this->context->layout = 'admin';
     display: inline-block;
     margin-right: 10px;
 }
+
+.truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%; /* Adjust this width to match the container width */
+  }
 </style>
 <div id="main-content ">
    
@@ -41,9 +49,9 @@ $this->context->layout = 'admin';
     <?php if (Yii::$app->user->can('admin') && Yii::$app->user->can('author')) : ?>
         <?= Html::a('Create Tender', ['create'], ['class' => 'btn btn-success']) ?>
       <?php endif; ?>
-
+<!--
         <?= Html::a('Generate Report', ['form'], ['class' => 'btn btn-primary']) ?>
-
+--->
     </p>
 
     
@@ -79,8 +87,11 @@ $this->context->layout = 'admin';
                     return '<div style="display: flex; align-items: flex-start;">' . $label . '<span style="margin-left: 5px;">' . $model->title . '</span></div>';
                 },
             ],
+
             'PE',
+
             'TenderNo',
+            
             [
                 'attribute' => 'publish_at',
                 'format' => ['date', 'php:Y-m-d H:i:s'],
@@ -138,25 +149,44 @@ $this->context->layout = 'admin';
 
             [
                 'class' => 'yii\grid\ActionColumn',
-                'template' => '{project} {attachment}',
+                'template' => '{activity} {attachment}',
                 'buttons' => [
-                    'project' => function ($url, $model, $key) {
+                    // 'project' => function ($url, $model, $key) {
+                    //     $userId = Yii::$app->user->id;
+                
+                    //     // Check if the tender meets the criteria
+                    //     $isEligibleTender = $model->status == 1 && Project::findOne(['tender_id' => $model->id]) === null;
+                
+                    //     $badgeHtml = '';
+                    //     if ($isEligibleTender) {
+                    //         $badgeHtml = '<img src="https://img.icons8.com/?size=48&id=2EuI26KqYJ6b&format=png" class="truncate"></img>';
+                    //     }
+                
+                    //     return Html::a($badgeHtml, ['project/create', 'tenderId' => $model->id], [
+                    //         'title' => 'register project',
+                    //         'aria-label' => 'register project',
+                    //         'class' => 'icon-button', // Add a custom CSS class for the icon button
+                    //     ]);
+                    // },
+
+                    'activity' => function ($url, $model, $key) {
                         $userId = Yii::$app->user->id;
                 
                         // Check if the tender meets the criteria
-                        $isEligibleTender = $model->status == 1 && Project::findOne(['tender_id' => $model->id]) === null;
+                        $isEligibleTender = UserActivity::findOne(['tender_id'=>$model->id])===null ;
                 
                         $badgeHtml = '';
                         if ($isEligibleTender) {
                             $badgeHtml = '<img src="https://img.icons8.com/?size=48&id=2EuI26KqYJ6b&format=png" class="truncate"></img>';
                         }
                 
-                        return Html::a($badgeHtml, ['project/create', 'tenderId' => $model->id], [
-                            'title' => 'register project',
-                            'aria-label' => 'register project',
+                        return Html::a($badgeHtml, ['adetail/create', 'tenderId' => $model->id], [
+                            'title' => 'compliance',
+                            'aria-label' => 'create compliance',
                             'class' => 'icon-button', // Add a custom CSS class for the icon button
                         ]);
                     },
+                
                 
                     'attachment' => function ($url, $model, $key) {
                         return Html::a('<span class="fa fa-paperclip"></span>', ['tattachmentss/create', 'tenderId' => $model->id], [
@@ -177,7 +207,8 @@ $this->context->layout = 'admin';
                 ],
                 
             ],
-            // ///////////////
+        
+    
         ],
 
         'pager' => [

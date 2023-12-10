@@ -263,7 +263,6 @@ height:200px;
     width: 100%; /* Adjust this width to match the container width */
   }
 </style>
-
    
 </head>
 <?php if (Yii::$app->user->can('admin') || Yii::$app->user->can('author')) : ?>
@@ -305,7 +304,7 @@ height:200px;
                   
                   <li><a><i class="fa fa-home"></i> Home<span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <li><a href="/dashboard/admin">Dashboard</a></li>
+                      <li><a href="/dashboard/admin">dashboard</a></li>
                     </ul>
                   </li>
                  
@@ -330,6 +329,8 @@ height:200px;
                      ->count();
                   ?>
 
+
+
 <?php
     $userId = Yii::$app->user->id;
     // Retrieve the projects assigned to the user
@@ -346,19 +347,36 @@ height:200px;
         }
     }
     ?>
-
+<?php 
+$new = Tender::find()->where(['session'=>0])->count();
+$tenderPend=Tender::find()->where(['status'=>5])->count();
+$tenderFail=Tender::find()->where(['status'=>4])->count();//not submmitted
+$tenderSubmit=Tender::find()->where(['status'=>3])->count();
+$tenderWin=Tender::find()->where(['status'=>1])->count();
+$tenderOnprocess=Tender::find()->where(['session'=>1])->andWhere(['status'=>5])->count();
+?>
                   <li><a><i class="fa fa-recycle"></i>Tender
                  
     <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
                     <?php if (Yii::$app->user->can('admin')) : ?>
-                      <li><a href="/tender">index <?php if ($projectCount !== null): ?>
-                 <span class="badge bg-red animated-badge"><?= $projectCount ?></span>
+                      <li><a href="/tender">all <?php if ($projectCount !== null): ?>
+                 <span class="badge bg-red animated-badge"></span>
                   <?php endif; ?></a></li>
-                      <?php endif; ?>
+                  <li><a href="/tender/new">new
+                  <?php if ($new !== null): ?>
+                    <span class="badge bg-blue animated-badge"><?=$new?></span>
+                    <?php endif; ?>
+                  </a></li>
+                  <li><a href="/tender/submit">submitted<span class="badge bg-blue animated-badge"><?=$tenderSubmit?></span></a></li>
+                  <li><a href="/tender/success">awarded<span class="badge bg-blue animated-badge"><?=$tenderWin?></span></a></li>
+                  <li><a href="/tender/unsubmit">not submitted<span class="badge bg-blue animated-badge"><?=$tenderFail?></span></a></li>
+                  <li><a href="/tender/pending">onprogress<span class="badge bg-blue animated-badge"><?=$tenderOnprocess?></span></a></li>
+
+                  <?php endif; ?>
                       <?php if (Yii::$app->user->can('author') && !Yii::$app->user->can('admin')) : ?>
                         
-                      <li><a href="/tender/pm">Assigned Tender<span class="badge bg-blue"><?=$newTender?></span></a></li>
+                      <li><a href="/tender/pm">assigned <span class="badge bg-blue"><?=$newTender?></span></a></li>
                       <?php endif; ?>
 
                      
@@ -378,21 +396,37 @@ height:200px;
                   
                     <ul class="nav child_menu">
                     <?php if (Yii::$app->user->can('admin')) : ?>
-            <li><a href="/project">index<span class="badge bg-green"><?=$newProjects?></span></a></li>
+            <li><a href="/project">project<span class="badge bg-green"><?=$newProjects?></span></a></li>
         <?php endif; ?>
         <?php if (Yii::$app->user->can('author')) : ?>
-            <li><a href="/project/pm">Project PM</a>
-            <li><a href="/project/member">Project Member</a>
+            <li><a href="/project/pm"> pm</a>
+            <li><a href="/project/member">member</a>
            
           </li>
         <?php endif; ?>
                     </ul>
                   </li>
-                  <li><a><i class="fas fa-box-open"></i>  Items<span class="fa fa-chevron-down"></span></a>
+                  <?php if (Yii::$app->user->can('admin')&&Yii::$app->user->can('author') || Yii::$app->user->can('author')) : ?>
+
+                  <li><a><i class="fa fa-plug"></i>  Activity<span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <li><a href="/item">index</a></li>
+
+                    <li><a href="/activity">activity</a></li>
+  
                     </ul>
                   </li>
+                  <?php endif; ?>
+
+                  <?php if (Yii::$app->user->can('admin')&&Yii::$app->user->can('author') || Yii::$app->user->can('author')) : ?>
+
+                   <li><a><i class="fa fa-sitemap"></i>Department<span class="fa fa-chevron-down"></span></a>
+                  <ul class="nav child_menu">
+
+                 <li><a href="/department">department</a></li>
+
+                     </ul>
+                  </li>
+   <?php endif; ?>
 
                   <?php
     $userId = Yii::$app->user->id;
@@ -432,7 +466,7 @@ height:200px;
     <?php if(!(Yii::$app->user->can('author') && Yii::$app->user->can('admin') )):?>
                   <li><a><i class="fas fa-balance-scale"></i>  Request  <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <li><a href="/prequest">index
+                      <li><a href="/prequest">request
                       <?php if(Yii::$app->user->can('admin') &&! Yii::$app->user->can('author') && $prequestCount!== 0 ):?>
                       <span class="badge bg-primary animated-badge"><?= $prequestCount ?></span>
                       <?php endif;?>
@@ -441,7 +475,7 @@ height:200px;
                       <span class="badge bg-secondary animated-badge"><?= $prequestsentCount ?></span></a>
                       <?php endif;?>
                     </li>
-                      <li><a href="/prequest/member">Project Member
+                      <li><a href="/prequest/member">member
                       <?php if(Yii::$app->user->can('author') &&! Yii::$app->user->can('admin') && $prequestsentCount!== 0 ):?>
                       <span class="badge bg-secondary animated-badge"><?= $prequestsentCount ?></span></a>
                       <?php endif;?>
@@ -468,27 +502,25 @@ height:200px;
                   <li><a><i class="fa fa-user"></i>User & Department<span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
                     <?php if (Yii::$app->user->can('admin')) : ?>
-                      <li><a href="/user">index</a></li>
+                      <li><a href="/user">user</a></li>
                       <li><a href="/role">role</a></li>
-                      <li><a href="/department">department</a></li>
+                      
                       </li>
-                  <?php if (Yii::$app->user->can('admin')&&Yii::$app->user->can('author') || Yii::$app->user->can('author')) : ?>
-
-                    <li><a href="/activity">Activity</a></li>
-                      <?php endif; ?>
+                 
                      
                     </ul>
                 
                         <?php endif; ?>
                   <li><a><i class="fa fa-building"></i>Office<span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <li><a href="/office">index</a></li>
+                      <li><a href="/office">office</a></li>
                     </ul>
                   </li>
                  
                   <li><a><i class="fa fa-file-pdf-o"></i>Report<span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <li><a href="#">index</a></li>
+                      <li><a href="/tender/form">tender report</a></li>
+                      <li><a href="/project/form">project report</a></li>
                     </ul>
                   </li>
                   
@@ -503,7 +535,7 @@ height:200px;
                  
                   <li><a><i class="fa fa-gear"></i>Settings<span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <li><a href="/setting">index</a></li>
+                      <li><a href="/setting">setting</a></li>
                     </ul>
                   </li>
 
@@ -788,6 +820,7 @@ $pm=User::findOne($project->user_id);
       
         </footer>
         <!-- /footer content -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
         </div>
         </div>
 

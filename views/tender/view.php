@@ -1,10 +1,15 @@
 <?php
 
 use app\models\Activity;
+use app\models\Activitydetil;
 use app\models\Adetail;
+use app\models\Compldoc;
+use app\models\Eligibactivity;
+use app\models\Eligibdetail;
 use app\models\Office;
 use app\models\Tattachmentss;
 use app\models\Tcomment;
+use app\models\Tdetails;
 use app\models\User;
 use app\models\UserActivity;
 use yii\helpers\Html;
@@ -22,7 +27,7 @@ $expireDater=$model->expired_at;
 
 $t_attachmentss=Tattachmentss::findOne(['tender_id'=>$model->id]);
 $tattachmentst = Tattachmentss::find()->where(['tender_id'=>$model->id])->all();
-
+$userId = Yii::$app->user->id;
 ?>
 <style>
     *{
@@ -215,6 +220,17 @@ span{
     background-color: #f9f9f9;
 }
 
+#counter {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: royalblue;
+        padding: 10px;
+        color: white;
+        text-align: center;
+        font-size: 16px;
+    }
 </style>
 
 
@@ -285,6 +301,7 @@ span{
                 'method' => 'post',
             ],
         ]) ?>
+        <?= Html::a('manage activity', ['/adetail/create', 'tenderId' => $model->id], ['class' => 'btn btn-warning']) ?>
 <?php if ($model->expired_at <= strtotime(date('Y-m-d'))) : ?>
 
 <?php if($model->status===5 && !empty($model->submission)):?>
@@ -344,9 +361,35 @@ foreach ($tattachmentst as $tattachment) {
 <?php endif;?>
 
 <?php endif;?>
-    </p>
 
-    <?= DetailView::widget([
+<?php 
+$comp=Compldoc::findOne(['user_id'=>$userId,'tender_id'=>$model->id]);
+?>
+
+<?php if ($model->expired_at > strtotime(date('Y-m-d')) && ((Yii::$app->user->can('author') && ! Yii::$app->user->can('admin'))) && $comp ===null) : ?>
+
+<?= Html::a('Document', ['compldoc/create', 'tenderId' => $model->id], [
+            'class' => 'btn btn-primary',
+            'data' => [
+                // 'confirm' => 'Are you sure you want to change the status to S of this item?',
+                'method' => 'post',
+            ],
+        ]) ?>
+
+<?php endif;?>
+    </p>
+    <nav>
+  <div class="nav nav-tabs" id="nav-tab" role="tablist">
+    <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">General</button>
+    <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">More</button>
+    <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Assignment</button>
+    <button class="nav-link" id="nav-disabled-tab" data-bs-toggle="tab" data-bs-target="#nav-disabled" type="button" role="tab" aria-controls="nav-disabled" aria-selected="false" >Required</button>
+  </div>
+</nav>
+<div class="tab-content" id="nav-tabContent">
+  <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
+  
+  <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
             'id',
@@ -432,71 +475,84 @@ foreach ($tattachmentst as $tattachment) {
         //         return implode(', ', $assignedUsernames);
         //     },
         // ],
-        [
-            'attribute' => 'Asign-to & compliance activity',
-            'format' => 'raw',
-            'value' => function ($model) {
-                $assignments = UserActivity::find()
-                    ->where(['tender_id' => $model->id])
-                    ->all();
+        // [
+        //     'attribute' => 'Asign-to & compliance activity',
+        //     'format' => 'raw',
+        //     'value' => function ($model) {
+        //         $assignments = UserActivity::find()
+        //             ->where(['tender_id' => $model->id])
+        //             ->all();
         
-                $assignedUserActivities = [];
+        //         $assignedUserActivities = [];
         
-                foreach ($assignments as $assignment) {
-                    $user = User::findOne($assignment->user_id);
-                    $activity = Activity::findOne($assignment->activity_id);
-                    $adetail = Adetail::findOne(['user_id' => $assignment->user_id]);
+        //         foreach ($assignments as $assignment) {
+        //             $user = User::findOne($assignment->user_id);
+        //             $activity = Activity::findOne($assignment->activity_id);
+        //             $adetail = Adetail::findOne(['user_id' => $assignment->user_id]);
         
-                    if ($user && $activity && $adetail) {
-                        if (!isset($assignedUserActivities[$user->username])) {
-                            $assignedUserActivities[$user->username] = [];
-                        }
-                        $assignedUserActivities[$user->username][] = [
-                            'activityName' => $activity->name,
-                            'submitDate' => Yii::$app->formatter->asDatetime($assignment->submit_at),
-                            'section' => $adetail->section,
-                            'assignmentId' => $assignment->id, // Add assignment ID for deletion
-                        ];
-                    }
-                }
+        //             if ($user && $activity && $adetail) {
+        //                 if (!isset($assignedUserActivities[$user->username])) {
+        //                     $assignedUserActivities[$user->username] = [];
+        //                 }
+        //                 $assignedUserActivities[$user->username][] = [
+        //                     'activityName' => $activity->name,
+        //                     'submitDate' => Yii::$app->formatter->asDatetime($assignment->submit_at),
+        //                     'section' => $adetail->section,
+        //                     'assignmentId' => $assignment->id, // Add assignment ID for deletion
+        //                 ];
+        //             }
+        //         }
         
-                $tableRows = '';
-                foreach ($assignedUserActivities as $username => $activities) {
-                    foreach ($activities as $index => $activity) {
-                        $tableRows .= '<tr>';
-                        if ($index === 0) {
-                            $tableRows .= '<td rowspan="' . count($activities) . '">' . $username . '</td>';
-                        }
-                        $tableRows .= '<td>' . $activity['activityName'] . '</td>';
-                        $tableRows .= '<td>' . $activity['submitDate'] . '</td>';
-                        $tableRows .= '<td>' . $activity['section'] . '</td>';
-                       
-                        $tableRows .= '</tr>';
-                    }
-                }
+        //         $tableRows = '';
+        //         foreach ($assignedUserActivities as $username => $activities) {
+        //             foreach ($activities as $index => $activity) {
+        //                 $tableRows .= '<tr>';
+        //                 if ($index === 0) {
+        //                     $byuname=User::findOne(['username'=>$username]);
+        //                     $compliance = Compldoc::findOne(['user_id' => $byuname->id,'tender_id'=>$model->id]);
+        //                     $tableRows .= '<td rowspan="' . count($activities) . '">' . $username . '</td>';
+        //                 }
+        //                 $tableRows .= '<td>' . $activity['activityName'] . '</td>';
+        //                 $tableRows .= '<td>' . $activity['submitDate'] . '</td>';
+        //                 $sessionValue = $compliance['session'] ?? null;
+        //                 $tableRows .= '<td>';
+        //                 if ($sessionValue === 1) {
+        //                     $tableRows .= '<span class="label label-success">Complete</span>';
+                            
+        //                 }
+        //                 $tableRows .= '</td>';
+                        
+        //                 $created = $compliance['created_at'] ?? null;
+        //                 $tableRows .= '<td>';
+        //                 if ($created !== null) {
+        //                     $formattedDate = Yii::$app->formatter->asDate($compliance['created_at']);
+        //                     $tableRows .= $formattedDate;
+        //                 }
+        //                 $tableRows .= '</td>';
+        //                 $tableRows .= '</tr>';
+        //             }
+        //         }
         
-                $table = '
-               
-                    <table class="styled-table">
-                        <thead>
-                            <tr>
-                                <th>User</th>
-                                <th>Activity Name</th>
-                                <th>Submit Date</th>
-                                <th>Section</th>
-                              
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ' . $tableRows . '
-                        </tbody>
-                    </table>
-                  
-                ';
+        //         $table = '
+        //             <table class="styled-table">
+        //                 <thead>
+        //                     <tr>
+        //                         <th>User</th>
+        //                         <th>Activity Name</th>
+        //                         <th>Submit Date</th>
+        //                         <th>Session</th>
+        //                         <th>Date</th>
+        //                     </tr>
+        //                 </thead>
+        //                 <tbody>
+        //                     ' . $tableRows . '
+        //                 </tbody>
+        //             </table>
+        //         ';
         
-                return $table;
-            },
-        ],
+        //         return $table;
+        //     },
+        // ],
         
             // [
             //     'attribute'=>'supervisor',
@@ -539,14 +595,46 @@ foreach ($tattachmentst as $tattachment) {
             ],
 
 
+            // [
+            //     'attribute' => 'submission',
+            //     'format' => 'raw',
+            //     'value' => function ($model) {
+            //         $fileName = $model->submission;
+            //         $filePath = Yii::getAlias('@webroot/upload/' . $fileName);
+            //         $downloadPath = Yii::getAlias('@web/upload/' . $fileName);
+            //         return $model->submission ? Html::a('<i class="fa fa-file-pdf" aria-hidden="true" style="font-size: 24px;"></i> ' . $model->submission, $downloadPath, ['class' => 'btn btn-', 'target' => '_blank']) : '';
+            //     },
+            // ],
+
             [
-                'attribute' => 'submission',
+                'label' => 'Compliance Documents',
                 'format' => 'raw',
                 'value' => function ($model) {
-                    $fileName = $model->submission;
-                    $filePath = Yii::getAlias('@webroot/upload/' . $fileName);
-                    $downloadPath = Yii::getAlias('@web/upload/' . $fileName);
-                    return $model->submission ? Html::a('<i class="fa fa-file-pdf" aria-hidden="true" style="font-size: 24px;"></i> ' . $model->submission, $downloadPath, ['class' => 'btn btn-', 'target' => '_blank']) : '';
+                    $compldocuments = Compldoc::findAll(['tender_id' => $model->id]);
+            
+                    if (empty($compldocuments)) {
+                        return '';
+                    }
+            
+                    $documentAttributes = [
+                        'document' => 'Tender Document',
+                        // Add more document attributes here if needed
+                    ];
+            
+                    $documentLinks = [];
+            
+                    foreach ($compldocuments as $compldocument) {
+                        foreach ($documentAttributes as $attribute => $label) {
+                            $fileName = $compldocument->{$attribute};
+                            if (!empty($fileName)) {
+                                $filePath = Yii::getAlias('@webroot/upload/' . $fileName);
+                                $downloadPath = Yii::getAlias('@web/upload/' . $fileName);
+                                $documentLinks[] = $label . ': ' . Html::a($fileName, $downloadPath, ['target' => '_blank']);
+                            }
+                        }
+                    }
+            
+                    return implode('<br>', $documentLinks);
                 },
             ],
 
@@ -629,90 +717,263 @@ foreach ($tattachmentst as $tattachment) {
 
 
 
+</div>
+  <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
+
+  <!--  TENDER MORE DETAILS -->
+  <?php
+
+
+if ($ttdetail !== null) {
+    echo DetailView::widget([
+        'model' => $ttdetail, // Use 'model' instead of 'ttdetail'
+        'attributes' => [
+            [
+                'attribute' => 'tender_security',
+                'label' => 'Tender Security',
+                'value' => function ($model) {
+                    return getSecurityLabel($model->tender_security);
+                },
+            ],
+            'amount',
+            'percentage',
+            'bidmeet:datetime',
+            'end_clarificatiion:datetime',
+            'site_visit_date:datetime',
+            [
+                'attribute' => 'office',
+                'value' => function ($model) {
+                    $office = Office::findOne($model->office);
+                    return $office->location;
+                },
+            ],
+        ],
+    ]);
+}
+?>
+
+</div>
+  <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab" tabindex="0">
+  <?= DetailView::widget([
+        'model' => $model,
+        'attributes' => [
+         
+        [
+            'attribute' => 'Asign-to & compliance activity',
+            'format' => 'raw',
+            'value' => function ($model) {
+                $assignments = UserActivity::find()
+                    ->where(['tender_id' => $model->id])
+                    ->all();
+        
+                $assignedUserActivities = [];
+         
+                foreach ($assignments as $assignment) {
+                    $user = User::findOne($assignment->user_id);
+                    $activity = Activity::findOne($assignment->activity_id);
+                    $adetail = Adetail::findOne(['user_id' => $assignment->user_id]);
+                    $compdoc = Compldoc::findOne(['tender_id' => $model->id, 'user_id' => $assignment->user_id]);
+                
+                    if ($user && $activity && $adetail) {
+                        if (!isset($assignedUserActivities[$user->username])) {
+                            $assignedUserActivities[$user->username] = [];
+                        }
+                        $assignedUserActivities[$user->username][] = [
+                            'activityName' => $activity->name,
+                            'submitDate' => Yii::$app->formatter->asDatetime($assignment->submit_at),
+                            'section' => $adetail->section,
+                            'assignmentId' => $assignment->id, // Add assignment ID for deletion
+                            'compdoc' => $compdoc, // Add compdoc variable
+                        ];
+                    }
+                }
+                
+        
+                $tableRows = '';
+                foreach ($assignedUserActivities as $username => $activities) {
+                    foreach ($activities as $index => $activity) {
+                        $byuname=User::findOne(['username'=>$username]);
+
+                         $userIdlogger = Yii::$app->user->id;
+
+                        if((Yii::$app->user->can('admin')&&Yii::$app->user->can('author')) || $userIdlogger==$byuname->id){
+                        $tableRows .= '<tr>';
+                        if ($index === 0) {
+                            $byuname=User::findOne(['username'=>$username]);
+                            $compliance = Compldoc::findOne(['user_id' => $byuname->id,'tender_id'=>$model->id]);
+
+                            $tableRows .= '<td rowspan="' . count($activities) . '">' . $username . '</td>';
+
+                        }
+                        $tableRows .= '<td><a href="' . \yii\helpers\Url::to(['compldoc/create', 'tenderId' => $model->id]) . '">' . $activity['activityName'] . '</a></td>';                        $tableRows .= '<td>' . $activity['submitDate'] . '</td>';
+                        $sessionValue = $compliance['session'] ?? null;
+                        $tableRows .= '<td>';
+                        if ($sessionValue === 1) {
+                            $tableRows .= '<span class="label label-success">Complete</span>';
+                            
+                        }
+                        $tableRows .= '</td>';
+                        
+                        $created = $compliance['created_at'] ?? null;
+                        $tableRows .= '<td>';
+                        if ($created !== null) {
+                            $formattedDate = Yii::$app->formatter->asDate($compliance['created_at']);
+                            $tableRows .= $formattedDate;
+                        }
+                        $tableRows .= '</td>';
+                        $tableRows .= '<td>';
+                        if (isset($compdoc) && !empty($compdoc)) {
+                            $fileName = $compdoc->document;
+                            $filePath = Yii::getAlias('@webroot/upload/' . $fileName);
+                            $downloadPath = Yii::getAlias('@web/upload/' . $fileName);
+                            $documentLink = Html::a('<i class="glyphicon glyphicon-download-alt"></i>' . $fileName, $downloadPath, ['target' => '_blank']);                    $tableRows .= $documentLink;
+                        }
+                        $tableRows .= '</td>';
+                        $tableRows .= '</tr>';
+                    }
+                    }
+                }
+        
+                $table = '
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                            <th>User</th>
+                            <th>Activity Name</th>
+                            <th>Required Date</th>
+                            <th>Status</th>
+                            <th>Submit Date</th>
+                            <th>Work</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ' . $tableRows . '
+                        </tbody>
+                    </table>
+                ';
+        
+                return $table;
+            },
+        ],
+        
+     
+           
+         
+        ],
+    ]) ?>
+
+</div>
+  <div class="tab-pane fade" id="nav-disabled" role="tabpanel" aria-labelledby="nav-disabled-tab" tabindex="0">
+  <?= DetailView::widget([
+        'model' => $model,
+        'attributes' => [
+         
+        [
+            'attribute' => 'Asign-to & compliance activity',
+            'format' => 'raw',
+            'value' => function ($model) {
+                $assignments = UserActivity::find()
+                    ->where(['tender_id' => $model->id])
+                    ->all();
+        
+                $assignedUserActivities = [];
+         
+                foreach ($assignments as $assignment) {
+                    $user = User::findOne($assignment->user_id);
+                    $activity = Activity::findOne($assignment->activity_id);
+                    $adetail = Adetail::findOne(['user_id' => $assignment->user_id]);
+                    $compdoc = Compldoc::findOne(['tender_id' => $model->id, 'user_id' => $assignment->user_id]);
+                    
+                   
+                    $eligibdetail=Eligibdetail::find()->where(['adetail_id'=>$adetail->tender_id])->all();
+                
+                    if ($user && $activity && $adetail) {
+                        if (!isset($assignedUserActivities[$user->username])) {
+                            $assignedUserActivities[$user->username] = [];
+                        }
+                        $assignedUserActivities[$user->username][] = [
+                            'activityName' => $activity->name,
+                            'submitDate' => Yii::$app->formatter->asDatetime($assignment->submit_at),
+                            'section' => $adetail->section,
+                            'assignmentId' => $assignment->id, // Add assignment ID for deletion
+                            'compdoc' => $compdoc, // Add compdoc variable
+                            'eligibdetail'=>$eligibdetail,
+                        ];
+                    }
+                }
+                
+        
+                $tableRows = '';
+                foreach ($assignedUserActivities as $username => $activities) {
+                    foreach ($activities as $index => $activity) {
+                        $byuname=User::findOne(['username'=>$username]);
+
+                         $userIdlogger = Yii::$app->user->id;
+
+                        if((Yii::$app->user->can('admin')&&Yii::$app->user->can('author')) || $userIdlogger==$byuname->id){
+
+
+                            $tableRows .= '<tr>';
+                            if ($index === 0) {
+                                $byuname = User::findOne(['username' => $username]);
+                                $user_actvty = Eligibdetail::find()->where(['tender_id' => $model->id, 'user_id' => $byuname->id])->all();
+                            
+                                $elgibledetailactivity = [];
+                                foreach ($user_actvty as $eligibdetail) {
+                                    $elgib_activity = Eligibactivity::findOne($eligibdetail->activitydetail_id);
+                                    $actvt_detail = Activitydetil::findOne($elgib_activity->activitydetail_id);
+                                    $elgibledetailactivityById = Activitydetil::findOne($eligibdetail->activitydetail_id);
+                                    $elgibledetailactivity[] = $actvt_detail->title;
+                                }
+                            
+                                $tableRows .= '<td rowspan="' . count($activities) . '">' . $username . '</td>';
+                            
+                                if (!empty($user_actvty)) {
+                                    $tableRows .= '<td>' . implode(', ', $elgibledetailactivity) . '</td>';
+                                } else {
+                                    $tableRows .= '<td>' . 'document submission' . '</td>';
+                                }
+                            }
+                            $tableRows .= '</tr>';
+                    }
+                    }
+                }
+        
+                $table = '
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                            <th>User</th>
+                            <th>Required </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ' . $tableRows . '
+                        </tbody>
+                    </table>
+                ';
+        
+                return $table;
+            },
+        ],
+        
+     
+           
+         
+        ],
+    ]) ?>
+  
+
+</div>
+</div>
+
 
 </div>
 
 
 
-<center>
-<h1 class="text-muted center mt-10" style=" color: blue;">More Details</h1>
-</center>
 
 
-<table class="table">
-  <thead>
-    <tr style="background-color: #f2f2f2;">
-      <th scope="col">#</th>
-      <th scope="col">Tender Security</th>
-      <th scope="col">Bid Security Amount(tsh)</th>
-      <th scope="col">Bid Security Percent(%)</th>
-      <th scope='col'>Bid Meet Date</th>
-      <th scope="col">End Clarification Date</th>
-      <th scope='col'>Site visit date</th>
-      <th scope='col'>Office</th>
-      <td scope="col"></td>
-      
-    </tr>
-  </thead>
-  <tbody>
-  <?php foreach ($tdetail as $tdetail): ?>
-    <tr>
-      <th scope="row">1</th>
-      <td><?=getSecurityLabel($tdetail->tender_security)?></td>
-
-      <td><?=$tdetail->amount?></td>
-      <td><?=$tdetail->percentage?></td>
-
-     <td><?= Yii::$app->formatter->asDatetime($tdetail->bidmeet)?></td>
-
-      <td><?= Yii::$app->formatter->asDatetime($tdetail->end_clarificatiion) ?></td>
-
-      <td><?= Yii::$app->formatter->asDatetime($tdetail->site_visit_date) ?></td>
-      <?php 
-      $office=Office::findOne($tdetail->office);
-       $office_loca=$office->location;
-      ?>
-      <td><?= $office_loca?></td>
-    
-
-      <td>
-      <?php if (Yii::$app->user->can('admin')&&Yii::$app->user->can('author')) : ?>
-                <?= Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['tdetail/update', 'id'=> $tdetail->id], [
-                    'title' => 'edit',
-                    'data-method' => 'post',
-                    'data-pjax' => '0',
-                ]) ?>
-                <?= Html::a('<span class="glyphicon glyphicon-trash"></span>', ['tdetail/delete', 'id'=> $tdetail->id], [
-                    'title' => 'edit',
-                    'data-method' => 'post',
-                    'data-pjax' => '0',
-                ]) ?>
-                <?php endif;?>
-            </td>
-    
-
-    </tr>
-    
-    <?php endforeach; ?>
-    <tr>
-
-      <td>
-      <?php if (Yii::$app->user->can('admin')&&Yii::$app->user->can('author')) : ?>
-      <?= Html::a('+ Add',  [ 'tdetail/create' , 'tenderId'=> $model->id]) ?>
-      <?php endif;?>
-    </td>
-    
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-  </tbody>
-</table>
     </div>
 
   
@@ -724,8 +985,8 @@ foreach ($tattachmentst as $tattachment) {
     function getStatusLabel($status)
 {
     $statusLabels = [
-      1 => '<span class="">YES</span>',
-      2 => '<span class="">NO</span>',
+      1 => 'YES',
+      2 => 'NO',
      
     ];
 
@@ -735,8 +996,8 @@ foreach ($tattachmentst as $tattachment) {
 function getSecurityLabel($status)
 {
     $statusLabels = [
-      1 => '<span class="">Security Declaration</span>',
-      2 => '<span class="">Bid/Tender Security</span>',
+      1 => 'Security Declaration',
+      2 => 'Bid/Tender Security',
      
     ];
 

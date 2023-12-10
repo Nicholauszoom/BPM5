@@ -12,6 +12,8 @@ use yii\grid\GridView;
 
 $this->title = 'Compliances';
 $this->params['breadcrumbs'][] = $this->title;
+$this->context->layout = 'admin';
+
 ?>
 <div class="compliance-index">
 
@@ -30,9 +32,6 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             'id',
-            'role_id',
-            'user_id',
-            'section',
             'tender_id',
             [
                 'class' => ActionColumn::className(),

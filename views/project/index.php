@@ -53,7 +53,9 @@ $sidebarItems = [
         <!-- ============================================================== -->
         <div class="row"></div>
         <p>
+            <!--
         <?= Html::a('Generate Report', ['form'], ['class' => 'btn btn-primary']) ?>
+            -->
         </p>
 
            <!--<p>

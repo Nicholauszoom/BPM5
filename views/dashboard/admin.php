@@ -288,7 +288,10 @@ $budgetDataJson = Json::encode($budgetData);
                 <div class="col mr-2">
                 <div class="text-xs font-weight-bold  text-uppercase mb-1">Total Projects Budget
                     </div>
-                    <div class="h5 mb-0 font-weight-bold text-gray-800"> TSH <?=$totalBudget ?></div>
+                    <?php
+                    $formattedBudgetadmin = number_format($totalBudget, 2)
+                    ?>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800"> TSH <?=$formattedBudgetadmin?></div>
 
                 </div>
                 <div class="col-auto">

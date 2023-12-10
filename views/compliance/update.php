@@ -9,6 +9,8 @@ $this->title = 'Update Compliance: ' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Compliances', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Update';
+$this->context->layout = 'admin';
+
 ?>
 <div class="compliance-update">
 

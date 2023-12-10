@@ -121,10 +121,12 @@ public function actionAssigned()
         $tdetail=Tdetails::find()
         ->where(['tender_id'=>$id])
         ->all();
+        $ttdetail=Tdetails::findOne(['tender_id'=>$id]);
 
         return $this->render('view', [
             'model' => $model,
             'tdetail'=>$tdetail,
+            'ttdetail'=> $ttdetail,
         ]);
         
     }
@@ -406,6 +408,59 @@ public function actionAssigned()
            ]);
        }
     
+
+       public function actionNew(){
+
+        
+        $userId = Yii::$app->user->id;
+
+        // Find user assignments
+        $user_assignments = Adetail::find()
+            ->where(['user_id' => $userId])
+            ->all();
+
+        $assignedTenderIds = [];
+        foreach ($user_assignments as $user_assignment) {
+            $assignedTenderIds[] = $user_assignment->tender_id;
+        }
+
+        // Find assigned tenders
+        $new = Tender::find()
+            ->Where(['session'=>0])
+            ->all();
+
+       return $this->render('new', [
+           'new'=>$new,
+       ]);
+   }
+
+   public function actionNonnew(){
+
+        
+    $userId = Yii::$app->user->id;
+
+    // Find user assignments
+    $user_assignments = Adetail::find()
+        ->where(['user_id' => $userId])
+        ->all();
+
+    $assignedTenderIds = [];
+    foreach ($user_assignments as $user_assignment) {
+        $assignedTenderIds[] = $user_assignment->tender_id;
+    }
+
+    // Find assigned tenders
+    $nonnew = Tender::find()
+        ->Where(['session'=>!0])
+        ->all();
+
+   return $this->render('nonnew', [
+       'nonnew'=>$nonnew,
+   ]);
+}
+
+
+
     /**
      * Deletes an existing Tender model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
@@ -622,6 +677,25 @@ public function actionProgress()
   
 
     return $this->render('progress', [
+      
+        'model'=>$model,
+    ]);
+}else {
+    throw new ForbiddenHttpException;
+}
+}
+
+
+public function actionPending()
+{
+    if (Yii::$app->user->can('admin')) {
+        $model=Tender::find()
+         ->where(['status'=>5])
+         ->andWhere(['session'=>1])
+         ->all();
+  
+
+    return $this->render('pending', [
       
         'model'=>$model,
     ]);

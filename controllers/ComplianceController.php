@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Cdetail;
 use app\models\Compliance;
 use app\models\ComplianceSearch;
 use yii\web\Controller;
@@ -65,11 +66,11 @@ class ComplianceController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
-    public function actionCreate($tenderId)
+    public function actionCreate()
     {
         $model = new Compliance();
-
-        $model->tender_id =$tenderId;
+        $modelsCdetail = [new Cdetail];
+        // $model->tender_id =$tenderId;
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
                 return $this->redirect(['view', 'id' => $model->id]);
@@ -80,7 +81,8 @@ class ComplianceController extends Controller
 
         return $this->render('create', [
             'model' => $model,
-            'tenderId'=>$tenderId,
+            // 'tenderId'=>$tenderId,
+            'modelsCdetail' => (empty($modelsCdetail)) ? [new Cdetail] : $modelsCdetail
         ]);
     }
 

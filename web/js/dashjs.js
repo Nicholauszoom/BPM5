@@ -181,6 +181,31 @@ $(document).ready(function() {
     }
 });
 
+
+$('#tender-security-dropdown').on('change', function() {
+    var selectedValue = $(this).val();
+    
+    // Show or hide the additional form based on the selected value
+    if (selectedValue == 3) {
+        $('#add-formp').show();
+    } else {
+        $('#add-formp').hide();
+    }
+});
+
+// Check the initial value of the site_visit dropdown on page load
+$(document).ready(function() {
+    var selectedValue = $('#tender-security-dropdown').val();
+    
+    // Show or hide the additional form based on the selected value
+    if (selectedValue == 3) {
+        $('#add-formp').show();
+    } else {
+        $('#add-formp').hide();
+    }
+});
+
+
 $(document).ready(function() {
     // Add icons to drop-down options
     $('#site-visit-dropdown option[value="1"]').prepend('<span class="fa fa-check-circle" style="color: blue;"></span> ');
@@ -255,5 +280,15 @@ assignActivity.forEach(function (activity) {
 $(document).ready(function() {
     $('#checkAll').click(function() {
         $('.checkbox-item').prop('checked', this.checked);
+    });
+});
+
+$(document).ready(function() {
+    $('.activity-checkbox').on('click', function() {
+        if ($(this).is(':checked')) {
+            $('#activity-details-dropdown').show();
+        } else {
+            $('#activity-details-dropdown').hide();
+        }
     });
 });

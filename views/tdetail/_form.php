@@ -23,9 +23,10 @@ $end_clarification_days_interval=$submit_date  - ($end_clarification * 3600 * 24
 ?>
 
 <div class="tdetails-form">
-<small>The inputs with this * indicate are required to be fill and also End of clarification Date of this tender: <span style="color: dark-grey;"><?=Yii::$app->formatter->asDate($end_clarification_days_interval)?></span> </small>
+<small>The inputs with this  <span style="color:red;"> * </span> are required to be fill and also End of clarification Date of this tender: <span style="color:red;"><?=Yii::$app->formatter->asDate($end_clarification_days_interval)?></span> </small>
     <?php $form = ActiveForm::begin(); ?>
-
+<div class="form-row">
+    <div class="col-6">
     <?= $form->field($model, 'site_visit', ['template' => "{label}\n<div class='input-group'>{input}\n<span class='input-group-addon'><i class='fa fa-bell'></i></span></div>\n{error}"])->label('Sitevisit *<small class="text-muted">from tender department</small>')->dropDownList(
     [
         1 => 'a. YES',
@@ -62,10 +63,10 @@ $end_clarification_days_interval=$submit_date  - ($end_clarification * 3600 * 24
 ?>
 <div id="site-visit-date-warning" style="display: none; color: red;"><i class="fas fa-warning" style="color:orange ;"></i> Date must be between <span style = "color:dimgray;"><?=Yii::$app->formatter->asDatetime($publish_date)?></span>  and <span style = "color:dimgray;"><?=Yii::$app->formatter->asDatetime($end_clarification_days_interval)?></span></div>
 
+    </div>
+  
 </div>
-</div>
-    <?= $form->field($model, 'tender_id')->hiddenInput(['value' => $tenderId])->label(false) ?>
-
+<div class="col">
     <?= $form->field($model, 'bidmeet')->label('Bid Meet Date * <small class="text-muted">eg.10-12-2025 03:00 AM</small>')->widget(DatePicker::class, [
     'language' => 'ru',
     'dateFormat' => 'MM/dd/yyyy',
@@ -90,6 +91,12 @@ $end_clarification_days_interval=$submit_date  - ($end_clarification * 3600 * 24
 <div id="bidmeet-warning" style="display: none; color: red;"><i class="fas fa-warning" style="color:orange ;"></i> Date must be between <span style = "color:dimgray;"><?=Yii::$app->formatter->asDatetime($publish_date)?></span>  and <span style = "color:dimgray;"><?=Yii::$app->formatter->asDatetime($end_clarification_days_interval)?></span></div>
 
 
+    </div>
+</div>
+</div>
+    <?= $form->field($model, 'tender_id')->hiddenInput(['value' => $tenderId])->label(false) ?>
+
+  
 <?php
 $tender_by_id = Tender::findOne($tenderId);
 $publish_date = $tender_by_id->publish_at;
@@ -105,46 +112,56 @@ $model->end_clarificatiion = date('m/d/Y', $end_clarification_days_interval);
 
 <div class="form-row">
     <div class="col">
-<?= $form->field($model, 'tender_security')->label('Tender Security * <small class="text-muted">eg.security declaration</small>')->dropDownList(
+    <?= $form->field($model, 'tender_security')->label('Tender Security * <small class="text-muted">eg.security declaration</small>')->dropDownList(
     [
         1 => 'a. Security Declaration',
-        2 => 'b. Bid/Tender Security',
+        2 => 'b. Bid/Tender Security Amount',
+        3 => 'c. Bid/Tender Security Percent',
     ],
     [
         'id' => 'tender-security-dropdown',
         'prompt' => 'Select security type',
     ]
 ) ?>
+
 <div id="add-form" style="display: none;">
     <div class="form-row">
-        <div class="col">
-            <?= $form->field($model, 'amount')->label('Amount* <small class="text-muted">TSH</small>')->textInput(['type'=>'number','placeholder'=>'TSH'])?>
+        <div class="col-6">
+            <?= $form->field($model, 'amount')->label('Amount* <small class="text-muted">TSH</small>')->textInput(['type'=>'number','placeholder'=>'TSH', 'id' => 'amount-input'])?>
         </div>
-        <div class="col">
-            <?= $form->field($model, 'percentage')->label('Percentage <small class="text-muted">%</small>')->textInput(['type'=>'number','placeholder'=>'%']) ?>
-        </div>
-    </div>
-</div>
-    </div>
-    <div class="col">
-    
-    <?php echo $form->field($model, 'office')->label('Office * <small class="text-muted">eg. Dodoma/Dar es salaam/Zanzibar</small>')->dropDownList(
-    ArrayHelper::map($office, 'id', function ($item) {
-        return '<i class="fas fa-map-marker-alt" style="color: blue;"></i> ' . $item['location'];
-    }),
-    [
-        'prompt' => '<i class="glyphicon glyphicon-envelope" style="color: blue;"></i> Office',
-        'encode' => false, // Prevents HTML entities from being encoded
-        'class' => 'form-control', // Add the desired CSS class for styling
-    ]
-); ?>
     </div>
 </div>
 
-     <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+<div id="add-formp" style="display: none;">
+        <div class="form-row">
+        <div class="col-6">
+            <?= $form->field($model, 'percentage')->label('Percentage <small class="text-muted">%</small>')->textInput(['type'=>'number','placeholder'=>'%', 'id' => 'percentage-input']) ?>
+        </div>
+        </div>
+  
+</div>
+
     </div>
+    <div class="col-6">
+    <?php echo $form->field($model, 'office')->label('Office * <small class="text-muted">eg. Dodoma/Dar es salaam/Zanzibar</small>')->dropDownList(
+        ArrayHelper::map($office, 'id', function ($item) {
+            return '<i class="fas fa-map-marker-alt" style="color: blue;"></i> ' . $item['location'];
+        }),
+        [
+            'prompt' => '<i class="glyphicon glyphicon-envelope" style="color: blue;"></i> Office',
+            'encode' => false, // Prevents HTML entities from being encoded
+            'class' => 'form-control', // Add the desired CSS class for styling
+        ]
+    ); ?>
+  
+</div>
+</div>
+
+<?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
 
     <?php ActiveForm::end(); ?>
+
+
 
 </div>
 <?php
@@ -174,29 +191,6 @@ $(document).ready(function() {
     }
 });
 
-
-$('#tender-security-dropdown').on('change', function() {
-    var selectedValue = $(this).val();
-    
-    // Show or hide the additional form based on the selected value
-    if (selectedValue == 2) {
-        $('#add-form').show();
-    } else {
-        $('#add-form').hide();
-    }
-});
-
-// Check the initial value of the site_visit dropdown on page load
-$(document).ready(function() {
-    var selectedValue = $('#tender-security-dropdown').val();
-    
-    // Show or hide the additional form based on the selected value
-    if (selectedValue == 2) {
-        $('#add-form').show();
-    } else {
-        $('#add-form').hide();
-    }
-});
 JS;
 
 $this->registerJs($script);

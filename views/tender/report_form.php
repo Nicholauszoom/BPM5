@@ -30,7 +30,8 @@ $this->context->layout = 'admin';
 </div>
 
 <div class="form-group">
-    <?= Html::submitButton('Generate Report', ['class' => 'btn btn-primary']) ?>
+    <?= Html::submitButton(' <i class="fas fa-download"></i> pdf ', ['class' => 'btn btn-primary btn-floating']) ?>
+
 </div>
 
 <?php ActiveForm::end(); ?>

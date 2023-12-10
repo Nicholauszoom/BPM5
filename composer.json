@@ -37,7 +37,8 @@
         "guzzlehttp/guzzle": "^7.8.0",
         "tecnickcom/tcpdf": "^6.6",
         "reportico/yii2-reportico": "dev-master",
-        "mpdf/mpdf":"*"
+        "mpdf/mpdf":"*",
+        "wbraganca/yii2-dynamicform": "*"
         
         
         

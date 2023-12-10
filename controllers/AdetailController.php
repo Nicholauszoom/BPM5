@@ -249,22 +249,40 @@ class AdetailController extends Controller
                                     ');
         
                                
-        
+
                                 $mailer->send($message);
                             }
-
-                        }
-
-
                        
+                            if ($activityId == 1) {
+                                Yii::$app->session->setFlash('success', 'saved and email notification successfully.');
+                                // return $this->redirect(['eligibactivity/create', 'adetailId' => $model->id]);
+                                $activity_role =Activity::findOne($assignment->activity_id);
+                                //find by user id
+                                $assign=User::findOne(['id'=>$assignment->user_id]);
+                                return $this->redirect([
+                                    'eligibactivity/create',
+                                    'adetailId' => $model->id,
+                                    'userId' => $assignment->user_id,
+                                    'tenderId'=>$assignment->tender_id,
+                                ]);
+                            } else {
+                                Yii::$app->session->setFlash('success', 'saved and email notification successfully.');
+                                return $this->redirect(['adetail/create', 'tenderId' => $tenderId]);
+                                
+                            }
+                        }
                     }
-                    Yii::$app->session->setFlash('success', 'saved and email notification successfully.');
-                    return $this->redirect(['adetail/create', 'tenderId' => $tenderId]);
+
+
+               
+
+
+
             }
         } else {
             $model->loadDefaultValues();
         }
-
+          
         return $this->render('create', [
             'model' => $model,
             'users'=>$users,

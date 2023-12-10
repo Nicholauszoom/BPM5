@@ -24,18 +24,38 @@ $end_clarification= $end_clarification_days->end_clarification;
 $end_clarification_days_interval=$submit_date  - ($end_clarification * 3600 * 24);
 
 ?>
-
+  <?php
+        $user= User::find()->all();
+         ?>
 <div class="user-activity-form">
-<small>The inputs with this * indicate are required to be fill and also End of clarification Date of this tender: <span style="color: dark-grey;"><?=Yii::$app->formatter->asDate($end_clarification_days_interval)?> and submission date: <?=Yii::$app->formatter->asDate($submit_date)?></span> </small>
+<small>The inputs with this <span style="color:red;">*</span> indicate are required to be fill and also End of clarification Date of this tender: <span style="color:red;"><?=Yii::$app->formatter->asDate($end_clarification_days_interval)?></span>  and submission date:<span style="color:red;"> <?=Yii::$app->formatter->asDate($submit_date)?></span> </small>
 
     <?php $form = ActiveForm::begin(); ?>
     <div class="form-row">
         <div class="col">
-            
-        <?php
-        $user= User::find()->all();
-         ?>
-        <?= $form->field($model, 'user_id')->label('Description * <small class="text-muted">eg.information on tender</small>')->dropDownList(
+        <?= $form->field($model, 'supervisor')->label('Supervisor *<small class="text-muted">eg.tender member</small>')->dropDownList(
+   
+   ArrayHelper::map($user, 'id', 'username'),
+   ['prompt' => 'Select Supervisor', 'id' => 'supervisor']
+)?>
+    
+        </div>
+        <div class="col">
+        <?= $form->field($model, 'section')->label('Document Section  <small class="text-muted">eg.SECTION II: BID DATA SHEET (BDS)</small>')->textInput(['placeholder'=>'Assign task in section..'])?>
+
+        </div>
+        <div class="col">
+        <?= $form->field($model, 'activity_id')->checkboxList( ArrayHelper::map($activity, 'id', 'name'), ['prompt' => 'Select Activity', 'id' => 'activity'] )?>
+
+
+</div>
+
+    </div>
+
+    <div class="form-row">
+        <div class="col">
+      
+        <?= $form->field($model, 'user_id')->label('Assign To * <small class="text-muted">eg.select engineer</small>')->dropDownList(
     ArrayHelper::map($user, 'id', function ($user) use ($model) {
         $assignActivity = UserActivity::findOne(['user_id' => $user->id, 'tender_id' => $model->tender_id]);
         $label = $assignActivity && $assignActivity->assign == 1 ? '(assigned)' : '';
@@ -50,27 +70,6 @@ $end_clarification_days_interval=$submit_date  - ($end_clarification * 3600 * 24
 
 ) ?>
 
-
-        </div>
-        <div class="col">
-        <?= $form->field($model, 'activity_id')->checkboxList( ArrayHelper::map($activity, 'id', 'name'), ['prompt' => 'Select Activity', 'id' => 'activity'] )?>
-
-        </div>
-        <div class="col">
-
-<?= $form->field($model, 'section')->label('Document Section  <small class="text-muted">eg.SECTION II: BID DATA SHEET (BDS)</small>')->textInput(['placeholder'=>'Assign task in section..'])?>
-
-</div>
-
-    </div>
-
-    <div class="form-row">
-        <div class="col">
-        <?= $form->field($model, 'supervisor')->label('Supervisor *<small class="text-muted">eg.tender member</small>')->dropDownList(
-   
-   ArrayHelper::map($user, 'id', 'username'),
-   ['prompt' => 'Select Supervisor', 'id' => 'supervisor']
-)?>
         </div>
 
         <div class="col">

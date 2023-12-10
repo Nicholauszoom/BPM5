@@ -28,8 +28,7 @@ class Compliance extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['role_id', 'user_id','tender_id'], 'integer'],
-            [['section'], 'string', 'max' => 255],
+            [['supervisor','tender_id'], 'integer'],
         ];
     }
 
@@ -40,10 +39,9 @@ class Compliance extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'role_id' => 'Role ID',
-            'user_id' => 'User ID',
+            'supervisor' => 'Supervisor',
             'tender_id'=>'Tender Id',
-            'section' => 'Section',
+
         ];
     }
 }

@@ -8,6 +8,7 @@ use yii\helpers\Html;
 $this->title = 'Create Compliance';
 $this->params['breadcrumbs'][] = ['label' => 'Compliances', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+$this->context->layout = 'admin';
 ?>
 <div class="compliance-create">
 
@@ -15,6 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $this->render('_form', [
         'model' => $model,
+        'modelsCdetail'=>$modelsCdetail,
     ]) ?>
 
 </div>

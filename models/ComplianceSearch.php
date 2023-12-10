@@ -17,8 +17,8 @@ class ComplianceSearch extends Compliance
     public function rules()
     {
         return [
-            [['id', 'role_id', 'user_id', 'tender_id'], 'integer'],
-            [['section'], 'safe'],
+            [['id',  'supervisor', 'tender_id'], 'integer'],
+          
         ];
     }
 
@@ -59,12 +59,12 @@ class ComplianceSearch extends Compliance
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'role_id' => $this->role_id,
-            'user_id' => $this->user_id,
+
+            'supervisor' => $this->supervisor,
             'tender_id' => $this->tender_id,
         ]);
 
-        $query->andFilterWhere(['like', 'section', $this->section]);
+        // $query->andFilterWhere(['like', 'section', $this->section]);
 
         return $dataProvider;
     }

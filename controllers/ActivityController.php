@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\Activity;
+use app\models\Activitydetil;
 use app\models\ActivitySearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -55,8 +56,12 @@ class ActivityController extends Controller
      */
     public function actionView($id)
     {
+
+        $subactivity=Activitydetil::find()->where(['activity_id'=>$id])->all();
+
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'subactivity'=>$subactivity,
         ]);
     }
 

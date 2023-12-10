@@ -122,7 +122,7 @@ function getSiteVisitLabel($status)
                  
                 }
                
-                return $this->redirect(['adetail/create', 'tenderId' => $tenderId]);
+                return $this->redirect(['tender/new']);
 
 
 
