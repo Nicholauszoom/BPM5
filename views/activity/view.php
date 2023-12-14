@@ -96,13 +96,11 @@ $this->context->layout = 'admin';
     ]) ?>
 </div>
   <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
-
-
   <?= GridView::widget([
     'dataProvider' => new \yii\data\ArrayDataProvider([
         'allModels' => $subactivity,
         'pagination' => [
-            'pageSize' => 10, // Adjust the page size as per your requirement
+            'pageSize' => 10,
         ],
         'sort' => [
             'attributes' => [
@@ -119,16 +117,32 @@ $this->context->layout = 'admin';
         ],
     ]),
     'columns' => [
-        ['class' => 'yii\grid\SerialColumn'],
+        // columns configuration
+        'id',
         'title',
         [
             'class' => 'yii\grid\ActionColumn',
-            'urlCreator' => function ($action, $model, $key, $index) use ($subactivity) {
-                return Url::to([$action, 'id' => $subactivity[$index]['id']]);
-            },
+            'header' => 'Actions',
+            'headerOptions' => ['style' => 'text-align:center'],
+            'contentOptions' => ['style' => 'text-align:center'],
+            'template' => '<div style="display:flex; justify-content:center;">{view} {create-analysis} {create-task} {update} {team}</div>',
+            'buttons' => [
+                'view' => function ($url, $model, $key) {
+                    return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', ['activitydetil/view', 'id' => $model->id], [
+                        'title' => 'View',
+                        'aria-label' => 'View',
+                    ]);
+                },
+                'update' => function ($url, $model, $key) {
+                    return Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['activitydetil/update', 'id' => $model->id], [
+                        'title' => 'Edit',
+                        'aria-label' => 'Edit',
+                    ]);
+                },
+            ],
         ],
     ],
-]); ?>
+]) ?>
 
 </div>
 </div>

@@ -93,13 +93,15 @@ class ActivitydetilController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $activityId=$model->activity_id;
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['activity/view', 'id' => $activityId]);
         }
 
         return $this->render('update', [
             'model' => $model,
+            'activityId'=>$activityId,
         ]);
     }
 

@@ -6,6 +6,7 @@ use app\models\Adetail;
 use app\models\Compldoc;
 use app\models\Eligibactivity;
 use app\models\Eligibdetail;
+use app\models\Eligibdone;
 use app\models\Office;
 use app\models\Tattachmentss;
 use app\models\Tcomment;
@@ -14,6 +15,8 @@ use app\models\User;
 use app\models\UserActivity;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+
+use function PHPUnit\Framework\isEmpty;
 
 /** @var yii\web\View $this */
 /** @var app\models\Tender $model */
@@ -821,14 +824,39 @@ if ($ttdetail !== null) {
                             $tableRows .= $formattedDate;
                         }
                         $tableRows .= '</td>';
-                        $tableRows .= '<td>';
+                      
+
                         if (isset($compdoc) && !empty($compdoc)) {
-                            $fileName = $compdoc->document;
-                            $filePath = Yii::getAlias('@webroot/upload/' . $fileName);
-                            $downloadPath = Yii::getAlias('@web/upload/' . $fileName);
-                            $documentLink = Html::a('<i class="glyphicon glyphicon-download-alt"></i>' . $fileName, $downloadPath, ['target' => '_blank']);                    $tableRows .= $documentLink;
+                            $eligibdone = Eligibdone::find()
+                                ->where(['compldoc_id' => $compdoc->id, 'user_id' => $byuname->id, 'tender_id' => $model->id])
+                                ->all();
+                            
+                            $eligib = [];
+                            
+                            foreach ($eligibdone as $eligibdoneItem) {
+                                $activitydetail = Activitydetil::findOne($eligibdoneItem->eligibd_id);
+                                
+                                if ($activitydetail !== null) {
+                                    $eligib[] = $activitydetail->title;
+                                }
+                            }
+                        
+                            if (empty($eligibdone)) {
+                                $tableRows .= '<td>';
+                                $fileName = $compdoc->document;
+                                $filePath = Yii::getAlias('@webroot/upload/' . $fileName);
+                                $downloadPath = Yii::getAlias('@web/upload/' . $fileName);
+                                $documentLink = Html::a('<i class="glyphicon glyphicon-download-alt"></i>' . $fileName, $downloadPath, ['target' => '_blank']);
+                                $tableRows .= $documentLink;
+                                $tableRows .= '</td>';
+                            } else {
+                               
+                               
+                                $tableRows .= '<td>' . implode(', ', $eligib) . '</td>';
+                            }
                         }
-                        $tableRows .= '</td>';
+                        
+                        
                         $tableRows .= '</tr>';
                     }
                     }
@@ -921,8 +949,8 @@ if ($ttdetail !== null) {
                                 $elgibledetailactivity = [];
                                 foreach ($user_actvty as $eligibdetail) {
                                     $elgib_activity = Eligibactivity::findOne($eligibdetail->activitydetail_id);
-                                    $actvt_detail = Activitydetil::findOne($elgib_activity->activitydetail_id);
-                                    $elgibledetailactivityById = Activitydetil::findOne($eligibdetail->activitydetail_id);
+                                    $actvt_detail = Activitydetil::findOne($eligibdetail->adetail_id);
+                                    // $elgibledetailactivityById = Activitydetil::findOne($eligibdetail->activitydetail_id);
                                     $elgibledetailactivity[] = $actvt_detail->title;
                                 }
                             

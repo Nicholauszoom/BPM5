@@ -10,6 +10,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
+use app\models\Eligibdone;
 
 /**
  * CompldocController implements the CRUD actions for Compldoc model.
@@ -98,6 +99,22 @@ class CompldocController extends Controller
                      $tender->session = 1;
                    
                      $tender->save();
+
+
+
+
+                     if (is_array($model->eligibd_id) && !empty($model->eligibd_id)) {
+                        foreach ($model->eligibd_id as $eligibdId) {
+                            $assignment = new Eligibdone();
+                            $assignment->tender_id = $model->tender_id;
+                            $assignment->user_id = $model->user_id;
+                            $assignment->compldoc_id=$model->id;
+                            $assignment->eligibd_id = $eligibdId;
+                            $assignment->save();
+
+                        }
+                    }
+
                 return $this->redirect(['/tender/view', 'id' => $tenderId]);
                  }
             }

@@ -48,9 +48,10 @@ class Compldoc extends \yii\db\ActiveRecord
     {
         return [
             [['created_at', 'updated_at', 'created_by', 'user_id', 'tender_id','session'], 'integer'],
-            [['user_id', 'tender_id','document'], 'required'],
+            [['user_id', 'tender_id'], 'required'],
             [['document'], 'string', 'max' => 255],
             [['session'], 'default', 'value' => 1],
+            [['eligibd_id'], 'safe'],
         ];
     }
 
@@ -68,6 +69,13 @@ class Compldoc extends \yii\db\ActiveRecord
             'session'=>'session',
             'tender_id' => 'Tender ID',
             'document' => 'Document',
+            'eligibd_id' => 'Eligibility Detail',
         ];
     }
+
+    public function getEligibd()
+    {
+        return $this->hasOne(Eligibdetail::class, ['id' => 'eligibd_id']);
+    }
+    
 }

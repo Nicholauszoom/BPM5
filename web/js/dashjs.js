@@ -292,3 +292,25 @@ $(document).ready(function() {
         }
     });
 });
+
+var submitatInput = document.getElementById('submitat-input');
+
+// Add an event listener to the change event
+submitatInput.addEventListener('change', function() {
+  // Get the entered publish date and current date
+  var enteredDate = new Date(this.value);
+  var currentDate = new Date();
+  
+  var submitDate = new Date("<?php echo date('Y/m/d',$submit_date); ?>"); // Subtract 7 days from the submitted date
+
+  // Compare the entered publish date with the current date and submit date
+  if (enteredDate < currentDate || enteredDate > submitDate) {
+    // Display a warning message
+    var warningMessage = document.getElementById('submitat-warning');
+    warningMessage.style.display = 'block';
+  } else {
+    // Hide the warning message
+    var warningMessage = document.getElementById('submitat-warning');
+    warningMessage.style.display = 'none';
+  }
+});

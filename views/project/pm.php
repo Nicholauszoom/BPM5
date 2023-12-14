@@ -206,7 +206,7 @@ $sidebarItems = [
                 },
 
                 'prequest' => function ($url, $model, $key) {
-                    return Html::a('<span class="fas fa-balance-scale"></span>', ['prequest/create', 'projectId' => $model->id], [
+                    return Html::a('<span class="fas fa-plus"></span>', ['prequest/create', 'projectId' => $model->id], [
                         // 'class' => 'btn btn-success',
                         'title' => 'request',
                         'aria-label' => 'request',

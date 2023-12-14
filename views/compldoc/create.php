@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /** @var yii\web\View $this */
 /** @var app\models\Compldoc $model */
 $tndr=Tender::findOne($tenderId);
-$this->title = 'Upload Compliance Document for '.$tndr->title;
+$this->title = 'Conduct activities for '.$tndr->title;
 $this->params['breadcrumbs'][] = ['label' => 'Compldocs', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 $this->context->layout='admin';
