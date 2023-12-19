@@ -120,7 +120,7 @@ $department=Department::find()->all();
 
  
 
-    <?php if (Yii::$app->user->can('author')) : ?>
+    <?php if (!Yii::$app->user->can('author') && !Yii::$app->user->can('admin')) : ?>
 
     <?= $form->field($model, 'submission')->fileInput()?>
  

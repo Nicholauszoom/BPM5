@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /** @var yii\web\View $this */
 /** @var app\models\Rdetail $model */
 
-$this->title = 'Create Rdetail';
+$this->title = '';
 $this->params['breadcrumbs'][] = ['label' => 'Rdetails', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 $this->context->layout = ('admin');
@@ -21,6 +21,7 @@ $this->context->layout = ('admin');
         'prequest'=>$prequest,
         'prequestId'=>$prequestId,
         'total_amount'=>$total_amount,
+        'analysis'=>$analysis,
     ]) ?>
 
 </div>

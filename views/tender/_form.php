@@ -23,7 +23,7 @@ $department=Department::find()->all();
 ?>
 
 <div class="tender-form">
-<small>The inputs with this * indicate are required to be filled before submit th form. </small>
+<small>The inputs with this <span style="color:red;">*</span> indicate are required to be filled before submit the form. </small>
 
     <?php $form = ActiveForm::begin(['id'=>'my-form']); ?>
     <?php if (Yii::$app->user->can('admin')) : ?>

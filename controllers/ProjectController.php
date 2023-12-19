@@ -121,7 +121,7 @@ class ProjectController extends Controller
         if(Yii::$app->user->can('author'))
         {
      // Get the logged-in user
-    $userId = Yii::$app->user->id;
+      $userId = Yii::$app->user->id;
     
              //get project for specific assigned as part of team user
 

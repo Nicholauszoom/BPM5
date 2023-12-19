@@ -1,11 +1,14 @@
 <?php
 
+use app\models\Tender;
 use yii\helpers\Html;
 
 /** @var yii\web\View $this */
 /** @var app\models\Eligibactivity $model */
 
-$this->title = 'Create Eligibility Activities';
+$eligb_tender=Tender::findOne($tenderId);
+
+$this->title = 'Create Eligibility Activities(tender):'. $eligb_tender->title;
 $this->params['breadcrumbs'][] = ['label' => 'Eligibactivities', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 $this->context->layout = 'admin';
@@ -21,6 +24,7 @@ $this->context->layout = 'admin';
         'eligibsubactivity'=>$eligibsubactivity,
         'userId'=>$userId,
         'assgntenderId'=>$assgntenderId,
+        'eligibdtilExist'=> $eligibdtilExist,
     ]) ?>
 
 </div>

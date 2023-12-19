@@ -77,6 +77,15 @@ class EligibactivityController extends Controller
 
         $model = new Eligibactivity();
         $eligibsubactivity=Activitydetil::find()->where(['activity_id'=>1])->all();
+
+       $eligibdtil= Eligibactivity::find()->where(['tender_id'=>$tenderId, 'adetail_id'=>$adetailId,'user_id'=>$userId])->all();
+
+       $eligibdtilExist = [];
+       foreach ($eligibdtil as $eligibdtil) {
+        $eligibdtilExist[] =Eligibdetail::find()->where(['activitydetail_id'=>$eligibdtil->id])->all();
+       
+       }
+
         
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
@@ -88,11 +97,8 @@ class EligibactivityController extends Controller
                         $assignment->tender_id = $tenderId;
                         $assignment->activitydetail_id = $model->id;
                         $assignment->save();
-
                     }
 
-
-                   
                 }
                 $tendadetail=Adetail::findOne($adetailId);
                 Yii::$app->session->setFlash('success', 'saved successfully.');
@@ -109,6 +115,8 @@ class EligibactivityController extends Controller
             'assgnuserId'=>$assgnuserId,
             'assgntenderId'=>$assgntenderId,
             'userId'=>$userId,
+            'tenderId'=>$tenderId,
+            'eligibdtilExist'=> $eligibdtilExist,
 
 
         ]);

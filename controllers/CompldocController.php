@@ -95,10 +95,14 @@ class CompldocController extends Controller
                  }
                  if ($model->save()) {
                      // Send an email to a specific department by email
-                     $tender = new Tender();
+                    $tender=Tender::findOne($tenderId);
                      $tender->session = 1;
                    
                      $tender->save();
+
+                     $tender->session=1;
+                     Tender::updateAll(['session' => $tender->session], ['id' => $tenderId]);
+                     
 
 
 

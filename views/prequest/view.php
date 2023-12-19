@@ -1,18 +1,21 @@
 <?php
 
+use app\models\Analysis;
 use app\models\Comment;
 use app\models\Department;
 use app\models\Item;
 use app\models\Project;
 use app\models\Rdetail;
+use app\models\Tender;
 use app\models\User;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /** @var yii\web\View $this */
 /** @var app\models\Prequest $model */
-
-$this->title = $model->id;
+$proj=Project::findOne($model->project_id);
+$tendr=Tender::findOne($proj->tender_id);
+$this->title = 'Request for :'.$tendr->title;
 $this->params['breadcrumbs'][] = ['label' => 'Prequests', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
@@ -234,7 +237,17 @@ $rdetails=Rdetail::find()
 <?php endif;?>
 
     </p>
+    <nav>
+  <div class="nav nav-tabs" id="nav-tab" role="tablist">
+    <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">General</button>
+    <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Item</button>
+    <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Comment</button>
 
+  </div>
+</nav>
+<div class="tab-content" id="nav-tabContent">
+  <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
+  
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
@@ -283,10 +296,10 @@ $rdetails=Rdetail::find()
             'project_id',
         ],
     ]) ?>
+  </div>
 
-</div>
+  <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
 
-<h2>Request Details</h2>
 
 <table class="table">
   <thead>
@@ -298,24 +311,26 @@ $rdetails=Rdetail::find()
       <th scope="col">Amount</th>
       <th scope="col">Created</th>
       <th scope="col">Updated</th>
-      <th scope="col">Created By</th>
       <th scope="col"></th>
     </tr>
     </thead>
 <tbody>
 <?php foreach ($rdetails as $rdetails): ?>
     <tr>
-      <?php
-        $item=Item::findOne($rdetails->iteam);
+    <?php
+        $item=Analysis::findOne($rdetails->iteam);
       ?>
-       
-        <td><?=$item->name?></td>
+      <?php if($item!==null):?>
+        <td><?=$item->item?></td>
+        <?php else:?>
+            <td>No item</td>
+        <?php endif;?>
         <td><?= $rdetails->quantity ?></td>
         <td><?= $rdetails->unit ?></td>
         <td><?= $rdetails->amount ?></td>
         <td><?= Yii::$app->formatter->asDatetime($rdetails->created_at) ?></td>
         <td><?= Yii::$app->formatter->asDatetime($rdetails->updated_at) ?></td>
-        
+    
         <td>
         
                 <?= Html::a('<span class="glyphicon glyphicon-edit"></span>', ['update', 'id' => $rdetails->id], [
@@ -337,7 +352,8 @@ $rdetails=Rdetail::find()
 <tr>
     <td>
    
-            <?= Html::a('+ create request', '#', ['data-toggle' => 'modal', 'data-target' => '#createModal']) ?>
+           
+            <?= Html::a('+ create request', ['rdetail/create', 'prequestId' => $model->id])?>
     </td>
     <td></td>
     <td></td>
@@ -361,6 +377,8 @@ $rdetails=Rdetail::find()
 </tr>
 </tbody>
 </table>
+</div>
+<div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab" tabindex="0">
 <?php
 
 $comment =Comment::find()->where(['prequest_id'=>$model->id])->all();
@@ -409,4 +427,6 @@ $comment =Comment::find()->where(['prequest_id'=>$model->id])->all();
            
         </div>
     </div>
+</div>
+</div>
 </div>

@@ -33,10 +33,17 @@ $sidebarItems = [
 
 
 ?>
-
 <a href="<?= Yii::$app->request->referrer ?>" class="back-arrow">
     <span class="arrow">&#8592;</span> Back
 </a>
+
+       <nav>
+  <div class="nav nav-tabs" id="nav-tab" role="tablist">
+    <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Projects</button>
+  </div>
+</nav>
+
+
 <div id="main-content ">
    
     <div id="page-container">
@@ -44,6 +51,9 @@ $sidebarItems = [
         <!-- Sales Cards  -->
         <!-- ============================================================== -->
         <div class="row"></div>
+ 
+<div class="tab-content" id="nav-tabContent">
+  <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
        
             <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
             <?= GridView::widget([
@@ -219,6 +229,10 @@ $sidebarItems = [
     ],
 ]); ?>
 
+  </div>
+
+
+</div>
 
 <?php
 function getStatusLabel($status)

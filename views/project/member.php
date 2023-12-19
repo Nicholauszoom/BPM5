@@ -69,18 +69,28 @@ $sidebarItems = [
     'columns' => [
         ['class' => 'yii\grid\SerialColumn'],
         // 'id',
+        // [
+        //     'attribute'=>'tender_id',
+        //     'format'=>'raw',
+        //     'value'=>function ($model){
+        //         $tender = Tender::findOne($model->tender_id);
+        //         $tenderTitle = $tender ? $tender->title : 'Unknown';
+        //          return $tenderTitle;
+        //     },
+        // ],
+
         [
-            'attribute'=>'tender_id',
-            'format'=>'raw',
-            'value'=>function ($model){
+            'attribute' => 'tender_id',
+            'format' => 'raw',
+            'value' => function ($model) {
                 $tender = Tender::findOne($model->tender_id);
                 $tenderTitle = $tender ? $tender->title : 'Unknown';
-                 return $tenderTitle;
+                $label = $model->isViewed ? '' : Html::tag('span', 'New', ['class' => 'badge badge-warning']);
+                return '<div style="display: flex; align-items: flex-start;">' . $label . '<span style="margin-left: 5px;">' . $tenderTitle . '</span></div>';
             },
         ],
+
         'budget',
-        
-                    
         [
             'attribute' => 'progress',
             'format' => 'raw',
@@ -136,14 +146,14 @@ $sidebarItems = [
         //     },
         // ],
        
-        [
-            'attribute' => 'isViewed',
-            'label' => 'alert',
-            'format' => 'raw',
-            'value' => function ($model) {
-                return $model->isViewed ? '' : Html::tag('span', 'New', ['class' => 'badge badge-success']);
-            },
-        ],
+        // [
+        //     'attribute' => 'isViewed',
+        //     'label' => 'alert',
+        //     'format' => 'raw',
+        //     'value' => function ($model) {
+        //         return $model->isViewed ? '' : Html::tag('span', 'New', ['class' => 'badge badge-success']);
+        //     },
+        // ],
         
         [
             'attribute'=>'created_by',

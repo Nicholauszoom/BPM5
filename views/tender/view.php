@@ -307,7 +307,11 @@ span{
         <?= Html::a('manage activity', ['/adetail/create', 'tenderId' => $model->id], ['class' => 'btn btn-warning']) ?>
 <?php if ($model->expired_at <= strtotime(date('Y-m-d'))) : ?>
 
-<?php if($model->status===5 && !empty($model->submission)):?>
+
+    <?php 
+      $submit_conf=Compldoc::find()->where(['tender_id'=>$model->id])->all(); 
+    ?>
+<?php if($model->status===5 && !empty( $submit_conf)):?>
 <?= Html::a('Submit', ['submitst', 'tenderId' => $model->id], [
             'class' => 'btn btn-secondary',
             'data' => [
@@ -795,83 +799,76 @@ if ($ttdetail !== null) {
                 $tableRows = '';
                 foreach ($assignedUserActivities as $username => $activities) {
                     foreach ($activities as $index => $activity) {
-                        $byuname=User::findOne(['username'=>$username]);
-
-                         $userIdlogger = Yii::$app->user->id;
-
-                        if((Yii::$app->user->can('admin')&&Yii::$app->user->can('author')) || $userIdlogger==$byuname->id){
-                        $tableRows .= '<tr>';
-                        if ($index === 0) {
-                            $byuname=User::findOne(['username'=>$username]);
-                            $compliance = Compldoc::findOne(['user_id' => $byuname->id,'tender_id'=>$model->id]);
-
-                            $tableRows .= '<td rowspan="' . count($activities) . '">' . $username . '</td>';
-
-                        }
-                        $tableRows .= '<td><a href="' . \yii\helpers\Url::to(['compldoc/create', 'tenderId' => $model->id]) . '">' . $activity['activityName'] . '</a></td>';                        $tableRows .= '<td>' . $activity['submitDate'] . '</td>';
-                        $sessionValue = $compliance['session'] ?? null;
-                        $tableRows .= '<td>';
-                        if ($sessionValue === 1) {
-                            $tableRows .= '<span class="label label-success">Complete</span>';
-                            
-                        }
-                        $tableRows .= '</td>';
-                        
-                        $created = $compliance['created_at'] ?? null;
-                        $tableRows .= '<td>';
-                        if ($created !== null) {
-                            $formattedDate = Yii::$app->formatter->asDate($compliance['created_at']);
-                            $tableRows .= $formattedDate;
-                        }
-                        $tableRows .= '</td>';
-                      
-
-                        if (isset($compdoc) && !empty($compdoc)) {
-                            $eligibdone = Eligibdone::find()
-                                ->where(['compldoc_id' => $compdoc->id, 'user_id' => $byuname->id, 'tender_id' => $model->id])
-                                ->all();
-                            
-                            $eligib = [];
-                            
-                            foreach ($eligibdone as $eligibdoneItem) {
-                                $activitydetail = Activitydetil::findOne($eligibdoneItem->eligibd_id);
-                                
-                                if ($activitydetail !== null) {
-                                    $eligib[] = $activitydetail->title;
+                        $byuname = User::findOne(['username' => $username]);
+                        $userIdlogger = Yii::$app->user->id;
+                
+                        if ((Yii::$app->user->can('admin') && Yii::$app->user->can('author')) || $userIdlogger == $byuname->id) {
+                            $tableRows .= '<tr>';
+                            if ($index === 0) {
+                                $byuname = User::findOne(['username' => $username]);
+                                $compliance = Compldoc::findOne(['user_id' => $byuname->id, 'tender_id' => $model->id]);
+                
+                                $tableRows .= '<td rowspan="' . count($activities) . '">' . $username . '</td>';
+                            }
+                            $tableRows .= '<td><a href="' . \yii\helpers\Url::to(['compldoc/create', 'tenderId' => $model->id]) . '">' . $activity['activityName'] . '</a></td>';
+                            $tableRows .= '<td>' . $activity['submitDate'] . '</td>';
+                            $sessionValue = $compliance['session'] ?? null;
+                            $tableRows .= '<td>';
+                            if ($sessionValue === 1) {
+                                $tableRows .= '<span class="label label-success">Complete</span>';
+                            }
+                            $tableRows .= '</td>';
+                            $created = $compliance['created_at'] ?? null;
+                            $tableRows .= '<td>';
+                            if ($created !== null) {
+                                $formattedDate = Yii::$app->formatter->asDate($compliance['created_at']);
+                                $tableRows .= $formattedDate;
+                            }
+                            $tableRows .= '</td>';
+                
+                            if (isset($activity['compdoc']) && $activity['compdoc'] !== null && $activity['compdoc']->document === null) {
+                                $eligibdone = Eligibdone::find()
+                                    ->where(['compldoc_id' => $activity['compdoc']->id, 'user_id' => $byuname->id, 'tender_id' => $model->id])
+                                    ->all();
+                
+                                $eligib = [];
+                
+                                foreach ($eligibdone as $eligibdoneItem) {
+                                    $activitydetail = Activitydetil::findOne($eligibdoneItem->eligibd_id);
+                
+                                    if ($activitydetail !== null) {
+                                        $eligib[] = $activitydetail->title;
+                                    }
                                 }
-                            }
-                        
-                            if (empty($eligibdone)) {
-                                $tableRows .= '<td>';
-                                $fileName = $compdoc->document;
-                                $filePath = Yii::getAlias('@webroot/upload/' . $fileName);
-                                $downloadPath = Yii::getAlias('@web/upload/' . $fileName);
-                                $documentLink = Html::a('<i class="glyphicon glyphicon-download-alt"></i>' . $fileName, $downloadPath, ['target' => '_blank']);
-                                $tableRows .= $documentLink;
-                                $tableRows .= '</td>';
-                            } else {
-                               
-                               
+                
                                 $tableRows .= '<td>' . implode(', ', $eligib) . '</td>';
+                            } else {
+                                $tableRows .= '<td>';
+                                if ($activity['compdoc'] !== null) {
+                                    $fileName = $activity['compdoc']->document;
+                                    $filePath = Yii::getAlias('@webroot/upload/' . $fileName);
+                                    $downloadPath = Yii::getAlias('@web/upload/' . $fileName);
+                                    $documentLink = Html::a('<i class="glyphicon glyphicon-download-alt"></i>' . $fileName, $downloadPath, ['target' => '_blank']);
+                                    $tableRows .= $documentLink;
+                                }
+                                $tableRows .= '</td>';
                             }
+                
+                            $tableRows .= '</tr>';
                         }
-                        
-                        
-                        $tableRows .= '</tr>';
-                    }
                     }
                 }
-        
+                
                 $table = '
                     <table class="styled-table">
                         <thead>
                             <tr>
-                            <th>User</th>
-                            <th>Activity Name</th>
-                            <th>Required Date</th>
-                            <th>Status</th>
-                            <th>Submit Date</th>
-                            <th>Work</th>
+                                <th>User</th>
+                                <th>Activity Name</th>
+                                <th>Required Date</th>
+                                <th>Status</th>
+                                <th>Submit Date</th>
+                                <th>Work</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -879,27 +876,27 @@ if ($ttdetail !== null) {
                         </tbody>
                     </table>
                 ';
-        
+                
                 return $table;
-            },
+                },
         ],
         
-     
-           
-         
+
+    
         ],
     ]) ?>
+
 
 </div>
   <div class="tab-pane fade" id="nav-disabled" role="tabpanel" aria-labelledby="nav-disabled-tab" tabindex="0">
   <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-         
+    'model' => $model,
+    'attributes' => [
         [
-            'attribute' => 'Asign-to & compliance activity',
+            'label' => 'Asign-to & compliance activity',
             'format' => 'raw',
             'value' => function ($model) {
+        
                 $assignments = UserActivity::find()
                     ->where(['tender_id' => $model->id])
                     ->all();
@@ -958,11 +955,33 @@ if ($ttdetail !== null) {
                             
                                 if (!empty($user_actvty)) {
                                     $tableRows .= '<td>' . implode(', ', $elgibledetailactivity) . '</td>';
+
+
+                                    $url = Yii::$app->urlManager->createUrl([
+                                        'eligibactivity/create',
+                                        'tenderId' => $model->id,
+                                        'adetailId' => $eligibdetail->activitydetail_id,
+                                        'userId' => $byuname->id
+                                    ]);
+                                    $tableRows .= '<td><a href="' . $url . '"><i class="fa fa-pencil"></i></a></td>';
+
+
                                 } else {
                                     $tableRows .= '<td>' . 'document submission' . '</td>';
                                 }
                             }
+
+                            // if (!empty($user_actvty)) {
+                            //     $tableRows .= '<td><a href="' . Yii::$app->urlManager->createUrl(['eligibactivity/create', 'tenderId' => $model->id]) . '"><i class="fa fa-plus"></i></a></td>';
+                            // }
+
+
+                          
+                            
+
                             $tableRows .= '</tr>';
+
+                            
                     }
                     }
                 }
@@ -973,6 +992,7 @@ if ($ttdetail !== null) {
                             <tr>
                             <th>User</th>
                             <th>Required </th>
+                            <th>Action </th>
                             </tr>
                         </thead>
                         <tbody>

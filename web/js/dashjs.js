@@ -314,3 +314,19 @@ submitatInput.addEventListener('change', function() {
     warningMessage.style.display = 'none';
   }
 });
+
+
+
+// Assuming you have jQuery included in your project
+
+$(document).ready(function() {
+  // Event listener for when the item dropdown selection changes
+  $('#item-dropdown').on('change', function() {
+    // Get the selected item ID
+    var selectedItem = $(this).val();
+    
+    // Set the selected item ID as the value of the hidden input field
+    $('#qty').val(selectedItem);
+  });
+});
+

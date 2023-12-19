@@ -45,10 +45,6 @@ $this->context->layout = 'admin';
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
-            'updated_at',
-            'created_by',
             'name',
             'location',
             [

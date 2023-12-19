@@ -1,10 +1,12 @@
 <?php
 
+use app\models\Analysis;
 use app\models\Item;
 use app\models\Rdetail;
 use yii\bootstrap5\Modal;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
+use yii\web\View;
 use yii\widgets\ActiveForm;
 
 /** @var yii\web\View $this */
@@ -29,12 +31,10 @@ $form = ActiveForm::begin([
 
 $item=Item::find()->all();
 
-echo $form->field($model, 'iteam')->label('Item * <small class="text-muted">eg.3 quoter pipes</small>')->dropDownList(
-    ArrayHelper::map($item, 'id', 'name'),
-    ['prompt' => 'select item']
+echo $form->field($model, 'iteam')->label('Item * <small class="text-muted">eg. 3 quarter pipes</small>')->dropDownList(
+  ArrayHelper::map($analysis, 'id', 'item'),
+  ['prompt' => 'Select item', 'id' => 'item-dropdown']
 );
-
-
 // $request_qty=Request::findOne(condition)
 
 echo $form->field($model, 'prequest_id')->hiddenInput(['value' => $prequestId])->label(false);
@@ -70,8 +70,8 @@ $rdetails=Rdetail::find()
     <tr style="background-color: #f2f2f2;">
   
       <th scope="col">item</th>
-      <th scope="col">unit price</th>
       <th scope="col">Qty</th>
+      <th scope="col">unit price</th>
       <th scope="col">Amount</th>
       <th scope="col">Created</th>
       <th scope="col">Updated</th>
@@ -83,10 +83,10 @@ $rdetails=Rdetail::find()
 <?php foreach ($rdetails as $rdetails): ?>
     <tr>
       <?php
-        $item=Item::findOne($rdetails->iteam);
+        $item=Analysis::findOne($rdetails->iteam);
       ?>
        
-        <td><?=$item->name?></td>
+        <td><?=$item->item?></td>
         <td><?= $rdetails->quantity ?></td>
         <td><?= $rdetails->unit ?></td>
         <td><?= $rdetails->amount ?></td>
@@ -94,7 +94,6 @@ $rdetails=Rdetail::find()
         <td><?= Yii::$app->formatter->asDatetime($rdetails->updated_at) ?></td>
         
         <td>
-        
                 <?= Html::a('<span class="glyphicon glyphicon-edit"></span>', ['update', 'id' => $rdetails->id], [
                     'title' => 'Update',
                     'data-method' => 'post',
@@ -113,7 +112,6 @@ $rdetails=Rdetail::find()
 <?php endforeach; ?>
 <tr>
     <td>
-   
             <?= Html::a('+ create request', '#', ['data-toggle' => 'modal', 'data-target' => '#createModal']) ?>
     </td>
     <td></td>
@@ -159,4 +157,20 @@ $(document).ready(function() {
   $('#unit, #qty').on('input', calculateAmount);
 });
 
+
+</script>
+
+<script>
+// Assuming you have jQuery included in your project
+
+$(document).ready(function() {
+  // Event listener for when the item dropdown selection changes
+  $('#item-dropdown').on('change', function() {
+    // Get the selected item ID
+    var selectedItem = $(this).val();
+    
+    // Set the selected item ID as the value of the hidden input field
+    $('#qty').val(selectedItem);
+  });
+});
 </script>

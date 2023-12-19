@@ -1,6 +1,7 @@
 <?php
 
 use app\models\Tender;
+use app\models\UserActivity;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
@@ -122,37 +123,73 @@ $this->context->layout = 'admin';
             //'created_at',
             //'updated_at',
             //'created_by',
-            [
-                'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, Tender $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'id' => $model->id]);
-                 }
-            ],
-            // ///////////////////
             // [
-            //     'class' => 'yii\grid\ActionColumn',
-            //     'template' => '{view} {create-project}  {update}',
-            //     'buttons' => [
-                    
-            //         'view' => function ($url, $model, $key) {
-            //             return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', ['view', 'id' => $model->id], [
-            //                 // 'class' => 'btn btn-success',
-            //                 'title' => 'view tender',
-            //                 'aria-label' => 'tender view',
-            //             ]);
-            //         },
-    
-    
-            //         'update' => function ($url, $model, $key) {
-            //             return Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['update', 'id' => $model->id], [
-            //                 // 'class' => 'btn btn-success',
-            //                 'title' => 'view tender',
-            //                 'aria-label' => 'tender update',
-            //             ]);
-            //         },
-            //     ],
-                
+            //     'class' => ActionColumn::className(),
+            //     'urlCreator' => function ($action, Tender $model, $key, $index, $column) {
+            //         return Url::toRoute([$action, 'id' => $model->id]);
+            //      }
             // ],
+            // ///////////////////
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{view} {create-project}  {update} {activity}',
+                'buttons' => [
+                    
+                    'view' => function ($url, $model, $key) {
+                        return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', ['view', 'id' => $model->id], [
+                            // 'class' => 'btn btn-success',
+                            'title' => 'view tender',
+                            'aria-label' => 'tender view',
+                        ]);
+                    },
+    
+    
+                    'update' => function ($url, $model, $key) {
+                        return Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['update', 'id' => $model->id], [
+                            // 'class' => 'btn btn-success',
+                            'title' => 'view tender',
+                            'aria-label' => 'tender update',
+                        ]);
+                    },
+
+                    'activity' => function ($url, $model, $key) {
+                        $userId = Yii::$app->user->id;
+                
+                        // Check if the tender meets the criteria
+                        $isEligibleTender = UserActivity::findOne(['tender_id'=>$model->id])===null ;
+                
+                        $badgeHtml = '';
+                        if ($isEligibleTender) {
+                            $badgeHtml = '<img src="https://img.icons8.com/?size=48&id=2EuI26KqYJ6b&format=png" class="truncate"></img>';
+                        }
+                
+                        return Html::a($badgeHtml, ['adetail/create', 'tenderId' => $model->id], [
+                            'title' => 'compliance',
+                            'aria-label' => 'create compliance',
+                            'class' => 'icon-button', // Add a custom CSS class for the icon button
+                        ]);
+                    },
+                    'activity' => function ($url, $model, $key) {
+                        $userId = Yii::$app->user->id;
+                
+                        // Check if the tender meets the criteria
+                        $isEligibleTender = UserActivity::findOne(['tender_id'=>$model->id])===null ;
+                
+                        $badgeHtml = '';
+                        if ($isEligibleTender) {
+                            $badgeHtml = '<img src="https://img.icons8.com/?size=48&id=2EuI26KqYJ6b&format=png" class="truncate"></img>';
+                        }
+                
+                        return Html::a($badgeHtml, ['adetail/create', 'tenderId' => $model->id], [
+                            'title' => 'compliance',
+                            'aria-label' => 'create compliance',
+                            'class' => 'icon-button', // Add a custom CSS class for the icon button
+                        ]);
+                    },
+                ],
+                
+            ],
+            
             // ///////////////
         ],
     ]); ?>

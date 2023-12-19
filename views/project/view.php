@@ -77,6 +77,17 @@ $userId = Yii::$app->user->id;
     </p>
     <?php endif;?>
 
+    <nav>
+  <div class="nav nav-tabs" id="nav-tab" role="tablist">
+    <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Project</button>
+    <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Analysis</button>
+    <button class="nav-link" id="nav-disabled-tab" data-bs-toggle="tab" data-bs-target="#nav-disabled" type="button" role="tab" aria-controls="nav-disabled" aria-selected="false" >Task</button>
+
+</div>
+</nav>
+<div class="tab-content" id="nav-tabContent">
+  <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
+       
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
@@ -242,28 +253,10 @@ $userId = Yii::$app->user->id;
           ],
         ]
     ]) ?>
-<?php
 
-
-
-// $currentDate = date('m-d-Y');
-
-// if ($model->end_at) {
-//     if ($currentDate < $model->end_at) {
-//         echo '<span class="alert alert-success">Not Yet Expired</span>';
-//     } else {
-//         echo '<span class="alert alert-danger">Expired</span>';
-//     }
-// }
-// ?>
-
-
-<div class="text-muted">
-<center>
-<h1 class="text-muted center mt-10" style=" color: blue;">ANALYSIS</h1>
-</center>
-<h3 class="text-muted mt-10"></h3>Alaysis Detail for <?= Html::encode($this->title) ?></h3>
-<?php $form = ActiveForm::begin(['action' => ['analysis/delete-multiple']]) ?>
+  </div>
+  <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab" tabindex="0">
+    <?php $form = ActiveForm::begin(['action' => ['analysis/delete-multiple']]) ?>
 <div style="margin-left:85%;">
 <?= Html::submitButton('Delete Selected', ['class' => 'btn btn-danger']) ?>
 </div>
@@ -363,7 +356,7 @@ $userId = Yii::$app->user->id;
       <td></td>
       <td>.</td>
     </tr>
-    
+    <tr>
       <td></td>
       <td></td>
       <td></td>
@@ -378,44 +371,10 @@ $userId = Yii::$app->user->id;
 </table>
 
 <?php ActiveForm::end() ?>
-<?php
-$js = <<<JS
-    $('#checkAll').click(function () {
-        $('.checkbox-item').prop('checked', this.checked);
-    });
-JS;
-$this->registerJs($js);
-?>
+  </div>
 
-</div>
-
-<?php
-function getStatusLabel($status)
-{
-    $statusLabels = [
-        1 => '<span class="badge badge-success">Approved</span>',
-        2 => '<span class="badge badge-warning">Not Approved</span>',
-        0 => '<span class="badge badge-secondary">On Process</span>',
-    ];
-
-    return isset($statusLabels[$status]) ? $statusLabels[$status] : '';
-}
-function getStatusClass($status)
-{
-    $statusClasses = [
-       
-        1 => 'status-active',
-        2 => 'status-inactive',
-        3 => 'status-onhold',
-    ];
-
-    return isset($statusClasses[$status]) ? $statusClasses[$status] : '';
-}
-?>
-<center>
-<h1 class="text-muted center mt-10" style=" color: blue;">WORK PLAN</h1>
-</center>
-<div class="text-muted">
+  <div class="tab-pane fade" id="nav-disabled" role="tabpanel" aria-labelledby="nav-disabled-tab" tabindex="0">
+  <div class="text-muted">
 
 <table class="table">
   <thead>
@@ -470,6 +429,62 @@ function getStatusClass($status)
   </tbody>
 </table>
 </div>
+</div>
+
+  </div>
+
+<?php
+
+
+
+// $currentDate = date('m-d-Y');
+
+// if ($model->end_at) {
+//     if ($currentDate < $model->end_at) {
+//         echo '<span class="alert alert-success">Not Yet Expired</span>';
+//     } else {
+//         echo '<span class="alert alert-danger">Expired</span>';
+//     }
+// }
+// ?>
+
+
+<?php
+$js = <<<JS
+    $('#checkAll').click(function () {
+        $('.checkbox-item').prop('checked', this.checked);
+    });
+JS;
+$this->registerJs($js);
+?>
+
+</div>
+
+<?php
+function getStatusLabel($status)
+{
+    $statusLabels = [
+        1 => '<span class="badge badge-success">Approved</span>',
+        2 => '<span class="badge badge-warning">Not Approved</span>',
+        0 => '<span class="badge badge-secondary">On Process</span>',
+    ];
+
+    return isset($statusLabels[$status]) ? $statusLabels[$status] : '';
+}
+function getStatusClass($status)
+{
+    $statusClasses = [
+       
+        1 => 'status-active',
+        2 => 'status-inactive',
+        3 => 'status-onhold',
+    ];
+
+    return isset($statusClasses[$status]) ? $statusClasses[$status] : '';
+}
+?>
+
+
 </div>
 </div>
 

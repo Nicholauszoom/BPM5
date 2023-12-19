@@ -91,10 +91,12 @@ class Tdetails extends \yii\db\ActiveRecord
 
     public function getOffice()
 {
+
     return $this->hasOne(Office::class, ['id' => 'office']);
+
 }
 
-    
+
     public function beforeSave($insert)
     {
         if ($this-> end_clarificatiion && $this->site_visit_date&& $this->bidmeet) {

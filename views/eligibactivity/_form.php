@@ -7,6 +7,9 @@ use yii\widgets\ActiveForm;
 /** @var yii\web\View $this */
 /** @var app\models\Eligibactivity $model */
 /** @var yii\widgets\ActiveForm $form */
+
+
+// '$eligibdtilExist '=> $eligibdtilExist,
 ?>
 
 <div class="eligibactivity-form">
@@ -17,8 +20,12 @@ use yii\widgets\ActiveForm;
 <div class="form-row">
  
     <div class="col-6">
+
     <?= $form->field($model, 'activitydetail_id')->checkboxList( ArrayHelper::map($eligibsubactivity, 'id', 'title'), ['prompt' => 'Select eligibility activity', 'id' => 'eligibsubactivity'] )?>
-    </div>
+   
+
+</div>
+
     <div class="col-6">
     <?= $form->field($model, 'adetail_id')->hiddenInput(['value' => $adetailId])->label(false)?>
     <?= $form->field($model, 'user_id')->hiddenInput(['value' => $userId])->label(false)?>

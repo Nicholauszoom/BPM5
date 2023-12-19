@@ -4,6 +4,7 @@
 use app\models\Adetail;
 use dosamigos\chartjs\ChartJs;
 use app\models\Department;
+use app\models\Prequest;
 use yii\helpers\Url;
 use app\models\Project;
 use app\models\Tender;
@@ -315,13 +316,29 @@ $budgetDataJson = Json::encode($budgetData);
 <!-- Earnings (Monthly) Card Example -->
 <div class="col-xl-3 col-md-6 mb-4">
 <a href="">
+<?php
+        $userId = Yii::$app->user->getId();
+
+        $user_assignments = Adetail::find()
+        ->where(['user_id' => $userId])
+        ->all();
+
+    $assignedTenderIds = [];
+    foreach ($user_assignments as $user_assignment) {
+        $assignedTenderIds[] = $user_assignment->tender_id;
+    }
+
+        $tassgntend=Tender::find()
+           ->where(['id' => $assignedTenderIds])
+           ->count();
+        ?>
     <div class="card border-left-success shadow h-100 py-2">
         <div class="card-body">
             <div class="row no-gutters align-items-center">
                 <div class="col mr-2">
                     <div class="text-xs font-weight-bold  text-uppercase mb-1">
-                    Published Tender</div>
-                    <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $tender ?></div>
+                    Total Assigned Tender</div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800"><?=  $tassgntend?></div>
                 </div>
                 <div class="col-auto">
                 <i class="badge" ><img src="https://cdn-icons-png.flaticon.com/128/4405/4405051.png" style="width:35px;"></i>
@@ -356,7 +373,7 @@ $budgetDataJson = Json::encode($budgetData);
            ->andWhere(['session'=>0])
            ->count();
         ?>
-                    <div class="text-xs font-weight-bold  text-uppercase mb-1">Assigned Tender
+                    <div class="text-xs font-weight-bold  text-uppercase mb-1">New Assigned Tender
                     </div>
                     <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $tend ?></div>
 
@@ -510,6 +527,44 @@ $formattedBudget = number_format($projectBudget, 2)
         </div>
     </div>
      </a>
+</div>
+
+
+<!-- Pending Requests Card Example -->
+<div class="col-xl-3 col-md-6 mb-4">
+    <div class="card border-left-warning shadow h-100 py-2">
+        <div class="card-body">
+            <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                    <div class="text-xs font-weight-bold  text-uppercase mb-1">
+                    <?php
+$prequests = Prequest::find()->all();
+
+$proj_ass=Project::find()->where(['user_id'=>$userId])->all();
+
+
+$ass_project_ids = [];
+
+foreach ($proj_ass as $proj_ass) {
+    $ass_project_ids[]= Prequest::findOne(['project_id'=>$proj_ass->id, 'session'=>0]);
+}
+
+$newRequestCount = count($ass_project_ids);
+?>
+
+<div>
+    New Requests
+</div>
+<div class="h5 mb-0 font-weight-bold text-gray-800">
+    <?= $newRequestCount ?>
+</div>
+                </div>
+                <div class="col-auto">
+                <i class="badge" ><img src="https://cdn-icons-png.flaticon.com/128/7156/7156236.png" style="width:35px;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 
@@ -686,7 +741,7 @@ $formattedBudget = number_format($projectBudget, 2)
 
 
           <div class="row">
-    <div class="col-md-6" style="margin-left: 5px; margin-right: 5px;">
+  <!--  <div class="col-md-6" style="margin-left: 5px; margin-right: 5px;">
         <div class="card mb-4 mb-md-0">
             <div class="card-body">
                 <p class="mb-4"><span class="text-primary font-italic me-1">Assignment</span> Project Assigned as Project Manager</p>
@@ -704,9 +759,9 @@ $formattedBudget = number_format($projectBudget, 2)
                 <?php endforeach; ?>
             </div>
         </div>
-    </div>
+    </div>-->
 
-    <div class="col-md-6" style="margin-left: 5px; margin-right: 5px;">
+   <!-- <div class="col-md-6" style="margin-left: 5px; margin-right: 5px;">
         <div class="card mb-4 mb-md-0">
             <div class="card-body">
                 <p class="mb-4"><span class="text-primary font-italic me-1">Assignment</span> Projects Assigned as Member of Team</p>
@@ -725,7 +780,7 @@ $formattedBudget = number_format($projectBudget, 2)
                 <?php endforeach; ?>
             </div>
         </div>
-    </div>
+    </div>-->
 </div>
           </div>
         </div>

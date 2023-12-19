@@ -374,6 +374,121 @@ class CrontController extends Controller
     //         }
     //     }
     // }
+
+
+
+    public function actionNoasign(){
+        // $noassign_tender = 
+         // Find new tenders
+         $new = Tender::find()
+         ->Where(['session'=>0])
+         ->all();
+
+         $noassign_tender = [];
+         foreach ($new as $new) {
+
+            $user_activity = UserActivity::findOne(['tender_id'=>$new->id]);
+            if($user_activity===null){
+                $noassign_tender[]=Tender::findOne($new->id);
+            }
+
+           
+         }
+      foreach($noassign_tender as $noassign_tender) {
+        $notassign_send_email=Tender::findOne($noassign_tender->id);
+        $created_by=User::findOne($noassign_tender->created_by);
+
+        $mailer = Yii::$app->mailer;
+        $message = $mailer->compose()
+            ->setFrom('nicholaussomi5@gmail.com')
+            ->setTo($created_by->email)
+            ->setSubject('Reminder notification')
+            ->setHtmlBody('
+                <html>
+                <head>
+                    <!-- CSS styles for the email body -->
+                    <style>
+                    /* CSS styles for the email body */
+                    body {
+                        font-family: Arial, sans-serif;
+                        background-color: #f4f4f4;
+                    }
+
+                    .container {
+                        max-width: 600px;
+                        margin: 0 auto;
+                        padding: 20px;
+                        background-color: #ffffff;
+                        border: 1px solid #dddddd;
+                        border-radius: 4px;
+                        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                    }
+
+                    h1 {
+                        color: blue;
+                        text-align: center;
+                    }
+
+                    p {
+                        color: #666666;
+                    }
+
+                    .logo {
+                        text-align: center;
+                        margin-bottom: 20px;
+                    }
+
+                    .logo img {
+                        max-width: 200px;
+                    }
+
+                    .assigned-by {
+                        font-weight: bold;
+                    }
+
+                    .button {
+                        display: inline-block;
+                        padding: 10px 20px;
+                        background-color: #3366cc;
+                        color: white;
+                        text-decoration: none;
+                        border-radius: 4px;
+                        margin-top: 20px;
+                    }
+
+                    .button:hover {
+                        background-color: #235daa;
+                    }
+                </style>
+                </head>
+                <body>
+                    <div class="container">
+                        <div class="logo">
+                        <img src="https://ci6.googleusercontent.com/proxy/s2ioZxU1n6rXmuUxz4xYQ36Pfr2j1HnbSNgHwy2c6pjTWEvzsLe9VdZGhYp-7dE-n6oTkJ79jUw9pHPeXRePiOT7U4irwAl5esSZrsPPqvZr8N1o6g2Bhh7k7M5UGUk=s0-d-e1-ft#http://teratech.co.tz/local/images/uploads/logo/163277576061522e507c527.webp" alt="teralogo">
+                        </div>
+                        <h1>TERATECH ANNOUCEMENT</h1>
+                        <p>Dear ' . Html::encode($created_by->username) . ',</p>
+                        <p>This tender looks like has not set compliance ,reminded to assign activities:</p>
+                        <ul>
+                            <li>Tender Title: ' . Html::encode($noassign_tender->title) . '</li>
+                            <li>Submission Date: ' . Html::encode(date('Y-m-d', $noassign_tender->expired_at)) . '</li>
+                        </ul>
+                        <p>.</p>
+                        <a href="https://example.com">Link Text</a>
+                    </div>
+                </body>
+                </html>
+            ');
+
+        $mailer->send($message);
+      }
+        // $isEligibleTender = UserActivity::findOne(['tender_id'=>$model->id])===null ;
+
+
+
+       
+    }
+
 }
 
 

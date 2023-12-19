@@ -10,6 +10,7 @@ use app\models\Adetail;
 use app\models\Prequest;
 use app\models\Project;
 use app\models\Setting;
+use app\models\TeamAssignment;
 use app\models\Tender;
 use app\models\User;
 use app\models\UserActivity;
@@ -391,6 +392,23 @@ $tenderOnprocess=Tender::find()->where(['session'=>1])->andWhere(['status'=>5])-
                         ->where(['user_id' => $userId])
                         ->andWhere(['isViewed'=>0])
                         ->count();
+
+                      
+           
+                   $team_assignment=TeamAssignment::find()
+                   ->where(['user_id'=>$userId])
+                   ->all();
+           
+           
+           
+                   $project_team='';
+                   foreach ($team_assignment as $proj) {
+                     $project_team =Project::find()
+                       ->where(['id'=>$proj->project_id, 'isViewed'=>0])
+                       ->count();
+                   }
+           
+
                     ?>
                   <li><a><i class="fa fa-clone"></i> Project <span class="fa fa-chevron-down"></span> </a>
                   
@@ -400,13 +418,13 @@ $tenderOnprocess=Tender::find()->where(['session'=>1])->andWhere(['status'=>5])-
         <?php endif; ?>
         <?php if (Yii::$app->user->can('author')) : ?>
             <li><a href="/project/pm"> pm</a>
-            <li><a href="/project/member">member</a>
+            <li><a href="/project/member">member<span class="badge bg-green"><?=$project_team?></span></a>
            
           </li>
         <?php endif; ?>
                     </ul>
                   </li>
-                  <?php if (Yii::$app->user->can('admin')&&Yii::$app->user->can('author') || Yii::$app->user->can('author')) : ?>
+                  <?php if (Yii::$app->user->can('admin')&&Yii::$app->user->can('author')) : ?>
 
                   <li><a><i class="fa fa-plug"></i>  Activity<span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
@@ -417,7 +435,7 @@ $tenderOnprocess=Tender::find()->where(['session'=>1])->andWhere(['status'=>5])-
                   </li>
                   <?php endif; ?>
 
-                  <?php if (Yii::$app->user->can('admin')&&Yii::$app->user->can('author') || Yii::$app->user->can('author')) : ?>
+                  <?php if (Yii::$app->user->can('admin')&&Yii::$app->user->can('author')) : ?>
 
                    <li><a><i class="fa fa-sitemap"></i>Department<span class="fa fa-chevron-down"></span></a>
                   <ul class="nav child_menu">
@@ -426,7 +444,7 @@ $tenderOnprocess=Tender::find()->where(['session'=>1])->andWhere(['status'=>5])-
 
                      </ul>
                   </li>
-   <?php endif; ?>
+          <?php endif; ?>
 
                   <?php
     $userId = Yii::$app->user->id;
@@ -511,6 +529,7 @@ $tenderOnprocess=Tender::find()->where(['session'=>1])->andWhere(['status'=>5])-
                     </ul>
                 
                         <?php endif; ?>
+                        <?php if (Yii::$app->user->can('author') &&Yii::$app->user->can('admin')) : ?>
                   <li><a><i class="fa fa-building"></i>Office<span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
                       <li><a href="/office">office</a></li>
@@ -538,7 +557,7 @@ $tenderOnprocess=Tender::find()->where(['session'=>1])->andWhere(['status'=>5])-
                       <li><a href="/setting">setting</a></li>
                     </ul>
                   </li>
-
+                  <?php endif; ?>
                 </ul>
               </div>
             

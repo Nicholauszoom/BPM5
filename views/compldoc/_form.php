@@ -37,10 +37,10 @@ foreach ($eligibdetail as $eligibdetail) {
 
     <?= $form->field($model, 'document')->fileInput() ?>
 
-    <?php if (isEmpty($eligibdetail)):?>
+   
 
     <?= $form->field($model, 'eligibd_id')->checkboxList( ArrayHelper::map($activityDetail, 'id', 'title'), ['prompt' => 'Select Eligibility Compliance', 'id' => 'activityDetail'] )?>
-  <?php endif;?>
+
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

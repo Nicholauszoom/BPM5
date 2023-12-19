@@ -75,6 +75,13 @@ class RdetailController extends Controller
     public function actionCreate($prequestId)
     {
         $model = new Rdetail();
+        $prequest=Prequest::findOne($prequestId);
+
+        $project = Project::findOne($prequest->project_id);
+
+        $analysis= Analysis::find()
+        ->where(['project' => $project->id])
+        ->all();
 
         $prequest=Rdetail::find()
         ->where(['prequest_id'=>$prequestId])
@@ -96,11 +103,14 @@ class RdetailController extends Controller
             $model->loadDefaultValues();
         }
 
+        
+
         return $this->render('create', [
             'model' => $model,
             'prequestId'=>$prequestId,
             'prequest'=>$prequest,
             'total_amount'=>$total_amount,
+            'analysis'=>$analysis,
         ]);
     }
 
