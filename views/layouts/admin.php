@@ -328,7 +328,27 @@ height:200px;
                      ->where(['id' => $assignedTenderIds])
                      ->andWhere(['session'=>0])
                      ->count();
+
+                     //find user activity
+                     $user_activty_detail = UserActivity::find()
+                  ->where(['user_id' => $userId])
+                  ->all();
+      
+              $userassignedTenderIds = [];
+              foreach ($user_activty_detail as $user_activty_detail) {
+                  $userassignedTenderIds[] = $user_activty_detail->tender_id;
+              }
+
+                  $newassgnTender=Tender::find()
+                     ->where(['id' => $userassignedTenderIds])
+                     ->andWhere(['session'=>0])
+                     ->count();
                   ?>
+
+                  
+
+                
+                  
 
 
 
@@ -375,9 +395,9 @@ $tenderOnprocess=Tender::find()->where(['session'=>1])->andWhere(['status'=>5])-
                   <li><a href="/tender/pending">onprogress<span class="badge bg-blue animated-badge"><?=$tenderOnprocess?></span></a></li>
 
                   <?php endif; ?>
-                      <?php if (Yii::$app->user->can('author') && !Yii::$app->user->can('admin')) : ?>
+                      <?php if (Yii::$app->user->can('author')) : ?>
                         
-                      <li><a href="/tender/pm">assigned <span class="badge bg-blue"><?=$newTender?></span></a></li>
+                      <li><a href="/tender/pm">assigned <span class="badge bg-warning animated-badge"><?=$newassgnTender?></span></a></li>
                       <?php endif; ?>
 
                      

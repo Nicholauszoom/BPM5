@@ -52,7 +52,7 @@ $department=Department::find()->all();
     <?php endif; ?>
  
 
-<?php if (Yii::$app->user->can('admin')) : ?>   
+<?php if (Yii::$app->user->can('admin')) : ?>
     
   <?= $form->field($model, 'status', ['template' => "{label}\n<div class='input-group'>{input}\n<span class='input-group-addon'><i class='fa fa-info'></i></span></div>\n{error}"])
     ->label('Status * <small class="text-muted">eg.awarded</small>')

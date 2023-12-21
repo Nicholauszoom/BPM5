@@ -67,6 +67,7 @@ $end_clarification_days_interval=$submit_date  - ($end_clarification * 3600 * 24
   
 </div>
 <div class="col">
+
     <?= $form->field($model, 'bidmeet')->label('Bid Meet Date * <small class="text-muted">eg.10-12-2025 03:00 AM</small>')->widget(DatePicker::class, [
     'language' => 'ru',
     'dateFormat' => 'MM/dd/yyyy',
@@ -86,7 +87,6 @@ $end_clarification_days= Setting::findOne(1);
 $end_clarification= $end_clarification_days->end_clarification;
 $end_clarification_days_interval=$submit_date  - ($end_clarification * 3600 * 24);
 
-
 ?>
 <div id="bidmeet-warning" style="display: none; color: red;"><i class="fas fa-warning" style="color:orange ;"></i> Date must be between <span style = "color:dimgray;"><?=Yii::$app->formatter->asDatetime($publish_date)?></span>  and <span style = "color:dimgray;"><?=Yii::$app->formatter->asDatetime($end_clarification_days_interval)?></span></div>
 
@@ -96,7 +96,6 @@ $end_clarification_days_interval=$submit_date  - ($end_clarification * 3600 * 24
 </div>
     <?= $form->field($model, 'tender_id')->hiddenInput(['value' => $tenderId])->label(false) ?>
 
-  
 <?php
 $tender_by_id = Tender::findOne($tenderId);
 $publish_date = $tender_by_id->publish_at;
@@ -280,4 +279,22 @@ end_clarificatiionInput.addEventListener('change', function() {
     warningMessage.style.display = 'none';
   }
 });
+</script>
+
+
+<script>
+    $(document).ready(function () {
+        $('#form-id').submit(function (event) {
+            var selectedDate = new Date($('#site-visit-date-input').val());
+            var publishDate = new Date('<?= Yii::$app->formatter->asDatetime($publish_date) ?>');
+            var endDate = new Date('<?= Yii::$app->formatter->asDatetime($end_clarification_days_interval) ?>');
+
+            if (selectedDate < publishDate || selectedDate > endDate) {
+                event.preventDefault(); // Prevent form submission
+                $('#site-visit-date-warning').show();
+            } else {
+                $('#site-visit-date-warning').hide();
+            }
+        });
+    });
 </script>

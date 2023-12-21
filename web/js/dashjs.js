@@ -330,3 +330,17 @@ $(document).ready(function() {
   });
 });
 
+$(document).ready(function () {
+    $('#form-id').submit(function (event) {
+        var selectedDate = new Date($('#site-visit-date-input').val());
+        var publishDate = new Date('<?= Yii::$app->formatter->asDatetime($publish_date) ?>');
+        var endDate = new Date('<?= Yii::$app->formatter->asDatetime($end_clarification_days_interval) ?>');
+
+        if (selectedDate < publishDate || selectedDate > endDate) {
+            event.preventDefault(); // Prevent form submission
+            $('#site-visit-date-warning').show();
+        } else {
+            $('#site-visit-date-warning').hide();
+        }
+    });
+});
