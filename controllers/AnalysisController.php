@@ -164,51 +164,70 @@ class AnalysisController extends Controller
                      $filePath = $uploadDir . $file->baseName . '.' . $file->extension;
              
                      if ($file->saveAs($filePath)) {
-                        $filePaths[] = $filePath;
-                    
-                        // Convert Excel file to CSV
-                        $csvFilePath = $uploadDir . $file->baseName . '.csv';
-                        $spreadsheet = IOFactory::load($filePath);
-                        $writer = IOFactory::createWriter($spreadsheet, 'Csv');
-                        $writer->save($csvFilePath);
-                    
-                        // Import CSV data into the database
-                        $handle = fopen($csvFilePath, 'r');
-                        while (($data = fgetcsv($handle)) !== false) {
-                            $rowData[] = $data;
-                        }
-                        fclose($handle);
-                    
-                        // Import data into the database
-                        foreach ($rowData as $row) {
-                            // Skip rows with empty quantity and item columns
+                         $filePaths[] = $filePath;
+             
+                         // Convert Excel file to CSV
+                         $csvFilePath = $uploadDir . $file->baseName . '.csv';
+                         $spreadsheet = IOFactory::load($filePath);
+                         $writer = IOFactory::createWriter($spreadsheet, 'Csv');
+                         $writer->save($csvFilePath);
+             
+                         // Import CSV data into the database
+                         $handle = fopen($csvFilePath, 'r');
+                         while (($data = fgetcsv($handle)) !== false) {
+                             $rowData[] = $data;
+                         }
+                         fclose($handle);
+             
+     
+                         // Import data into the database
+                         foreach ($rowData as $row) {
+
+
                             if (empty($row[2]) || empty($row[1])) {
                                 continue;
                             }
-                    
-                            $modelRow = new Analysis();
-                            $modelRow->serio = isset($row[0]) ? $row[0] : null;
-                            $modelRow->item = isset($row[1]) ? $row[1] : null;
-                            $modelRow->quantity = isset($row[2]) ? $row[2] : null;
-                            $modelRow->description = isset($row[3]) ? $row[3] : null;
-                            $modelRow->setunit = isset($row[4]) ? $row[4] : null;
-                            $modelRow->cotedAmount = isset($row[5]) ? $row[5] : null;
-                            $modelRow->cost = isset($row[6]) ? $row[6] : null;
-                            $modelRow->source = isset($row[7]) ? $row[7] : null;
-                    
-                            // Ensure numeric values for quantity and setunit
-                            $modelRow->quantity = is_numeric($modelRow->quantity) ? (float) $modelRow->quantity : 0;
-                            $modelRow->setunit = is_numeric($modelRow->setunit) ? (float) $modelRow->setunit : 0;
-                    
-                            $modelRow->unit = floatval($modelRow->cost) * intval($modelRow->quantity);
-                            $setunitWithoutCommas = str_replace(',', '', $modelRow->setunit);
-                            $setunitAsInt = intval($setunitWithoutCommas);
-                    
-                            $modelRow->unitprofit = $setunitAsInt - $modelRow->unit;
+    
+                             $modelRow = new Analysis();
+                            
+                             
+                            
+                             $modelRow->serio = isset($row[0]) ? $row[0] : null;
+                             $modelRow->item = isset($row[1]) ? $row[1] : null;
+                            
+                             $modelRow->quantity = isset($row[2]) ? $row[2] : null;
+                             
+                             $modelRow->description = isset($row[3]) ? $row[3] : null;
+                             $modelRow->setunit = isset($row[4]) ? $row[4] : null;
+                             $modelRow->cotedAmount = isset($row[5]) ? $row[5] : null;
+                             $modelRow->cost = isset($row[6]) ? $row[6] : null;
+                             $modelRow->source = isset($row[7]) ? $row[7] : null;
+                             // $modelRow->unit = $row[7];
+     
+                             // Ensure numeric values for unit and quantity
+                             // $modelRow->unit = is_numeric($modelRow->unit) ? (float)$modelRow->unit : 0;
+                             // $modelRow->quantity = is_numeric($modelRow->quantity) ? (float)$modelRow->quantity : 0;
+                             
+                             $modelRow->quantity = is_numeric($modelRow->quantity) ? (float)$modelRow->quantity : 0;
+                             // $modelRow->setunit = is_numeric($modelRow->setunit) ? (float)$modelRow->setunit : 0;
+     
+                            //  $modelRow->unit = $modelRow->cost * $modelRow->quantity ;
+                             $modelRow->unit = floatval($modelRow->cost) * intval($modelRow->quantity);
+                             $setunitWithoutCommas = str_replace(',', '', $modelRow->setunit);
+                             $setunitAsInt = intval($setunitWithoutCommas);
+     
+                             $modelRow->unitprofit = $setunitAsInt - $modelRow->unit;
                             $modelRow->project = $projectId;
                             $modelRow->files = $filePath;
                             $modelRow->save();
+
+
+
+                       
                         }
+
+                        // // Redirect after importing
+                        // return $this->redirect(['create']);
                     }
                 //    ..................
 
