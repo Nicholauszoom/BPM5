@@ -59,18 +59,17 @@ $this->context->layout = 'admin';
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); 
         $dataProvider = new ActiveDataProvider([
-            'query' => Tender::find()->orderBy(['created_at' => SORT_ASC]),
+            'query' => Tender::find()->orderBy(['created_at' => SORT_DESC]),
         ]);
         
         $model = Tender::find()->all();
-        
             
             ?>
 
 
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
+<?= GridView::widget([
+    'dataProvider' => $dataProvider,
+    'filterModel' => $searchModel,
         'dataProvider' => new \yii\data\ArrayDataProvider([
             'allModels' => $model,
             'pagination' => [

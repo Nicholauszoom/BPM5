@@ -234,6 +234,11 @@ span{
         text-align: center;
         font-size: 16px;
     }
+
+    .overflow-scroll {
+    max-width: 90%;
+    overflow-x: auto;
+}
 </style>
 
 
@@ -954,7 +959,8 @@ if ($ttdetail !== null) {
                                 $tableRows .= '<td rowspan="' . count($activities) . '">' . $username . '</td>';
                             
                                 if (!empty($user_actvty)) {
-                                    $tableRows .= '<td>' . implode(', ', $elgibledetailactivity) . '</td>';
+                                    $tableRows .= '<td><div class="overflow-scroll">' . implode(', ', $elgibledetailactivity) . '</div></td>';
+                                
 
 
                                     $url = Yii::$app->urlManager->createUrl([

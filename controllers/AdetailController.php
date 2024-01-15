@@ -136,10 +136,11 @@ class AdetailController extends Controller
                             $assignment->activity_id = $activityId;
                             $assignment->save();
 
+                            $tdetail = Tdetails::findOne(['tender_id'=>$assignment->tender_id]);
 
                             
                             //Sending Email to each user 
-                            if ($assignment && !empty($assignment->user_id)) {
+                            if ($assignment && !empty($assignment->user_id) &&  $tdetail!==null) {
 
                                 
                                  $activity_role =Activity::findOne($assignment->activity_id);
@@ -157,8 +158,12 @@ class AdetailController extends Controller
                                 //find supervisor by user id
                                 $supervisor= User:: findOne(['id'=>$model->supervisor]);
 
-                                //find office by id
+                               
+                                      //find office by id
                                 $office =Office::findOne(['id'=>$tdetail->office]);
+                              
+
+                              
 
                                 /** @var MailerInterface $mailer */
                                 $mailer = Yii::$app->mailer;

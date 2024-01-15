@@ -32,13 +32,20 @@ $this->context->layout = 'admin';
                         <?php 
                            $tender=Tender::findOne(['id'=>$project->tender_id]);
                         ?>
-                        <td scope="row"><?= Html::encode($tender->title) ?></td>
+                        <?php if($tender !== null):?>
+                        <td scope="row">
+                       
+                            <?= Html::encode($tender->title) ?>
+                            
+                        </td>
+                     
                         <?php $pm = User::findOne($project->user_id); ?>
                         <td><?= $pm->username ?></td>
                         <td><?= Yii::$app->formatter->asDatetime($project->start_at) ?></td>
                         <td><?= Yii::$app->formatter->asDatetime($project->end_at) ?></td>
                         <td><?= Yii::$app->formatter->asDatetime($project->created_at) ?></td>
                         <td><?= getStatusLabel($project->status) ?></td>
+                        <?php endif;?>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
@@ -52,7 +59,11 @@ $this->context->layout = 'admin';
                 <?php 
                            $tender=Tender::findOne(['id'=>$project->tender_id]);
                         ?>
+
+ <?php if($tender !== null):?>
                     <h3 class="tender-title"><?= $tender->title ?></h3>
+
+
                     <ul class="tender-details">
                         <li><strong>Project Manager:</strong> <?= $pm->username ?></li>
                         <li><strong>Start Date:</strong> <?= Yii::$app->formatter->asDatetime($project->start_at) ?></li>
@@ -60,7 +71,7 @@ $this->context->layout = 'admin';
                         <li><strong>Created At:</strong> <?= Yii::$app->formatter->asDatetime($project->created_at) ?></li>
                         <li><strong>Status:</strong> <?= getStatusLabel($project->status) ?></li>
                     </ul>
-
+<?php endif;?>
                     <hr>
                 </li>
             <?php endforeach; ?>

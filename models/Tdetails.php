@@ -57,7 +57,7 @@ class Tdetails extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['office','end_clarificatiion','tender_security'], 'required'],
+            [['office','end_clarificatiion','tender_security','office'], 'required'],
             [['site_visit','created_at', 'updated_at', 'created_by','tender_id','tender_security','office','amount','percentage'], 'integer'],
             // ['end_clarificatiion', 'date', 'format' => 'php:Y-m-d'],
             ['site_visit_date', 'date', 'format' => 'php:Y-m-d'],
