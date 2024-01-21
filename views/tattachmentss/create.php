@@ -1,11 +1,13 @@
 <?php
 
+use app\models\Tender;
 use yii\helpers\Html;
 
 /** @var yii\web\View $this */
 /** @var app\models\Tattachmentss $model */
 
-$this->title = 'Create Tender attachments';
+$tendattach=Tender::findOne($tenderId);
+$this->title = 'Attach Tender document for'. $tendattach->title ;
 $this->params['breadcrumbs'][] = ['label' => 'Tattachmentsses', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 $this->context->layout = 'admin';

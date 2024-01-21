@@ -618,37 +618,37 @@ $comp=Compldoc::findOne(['user_id'=>$userId,'tender_id'=>$model->id]);
             //     },
             // ],
 
-            [
-                'label' => 'Compliance Documents',
-                'format' => 'raw',
-                'value' => function ($model) {
-                    $compldocuments = Compldoc::findAll(['tender_id' => $model->id]);
+            // [
+            //     'label' => 'Compliance Documents',
+            //     'format' => 'raw',
+            //     'value' => function ($model) {
+            //         $compldocuments = Compldoc::findAll(['tender_id' => $model->id]);
             
-                    if (empty($compldocuments)) {
-                        return '';
-                    }
+            //         if (empty($compldocuments)) {
+            //             return '';
+            //         }
             
-                    $documentAttributes = [
-                        'document' => 'Tender Document',
-                        // Add more document attributes here if needed
-                    ];
+            //         $documentAttributes = [
+            //             'document' => 'Tender Document',
+            //             // Add more document attributes here if needed
+            //         ];
             
-                    $documentLinks = [];
+            //         $documentLinks = [];
             
-                    foreach ($compldocuments as $compldocument) {
-                        foreach ($documentAttributes as $attribute => $label) {
-                            $fileName = $compldocument->{$attribute};
-                            if (!empty($fileName)) {
-                                $filePath = Yii::getAlias('@webroot/upload/' . $fileName);
-                                $downloadPath = Yii::getAlias('@web/upload/' . $fileName);
-                                $documentLinks[] = $label . ': ' . Html::a($fileName, $downloadPath, ['target' => '_blank']);
-                            }
-                        }
-                    }
+            //         foreach ($compldocuments as $compldocument) {
+            //             foreach ($documentAttributes as $attribute => $label) {
+            //                 $fileName = $compldocument->{$attribute};
+            //                 if (!empty($fileName)) {
+            //                     $filePath = Yii::getAlias('@webroot/upload/' . $fileName);
+            //                     $downloadPath = Yii::getAlias('@web/upload/' . $fileName);
+            //                     $documentLinks[] = $label . ': ' . Html::a($fileName, $downloadPath, ['target' => '_blank']);
+            //                 }
+            //             }
+            //         }
             
-                    return implode('<br>', $documentLinks);
-                },
-            ],
+            //         return implode('<br>', $documentLinks);
+            //     },
+            // ],
 
             
             // [
@@ -691,30 +691,33 @@ $comp=Compldoc::findOne(['user_id'=>$userId,'tender_id'=>$model->id]);
                 'label' => 'Documents',
                 'format' => 'raw',
                 'value' => function ($model) {
-                    $attachments = Tattachmentss::findOne(['tender_id' => $model->id]);
+                    $attachments = Tattachmentss::find()->where(['tender_id' => $model->id])->all();
             
-                    if ($attachments === null) {
+                    if (empty($attachments)) {
                         return '';
                     }
             
                     $documentAttributes = [
-                        'evaluation' => 'Evaluation Letter',
-                        'negotiation' => 'Negotiation Letter',
-                        'award' => 'Award Letter',
-                        'intention' => 'Intention Letter',
-                        'arithmetic' => 'Arithmetic Letter',
-                        'audit' => 'Audit Letter',
-                        'cancellation' => 'Cancellation Letter',
+                        'evaluation' => 'Evaluation',
+                        'negotiation' => 'Negotiation ',
+                        'award' => 'Award ',
+                        'intention' => 'Intention ',
+                        'arithmetic' => 'Arithmetic',
+                        'audit' => 'Audit',
+                        'cancellation' => 'Cancellation ',
+                        'contract' => 'Contract',
                     ];
             
                     $documentLinks = [];
             
-                    foreach ($documentAttributes as $attribute => $label) {
-                        $fileName = $attachments->{$attribute};
-                        if (!empty($fileName)) {
-                            $filePath = Yii::getAlias('@webroot/upload/' . $fileName);
-                            $downloadPath = Yii::getAlias('@web/upload/' . $fileName);
-                            $documentLinks[] = $label . ': ' . Html::a($fileName, $downloadPath, ['target' => '_blank']);
+                    foreach ($attachments as $attachment) {
+                        foreach ($documentAttributes as $attribute => $label) {
+                            $fileName = $attachment->{$attribute};
+                            if (!empty($fileName)) {
+                                $filePath = Yii::getAlias('@webroot/upload/' . $fileName);
+                                $downloadPath = Yii::getAlias('@web/upload/' . $fileName);
+                                $documentLinks[] = $label . ': ' . Html::a($fileName, $downloadPath, ['target' => '_blank']);
+                            }
                         }
                     }
             
