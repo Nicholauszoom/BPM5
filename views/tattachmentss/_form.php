@@ -4,6 +4,7 @@ use app\models\Tattachmentss;
 use app\models\Tender;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use yii\widgets\DetailView;
 
 /** @var yii\web\View $this */
 /** @var app\models\Tattachmentss $model */
@@ -13,8 +14,17 @@ $tender_attach=Tender::findOne($tenderId);
 $t_attachmentss=Tattachmentss::findOne(['tender_id'=>$tenderId]);
 $tattachmentst=Tattachmentss::find()->where(['tender_id'=>$tenderId])->all();
 ?>
-
 <div class="tattachmentss-form">
+  <nav>
+  <div class="nav nav-tabs" id="nav-tab" role="tablist">
+    <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Form</button>
+    <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Uploads</button>
+    </div>
+</nav>
+<div class="tab-content" id="nav-tabContent">
+  <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
+  
+
 
     <?php $form = ActiveForm::begin(); ?>
 
@@ -156,4 +166,59 @@ $tattachmentst=Tattachmentss::find()->where(['tender_id'=>$tenderId])->all();
 
     <?php ActiveForm::end(); ?>
 
+  </div>
+
+  <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
+ 
+
+<?= DetailView::widget([
+    'model' => $tender_attach,
+    'attributes' => [
+     
+        [
+            'label' => 'Documents',
+            'format' => 'raw',
+            'value' => function ($model) {
+                $attachments = Tattachmentss::find()->where(['tender_id' => $model->id])->all();
+        
+                if (empty($attachments)) {
+                    return '';
+                }
+        
+                $documentAttributes = [
+                    'document' => 'Opening',
+                    'evaluation' => 'Evaluation',
+                    'negotiation' => 'Negotiation ',
+                    'award' => 'Award ',
+                    'intention' => 'Intention ',
+                    'arithmetic' => 'Arithmetic',
+                    'audit' => 'Audit',
+                    'cancellation' => 'Cancellation ',
+                    'contract' => 'Contract',
+                ];
+        
+                $documentLinks = [];
+        
+                foreach ($attachments as $attachment) {
+                    foreach ($documentAttributes as $attribute => $label) {
+                        $fileName = $attachment->{$attribute};
+                        if (!empty($fileName)) {
+                            $filePath = Yii::getAlias('@webroot/upload/' . $fileName);
+                            $downloadPath = Yii::getAlias('@web/upload/' . $fileName);
+                            $documentLinks[] = $label . ': ' . Html::a($fileName, $downloadPath, ['target' => '_blank']);
+                        }
+                    }
+                }
+        
+                return implode('<br>', $documentLinks);
+            },
+        ],
+
+
+    ],
+]) ?>
+
+  </div>
+</div>
+</div>
 </div>
