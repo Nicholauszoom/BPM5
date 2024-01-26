@@ -236,8 +236,14 @@ span{
     }
 
     .overflow-scroll {
-    max-width: 90%;
+    max-width: 70%;
     overflow-x: auto;
+}
+
+
+.overflows-scrolls {
+max-width: 80%;
+overflow-x: auto;
 }
 </style>
 
@@ -399,7 +405,7 @@ $comp=Compldoc::findOne(['user_id'=>$userId,'tender_id'=>$model->id]);
   </div>
 </nav>
 <div class="tab-content" id="nav-tabContent">
-  <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
+  <div class="tab-pane fade show active " id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
   
   <?= DetailView::widget([
         'model' => $model,
@@ -849,9 +855,9 @@ if ($ttdetail !== null) {
                                     }
                                 }
                 
-                                $tableRows .= '<td>' . implode(', ', $eligib) . '</td>';
+                                $tableRows .= '<td><div class="overflow-scroll">' . implode(', ', $eligib) . '</div></td>';
                             } else {
-                                $tableRows .= '<td>';
+                                $tableRows .= '<td><div class="overflow-scroll">';
                                 if ($activity['compdoc'] !== null) {
                                     $fileName = $activity['compdoc']->document;
                                     $filePath = Yii::getAlias('@webroot/upload/' . $fileName);
@@ -859,7 +865,7 @@ if ($ttdetail !== null) {
                                     $documentLink = Html::a('<i class="glyphicon glyphicon-download-alt"></i>' . $fileName, $downloadPath, ['target' => '_blank']);
                                     $tableRows .= $documentLink;
                                 }
-                                $tableRows .= '</td>';
+                                $tableRows .= '</div></td>';
                             }
                 
                             $tableRows .= '</tr>';
