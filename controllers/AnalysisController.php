@@ -137,16 +137,7 @@ class AnalysisController extends Controller
      
          if ($model->load(Yii::$app->request->post())) {
      
-             // $model->cost = $model->unit * $model->quantity;
-     
-             // $model->unitprofit=$model->setunit - $model->unit;
-     
-             // $costt=$model->cost;XAMPP: Starting MySQL...
-
-
-
-             // $unitprof=$model->unitprofit;
-     
+            
              // Create the upload directory if it doesn't exist
              $uploadDir = Yii::getAlias('@webroot/upload/');
              if (!is_dir($uploadDir)) {

@@ -2,5 +2,21 @@
     "cSpell.words": [
         "TCPDF",
         "Typeahead"
+    ],
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default",
+                "enableSsl": "Disabled"
+            },
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 3306,
+            "driver": "MariaDB",
+            "database": "vts",
+            "username": "root",
+            "name": "vts project",
+            "password": ""
+        }
     ]
 }
